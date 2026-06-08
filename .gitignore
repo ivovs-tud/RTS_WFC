@@ -1,0 +1,355 @@
+# =============================================================================
+# .gitignore — Python + MATLAB/Simulink | Cross-platform | VS + VS Code
+# =============================================================================
+
+
+# =============================================================================
+# PYTHON
+# =============================================================================
+
+# Byte-compiled / optimised / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.conda/
+conda-env/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+pytest.ini
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Spyder project settings
+.spyderproject.db
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+
+# =============================================================================
+# MATLAB & SIMULINK
+# =============================================================================
+
+# Compiled MEX binaries (platform-specific)
+*.mex
+*.mexw32
+*.mexw64
+*.mexmaci
+*.mexmaci64
+*.mexglx
+*.mexa64
+
+# Simulink generated code
+slprj/
+sccprj/
+codegen/
+
+# Simulink cache and build artifacts
+*.slxc
+*.slxp
+*.bak
+*.autosave
+*_sfcn_rtw/
+*_ert_rtw/
+*_grt_rtw/
+*_rsim_rtw/
+*_target_rtw/
+*_xpc_rtw/
+*_RTWLIB/
+
+# Simulink model coverage
+covdata/
+*.cvt
+
+# Simulink test / harness
+*.mldatx
+*.sltx
+
+# MATLAB figure and data files (optional — remove if you want to track these)
+# *.fig
+# *.mat
+
+# MATLAB preferences and history
+matlab.prf
+History.xml
+*.log
+
+# Polyspace results
+polyspace/
+
+# MATLAB Coder
+*.tmw
+
+# HDL Coder
+hdlsrc/
+
+# Embedded Coder / PIL simulation
+*.elf
+*.map
+*.axf
+
+# MATLAB App Designer
+*.mlappinstall
+
+# MATLAB toolbox packaging
+*.mltbx
+
+# Stateflow
+*.sfx
+
+
+# =============================================================================
+# VISUAL STUDIO (2019 / 2022)
+# =============================================================================
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific files (MonoDevelop / Xamarin Studio)
+*.userprefs
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache / options directory
+.vs/
+Generated\ Files/
+
+# MSBuild
+*.binlog
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# Publish profiles
+**/Properties/PublishProfiles/
+**/publish/
+
+# Crash dumps
+*.dmp
+
+# Visual Studio code metrics
+*.CodeMetricsLog
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+TestResult.xml
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# Dotfuscator
+Dotfuscator/
+
+# DocProject
+DocProject/buildhelp/
+DocProject/Help/*.HxT
+DocProject/Help/*.HxC
+DocProject/Help/*.hhc
+DocProject/Help/*.hhk
+DocProject/Help/*.hhp
+DocProject/Help/Html2
+DocProject/Help/html
+
+
+# =============================================================================
+# VS CODE
+# =============================================================================
+
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local history extension
+.history/
+
+# Built VS Code extension
+*.vsix
+
+
+# =============================================================================
+# OPERATING SYSTEM FILES
+# =============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+
+# =============================================================================
+# MISCELLANEOUS
+# =============================================================================
+
+# Secrets / credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Compiled binaries
+*.exe
+*.dll
+*.lib
+*.a
+*.o
+
+# Temporary files
+*.tmp
+*.temp
+~$*

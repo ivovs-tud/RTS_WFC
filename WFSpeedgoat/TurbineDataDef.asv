@@ -1,0 +1,49 @@
+% =========================================================
+%  Bus definition for S_TURBINEDATA
+%  Total size: 8 fields x LREAL(8 bytes) = 64 bytes
+% =========================================================
+
+% --- Field definitions ---
+fieldNames = { ...
+    'WindSpeed',     'double'; ...
+    'WindDirection', 'double'; ...
+    'PowerGen',      'double'; ...
+    'YawAng',        'double'; ...
+    'RotorSpeed',    'double'; ...
+    'PitchAngle',    'double'; ...
+    'PitchAngleSpt', 'double'; ...
+    'GenTorque',     'double'  ...
+};
+
+% --- Build bus elements ---
+elements(numel(fieldNames(:,1))) = Simulink.BusElement;  % preallocate
+
+for i = 1:size(fieldNames, 1)
+    elements(i)           = Simulink.BusElement;
+    elements(i).Name      = fieldNames{i, 1};
+    elements(i).DataType  = fieldNames{i, 2};
+    elements(i).Dimensions = 1;
+    elements(i).DimensionsMode = 'Fixed';
+    elements(i).SampleTime = -1;
+    elements(i).Complexity = 'real';
+end
+
+% --- Assemble the bus ---
+turbineData             = Simulink.Bus;
+turbineData.Description = 'S_TURBINEDATA - Turbine measurement data';
+turbineData.DataScope   = 'Auto';
+turbineData.Elements    = elements;
+
+% --- Register in base workspace ---
+assignin('base', 'turbineData', turbineData);
+
+% --- Verify byte size ---
+bytesPerField = 8;  % LREAL = double = 8 bytes
+totalBytes    = size(fieldNames, 1) * bytesPerField;
+fprintf('Bus ''turbineData'' defined: %d fields, %d bytes total\n', ...
+        size(fieldNames, 1), totalBytes);
+
+turbineDataBytes = 0;
+for i = 1:size(fieldNames, 1)
+    
+end

@@ -1,0 +1,34 @@
+%% Contants
+Nt = 12;        % Number of Turbines in Simulation
+
+
+%% Networking Definitions
+% IP Addresses
+localIP = '172.19.3.43';        % IP address of the RTS
+pcIP    = '172.19.3.214';       % IP address of the PC running the Flowfield simulation
+plcIP   = '172.19.3.190';       % IP address of the PLC running the IEC61850 Server
+
+% UDP/TCP ports
+pcTXport = '49160';             % UDP port used by PC to transmit flowfield data to RTS
+pcRXport = '49152';             % UDP port used by PC to receive turbine operational data
+
+rtsTXFFport = '49160';          % UDP port used by RTS to transmit turbine data to PC
+rtsRXFFport = '49152';          % UDP port used by RTS to receive flowfield data from PC
+
+plcTXport = '10000';            % UDP port used by PLC to transmit turbine cmd_data to RTS
+plcRXport = '11000';            % UDP port used by PLC to receive turbine op_data data from RTS
+
+rtsTXIECport = '10000';         % UDP port used by RTS to transmit turbine op_data to PLC
+rtsRXIECport = '11000';         % UDP port used by RTS to receive turbine cmd_data to PLC
+
+
+
+%%
+turbineData = Simulink.Bus;
+turbineData.Description = "UDP Packet (TX "
+
+
+%% Simulation Constants
+Ts_tur      = Simulink.Parameter(0.1);      % Sample frequency of the turbine simulation
+Ts_FF       = Simulink.Parameter(2.0);      % Sample frequency at which flowfield information is shared
+Ts_IEC      = Simulink.Parameter(0.5);      % Sample frequency at which RTS <-> PLC communication occurs

@@ -37,11 +37,15 @@ def main():
     else:
         IP_address_speedgoat = "172.19.3.43"  # Speedgoat target
     
-    IP_address_desk2 = "172.19.3.214"      
-    IP_address_desk3 = "172.19.3.220"
-    IP_address_PC = IP_address_desk2 # IP adress of the running PC
+    if len(sys.argv) > 2:
+        scadaIP = sys.argv[2]  # SCADA target
+    else:
+        scadaIP = "172.19.3.214"    
+
     localIP = "172.19.3.214"
-    scadaIP = "172.19.3.220"
+    
+
+    print(f"speedgoat IP: {IP_address_speedgoat}, scada IP: {scadaIP}")
 
     # Ports
     python2simulink_port = 49160  # PC -> Speedgoat

@@ -1,8 +1,11 @@
-tg = slrealtime('172.19.3.43');
-tg.connect;
+function deploy(rts_ip)
 
-tg.load('wturbines');
+    out = 'hoi!'
+    tg = slrealtime(rts_ip)
+    tg.connect
+    stop(tg)
+    tg.load('wturbines')
+    
+    start(tg)
 
-tg.setparam('localIP', '172.19.3.43');
-tg.setparam('pcIP', '172.19.3.214');
-tg.setparam('plcIP', '172.19.3.190');
+end

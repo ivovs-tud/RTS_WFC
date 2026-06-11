@@ -48,25 +48,25 @@ wind_farm:
 
   farm:
     layout_x:
-      - 0
-      - 0
-      - 0
-      - 300
-      - 300
-      - 300
-      - 600
-      - 600
-      - 600
+      - 382
+      - 954
+      - 1527
+      - 382
+      - 954
+      - 1527
+      - 382
+      - 954
+      - 1527
     layout_y:
-      - 0
-      - 300
-      - 600
-      - 0
-      - 300
-      - 600    
-      - 0
-      - 300
-      - 600      
+      - 1527
+      - 1527
+      - 1527
+      - 954
+      - 954
+      - 954    
+      - 382
+      - 382
+      - 382      
     layout_z:
       - 0.0
       - 0.0
@@ -226,7 +226,7 @@ ambient:
     wind_shear: 0.12
     wind_speeds: # a single value indicates constant conditions, multiple lead to linear interpolation
       - 5.0
-      - 15.0   
+      - 5.0   
     wind_speeds_t:
       - 0.0
       - 50.0
@@ -235,17 +235,23 @@ ambient:
     turbulence_intensities:
       - 0.06
     wind_directions: # a single value indicates constant conditions, multiple lead to linear interpolation
+      - 0.0 
+      - 0.0 
+      - 45.0
+      - 45.0
       - 0.0
-      - 180.0
       - 0.0
     wind_directions_t:
       - 0.0
-      - 200.0
-      - 400.0
+      - 50.0
+      - 60.0
+      - 300.0
+      - 310.0  
+      - 1000.0
     requested_power:
       - 0.0
-      - -1.0
-      - 1000000
+      - 12000000
+      - 45000000
     requested_power_t:
       - 0.0
       - 10.0

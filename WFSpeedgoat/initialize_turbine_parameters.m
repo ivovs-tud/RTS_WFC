@@ -27,22 +27,24 @@ if strcmp(turbine_name, 'NREL5MW')
     rotor_diameter = 126;
     Cp_opt = 0.482;
     tsr_opt = 7.55;
-    inertia = 6e5;   % Rotor + Generator Inertia
+    inertia = 4e6; %38677040.613; % Rotor Inertia
     gearbox_ratio = 97;
     generator_eff = 0.944;
     cut_in_wind_speed = 3.0;
     cut_out_wind_speed = 25.0;
     rated_wind_speed = 11.4;
     rated_rotor_speed = 12.1;  % In RPM
+    min_rotor_speed_rads = 0.722;
     rated_power = 5E6;
-    pitch_rate_deg = 5;  % NOTE: in deg/s, FIXME: Made up value
+    pitch_rate_deg = 10;  % In deg/s (from 0.1745 rad/s)
     brake_torque = 28116.2;  % FIXME: This is the high-speed brake torque, do I need to use the gearbox?
     yawing_rate = 5; % deg/s
     rated_torque = 31465000;
     max_gen_torque = 47402.91;
     cp_ct_file = 'Cp_Ct_IEA22MWRWT_github.csv';
-    pitch_above_rated_file = 'pitch_ss_IEA22MW_report.csv';
-    power_ss_file = 'power_ss_IEA22MW_hacw2_github.csv';
+    pitch_above_rated_file = 'pitch_above_rated_NREL5MW.csv';
+    power_ss_file = 'power_ss_NREL5MW.csv';
+
 elseif strcmp(turbine_name, 'IEA22MW')
     rotor_diameter = 284;
     Cp_opt = 0.482;  % FIXME: Not from paper
@@ -54,6 +56,7 @@ elseif strcmp(turbine_name, 'IEA22MW')
     cut_out_wind_speed = 25.0;
     rated_wind_speed = 11.0;
     rated_rotor_speed = 6.77;  % In RPM | FIXME: There are conflicting values, 6.77 is reported at 11.0 m/s, rated wind speed
+    min_rotor_speed_rads = 0.190;
     rated_power = 22E6;
     brake_torque = 28116.2;  % FIXME: Not in the report, this is from NREL
     pitch_rate_deg = 5;  % NOTE: in deg/s, FIXME: Made up value
@@ -72,7 +75,7 @@ rated_rotor_speed_rads = rated_rotor_speed * (2 * pi) / 60;  % In rad/s
 rotor_radius = rotor_diameter / 2;
 brake_torque = rated_torque;
 MIN_ROT_SPEED = 1e-3;
-ROT_SPEED_MIN_TRANS = 0.1;
+ROT_SPEED_MIN_TRANS = min_rotor_speed_rads;
 ROT_SPEED_SP_DIFF = 0.1;
 ROT_EMG_MAX_TOL = 1.15;
 
@@ -87,13 +90,13 @@ alpha_pitch_exp = 0;  % nan = 0 deg | 0 = no exponential smoothing | NOTE: Does 
 % FIXME: I had a bug using 'rated_rotor_speed' instead of
 % 'rated_rotor_speed_rads'
 % different turbines/operating points, 'theory' does not seem to hold
-K_omega_sq = 1/2 * (tsr_opt)^-3 * air_density * pi * (rotor_diameter / 2)^5 * Cp_opt;  % NOTE: Correct one for NREL5MW
+K_omega_sq = 1/2 * (tsr_opt)^-3 * air_density * pi * (rotor_diameter / 2)^5 * Cp_opt / gearbox_ratio^3;  % NOTE: Correct one for NREL5MW
 % K_omega_sq = 1/2 * (rated_rotor_speed_rads * (rotor_diameter / 2) / rated_wind_speed)^-3 * air_density * pi * (rotor_diameter / 2)^5 * Cp_opt; 
 % K_omega_sq = 1E7;  % Manuel value for IEA22MW, does not seem to really work
 
 % ==== PI downregulation ====
 
-dr_mode = Simulink.Parameter(3);  % 1 | Max-omega, 2 | Constant-omega, 3 | Constant-TSR, 4 | Minimum Ct, 0 | Shutdown
+dr_mode = Simulink.Parameter(2);  % 1 | Max-omega, 2 | Constant-omega, 3 | Constant-TSR, 4 | Minimum Ct, 0 | Shutdown
 
 K_p_gen = 1E7;  % 1E7
 K_i_gen = 1E5;  % 1E5

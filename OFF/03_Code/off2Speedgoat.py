@@ -2,6 +2,7 @@
 # a flow of turbine states coming from an external source
 
 import os
+import sys
 
 import off.off as off
 import off.off_interface as offi
@@ -31,10 +32,16 @@ def main():
     
     # setting up server with one port to one port communication 
     # IP addresses
-    IP_address_speedgoat = "172.19.3.43"  # Speedgoat target
+    if len(sys.argv) > 1:
+        IP_address_speedgoat = sys.argv[1]  # Speedgoat target
+    else:
+        IP_address_speedgoat = "172.19.3.43"  # Speedgoat target
+    
     IP_address_desk2 = "172.19.3.214"      
     IP_address_desk3 = "172.19.3.220"
     IP_address_PC = IP_address_desk2 # IP adress of the running PC
+    localIP = "172.19.3.214"
+    scadaIP = "172.19.3.220"
 
     # Ports
     python2simulink_port = 49160  # PC -> Speedgoat
@@ -54,7 +61,7 @@ def main():
     lg.info("")
     
     # Operator EndPoint
-    op = RequestedPowerTransmitter(IP_address_desk2, "9001")
+    op = RequestedPowerTransmitter(scadaIP, "9001")
     op.connect()
 
     # get layout of wind farm from windfarm_information.yaml
@@ -135,6 +142,8 @@ def main():
         iteration += 1
 
         sleep_for = next_tick - time.perf_counter()
+        print(f"Sleep for {sleep_for}", flush=True)
+        
         if sleep_for > 0:
             time.sleep(sleep_for)
         next_tick += INTERVAL

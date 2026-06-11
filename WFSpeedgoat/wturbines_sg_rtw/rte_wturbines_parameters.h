@@ -34,7 +34,7 @@ struct RTE_Param_Service_T {
   real_T generator_eff;
   real_T inertia;
   real_T max_gen_torque;
-  real_T pitch_all[23];
+  real_T pitch_all[15];
   real_T pitch_rate_deg;
   real_T pitch_vec[20];
   real_T rated_power;
@@ -47,7 +47,7 @@ struct RTE_Param_Service_T {
   real_T tsr_opt;
   real_T tsr_vec[20];
   real_T turbineDataBytes;
-  real_T u_all[23];
+  real_T u_all[15];
   real_T u_rotor_speed_all[2];
   real_T yawing_rate;
 };

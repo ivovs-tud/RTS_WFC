@@ -6,9 +6,10 @@ Nt = 9;        % Number of Turbines in Simulation
 
 %% Networking Definitions
 % IP Addresses
-localIP = '172.19.3.43';        % IP address of the RTS
-pcIP    = '172.19.3.214';       % IP address of the PC running the Flowfield simulation
-plcIP   = '172.19.3.190';       % IP address of the PLC running the IEC61850 Server
+localIP = '172.19.3.42';        % IP address of the RTS
+pcIP    = '172.19.3.202';       % IP address of the PC running the Flowfield simulation
+plcIP   = '172.19.3.210';       % IP address of the PLC running the IEC61850 Server
+
 
 % UDP/TCP ports
 pcTXport = '49160';             % UDP port used by PC to transmit flowfield data to RTS

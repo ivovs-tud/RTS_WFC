@@ -7,9 +7,9 @@
  *
  * Code generation for model "wturbines".
  *
- * Model version              : 1.214
+ * Model version              : 1.241
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C++ source code generated on : Fri Jun  5 16:22:00 2026
+ * C++ source code generated on : Thu Jun 11 13:02:08 2026
  *
  * Target selection: speedgoat.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -35,7 +35,7 @@ extern "C"
 #include "wturbines_private.h"
 #include "wturbines_types.h"
 
-/* Named constants for MATLAB Function: '<S10>/True Yaw Offset' */
+/* Named constants for MATLAB Function: '<S11>/True Yaw Offset' */
 const int32_T wturbines_CALL_EVENT = -1;
 const real_T wturbines_period = 0.01;
 
@@ -832,49 +832,51 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
     /* Outputs for Iterator SubSystem: '<Root>/For Each Subsystem' incorporates:
      *  ForEach: '<S2>/For Each'
      */
-    /* Lookup_n-D: '<S271>/Cp(&#x3BB;, &#x3B2;) ' incorporates:
-     *  Switch: '<S271>/Switch'
+    /* Lookup_n-D: '<S272>/Cp(&#x3BB;, &#x3B2;) ' incorporates:
+     *  Switch: '<S272>/Switch'
      */
     tmp_j = get_pitch_vec();
     tmp_i = get_tsr_vec();
 
-    /* RateLimiter: '<S8>/Rate Limiter' */
+    /* RateLimiter: '<S9>/Rate Limiter' */
     tmp_h = *get_pitch_rate_deg();
 
-    /* Product: '<S8>/Product' incorporates:
-     *  Constant: '<S8>/Constant3'
-     *  Switch: '<S8>/Switch3'
+    /* Switch: '<S9>/Switch' incorporates:
+     *  Constant: '<S9>/Constant1'
+     *  Switch: '<S9>/Switch3'
      */
     tmp_g = *get_brake_torque();
 
-    /* Chart: '<S8>/Wind Turbine State Machine' */
+    /* Chart: '<S9>/Wind Turbine State Machine' */
     tmp_f = *get_ROT_SPEED_MIN_TRANS();
     tmp_e = *get_cut_in_wind_speed();
     tmp_d = *get_MIN_ROT_SPEED();
 
-    /* Product: '<S26>/Divide4' incorporates:
-     *  Constant: '<S26>/Constant12'
-     *  MultiPortSwitch: '<S26>/Multiport Switch'
+    /* Product: '<S27>/Divide4' incorporates:
+     *  Constant: '<S27>/Constant12'
+     *  MultiPortSwitch: '<S27>/Multiport Switch'
      */
     tmp_c = *get_tsr_opt();
 
-    /* RateLimiter: '<S272>/Rate Limiter' */
+    /* RateLimiter: '<S273>/Rate Limiter' */
     tmp_b = *get_yawing_rate();
 
-    /* Gain: '<S264>/Gain' incorporates:
-     *  Constant: '<S264>/Constant'
+    /* Gain: '<S265>/Gain' incorporates:
+     *  Constant: '<S265>/Constant'
      */
-    tmp_a = *get_gearbox_ratio();
-    tmp_9 = *get_rated_rotor_speed();
+    tmp_a = *get_rated_rotor_speed();
 
-    /* RelationalOperator: '<S149>/IsNaN1' incorporates:
-     *  Constant: '<S149>/Constant1'
+    /* RelationalOperator: '<S150>/IsNaN1' incorporates:
+     *  Constant: '<S150>/Constant1'
      */
-    tmp_8 = *get_alpha_pitch_exp();
+    tmp_9 = *get_alpha_pitch_exp();
 
-    /* Product: '<S28>/Product1' incorporates:
-     *  Constant: '<S28>/Constant5'
-     *  Constant: '<S28>/Constant9'
+    /* Gain: '<S11>/Multiply2' */
+    tmp_8 = *get_gearbox_ratio();
+
+    /* Product: '<S29>/Product1' incorporates:
+     *  Constant: '<S29>/Constant5'
+     *  Constant: '<S29>/Constant9'
      */
     tmp_7 = *get_generator_eff();
     tmp_6 = *get_air_density();
@@ -882,8 +884,8 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
     /* Saturate: '<S6>/Saturation' */
     tmp_5 = *get_rated_power();
 
-    /* Product: '<S276>/Product' incorporates:
-     *  Constant: '<S276>/Constant'
+    /* Product: '<S277>/Product' incorporates:
+     *  Constant: '<S277>/Constant'
      */
     tmp_4 = *get_rotor_radius();
 
@@ -1026,12 +1028,12 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
       wturbines_B.ForEach = ForEach_itr;
 
       /* RateTransition: '<S2>/Rate Transition1' incorporates:
+       *  RateTransition: '<S10>/Rate Transition1'
+       *  RateTransition: '<S10>/Rate Transition11'
+       *  RateTransition: '<S10>/Rate Transition12'
        *  RateTransition: '<S2>/Rate Transition4'
        *  RateTransition: '<S2>/Rate Transition6'
        *  RateTransition: '<S2>/Rate Transition7'
-       *  RateTransition: '<S9>/Rate Transition1'
-       *  RateTransition: '<S9>/Rate Transition11'
-       *  RateTransition: '<S9>/Rate Transition6'
        */
       tmp = rtmIsMajorTimeStep(wturbines_M);
       if (tmp) {
@@ -1171,29 +1173,29 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         /* End of InitialCondition: '<S2>/IC6' */
       }
 
-      /* Integrator: '<S10>/Integrator' */
+      /* Integrator: '<S11>/Integrator' */
       wturbines_B.CoreSubsys[ForEach_itr].t = wturbines_X.CoreSubsys[ForEach_itr]
         .Integrator_CSTATE;
 
-      /* Saturate: '<S10>/Saturation' */
+      /* Saturate: '<S11>/Saturation' */
       u0 = wturbines_B.CoreSubsys[ForEach_itr].t;
       u1 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation_LowerSat_e;
       u2 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation_UpperSat_e;
       if (u0 > u2) {
-        /* Saturate: '<S10>/Saturation' */
+        /* Saturate: '<S11>/Saturation' */
         wturbines_B.CoreSubsys[ForEach_itr].Saturation = u2;
       } else if (u0 < u1) {
-        /* Saturate: '<S10>/Saturation' */
+        /* Saturate: '<S11>/Saturation' */
         wturbines_B.CoreSubsys[ForEach_itr].Saturation = u1;
       } else {
-        /* Saturate: '<S10>/Saturation' */
+        /* Saturate: '<S11>/Saturation' */
         wturbines_B.CoreSubsys[ForEach_itr].Saturation = u0;
       }
 
-      /* End of Saturate: '<S10>/Saturation' */
+      /* End of Saturate: '<S11>/Saturation' */
 
-      /* Product: '<S276>/Product' incorporates:
-       *  Constant: '<S276>/Constant'
+      /* Product: '<S277>/Product' incorporates:
+       *  Constant: '<S277>/Constant'
        */
       wturbines_B.CoreSubsys[ForEach_itr].Product =
         wturbines_B.CoreSubsys[ForEach_itr].Saturation * tmp_4;
@@ -1266,7 +1268,7 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         wturbines_B.CoreSubsys[ForEach_itr].RateTransition6 =
           wturbines_B.CoreSubsys[ForEach_itr].IC;
 
-        /* MATLAB Function: '<S8>/MATLAB Function' */
+        /* MATLAB Function: '<S9>/MATLAB Function' */
         wturbines_DW.CoreSubsys[ForEach_itr].sfEvent = wturbines_CALL_EVENT;
         if (!wturbines_DW.CoreSubsys[ForEach_itr].last_val_not_empty) {
           wturbines_DW.CoreSubsys[ForEach_itr].last_val =
@@ -1283,23 +1285,23 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         wturbines_B.CoreSubsys[ForEach_itr].y =
           wturbines_DW.CoreSubsys[ForEach_itr].last_val;
 
-        /* End of MATLAB Function: '<S8>/MATLAB Function' */
+        /* End of MATLAB Function: '<S9>/MATLAB Function' */
 
-        /* RateLimiter: '<S272>/Rate Limiter' */
+        /* RateLimiter: '<S273>/Rate Limiter' */
         u1 = wturbines_B.CoreSubsys[ForEach_itr].y -
           wturbines_DW.CoreSubsys[ForEach_itr].PrevY_n;
         if (u1 > tmp_b * wturbines_period) {
-          /* RateLimiter: '<S272>/Rate Limiter' */
+          /* RateLimiter: '<S273>/Rate Limiter' */
           wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_p = tmp_b *
             wturbines_period + wturbines_DW.CoreSubsys[ForEach_itr].PrevY_n;
         } else {
           u0 = -tmp_b;
           if (u1 < u0 * wturbines_period) {
-            /* RateLimiter: '<S272>/Rate Limiter' */
+            /* RateLimiter: '<S273>/Rate Limiter' */
             wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_p = u0 *
               wturbines_period + wturbines_DW.CoreSubsys[ForEach_itr].PrevY_n;
           } else {
-            /* RateLimiter: '<S272>/Rate Limiter' */
+            /* RateLimiter: '<S273>/Rate Limiter' */
             wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_p =
               wturbines_B.CoreSubsys[ForEach_itr].y;
           }
@@ -1308,7 +1310,7 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         wturbines_DW.CoreSubsys[ForEach_itr].PrevY_n =
           wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_p;
 
-        /* MATLAB Function: '<S10>/True Yaw Offset' */
+        /* MATLAB Function: '<S11>/True Yaw Offset' */
         wturbines_DW.CoreSubsys[ForEach_itr].sfEvent_e = wturbines_CALL_EVENT;
         wturbines_B.CoreSubsys[ForEach_itr].yaw =
           wturbines_B.CoreSubsys[ForEach_itr].RateLimiter1 -
@@ -1319,42 +1321,67 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
           wturbines_B.CoreSubsys[ForEach_itr].yaw += 360.0;
         }
 
-        /* End of MATLAB Function: '<S10>/True Yaw Offset' */
+        /* End of MATLAB Function: '<S11>/True Yaw Offset' */
 
-        /* Gain: '<S278>/Gain1' */
+        /* Gain: '<S279>/Gain1' */
         wturbines_B.CoreSubsys[ForEach_itr].Gain1 =
           wturbines_cal->wturbines_CoreSubsys_cal.Gain1_Gain_e *
           wturbines_B.CoreSubsys[ForEach_itr].yaw;
 
-        /* Trigonometry: '<S10>/Trigonometric Function' */
+        /* Trigonometry: '<S11>/Trigonometric Function' */
         wturbines_B.CoreSubsys[ForEach_itr].TrigonometricFunction = std::cos
           (wturbines_B.CoreSubsys[ForEach_itr].Gain1);
 
-        /* Product: '<S10>/Product' */
-        wturbines_B.CoreSubsys[ForEach_itr].wst =
+        /* Product: '<S11>/Product' */
+        wturbines_B.CoreSubsys[ForEach_itr].Product_l =
           wturbines_B.CoreSubsys[ForEach_itr].RateLimiter *
           wturbines_B.CoreSubsys[ForEach_itr].TrigonometricFunction;
 
-        /* Gain: '<S25>/Gain1' incorporates:
-         *  Constant: '<S8>/Constant4'
+        /* Saturate: '<S11>/Saturation2' */
+        u0 = wturbines_B.CoreSubsys[ForEach_itr].Product_l;
+        u1 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation2_LowerSat;
+        u2 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation2_UpperSat;
+        if (u0 > u2) {
+          /* Saturate: '<S11>/Saturation2' */
+          wturbines_B.CoreSubsys[ForEach_itr].ws_eff = u2;
+        } else if (u0 < u1) {
+          /* Saturate: '<S11>/Saturation2' */
+          wturbines_B.CoreSubsys[ForEach_itr].ws_eff = u1;
+        } else {
+          /* Saturate: '<S11>/Saturation2' */
+          wturbines_B.CoreSubsys[ForEach_itr].ws_eff = u0;
+        }
+
+        /* End of Saturate: '<S11>/Saturation2' */
+      }
+
+      /* End of RateTransition: '<S2>/Rate Transition' */
+
+      /* Product: '<S277>/Divide' */
+      wturbines_B.CoreSubsys[ForEach_itr].t_c =
+        wturbines_B.CoreSubsys[ForEach_itr].Product /
+        wturbines_B.CoreSubsys[ForEach_itr].ws_eff;
+      if (tmp) {
+        /* Gain: '<S26>/Gain1' incorporates:
+         *  Constant: '<S9>/Constant4'
          */
         wturbines_B.CoreSubsys[ForEach_itr].Gain1_f =
           wturbines_cal->wturbines_CoreSubsys_cal.Gain1_Gain_j *
           wturbines_cal->wturbines_CoreSubsys_cal.Constant4_Value;
 
-        /* RateTransition: '<S9>/Rate Transition6' */
-        wturbines_B.CoreSubsys[ForEach_itr].RateTransition6_o =
-          wturbines_B.CoreSubsys[ForEach_itr].RateLimiter;
+        /* RateTransition: '<S10>/Rate Transition12' */
+        wturbines_B.CoreSubsys[ForEach_itr].RateTransition12 =
+          wturbines_B.CoreSubsys[ForEach_itr].ws_eff;
 
-        /* RateTransition: '<S9>/Rate Transition' */
-        wturbines_B.CoreSubsys[ForEach_itr].RateTransition_k =
-          wturbines_B.CoreSubsys[ForEach_itr].RateTransition6_o;
+        /* RateTransition: '<S10>/Rate Transition13' */
+        wturbines_B.CoreSubsys[ForEach_itr].RateTransition13 =
+          wturbines_B.CoreSubsys[ForEach_itr].RateTransition12;
 
-        /* RateTransition: '<S9>/Rate Transition9' */
+        /* RateTransition: '<S10>/Rate Transition9' */
         wturbines_B.CoreSubsys[ForEach_itr].RateTransition9 =
           wturbines_B.CoreSubsys[ForEach_itr].Saturation;
 
-        /* RateTransition: '<S9>/Rate Transition2' */
+        /* RateTransition: '<S10>/Rate Transition2' */
         wturbines_B.CoreSubsys[ForEach_itr].RateTransition2 =
           wturbines_B.CoreSubsys[ForEach_itr].RateTransition9;
 
@@ -1400,129 +1427,129 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
 
         /* End of Switch: '<S6>/Switch' */
 
-        /* Math: '<S28>/Square' incorporates:
-         *  Constant: '<S28>/Constant7'
+        /* Math: '<S29>/Square' incorporates:
+         *  Constant: '<S29>/Constant7'
          */
         wturbines_B.CoreSubsys[ForEach_itr].Square = tmp_4 * tmp_4;
 
-        /* Product: '<S28>/Product1' incorporates:
-         *  Constant: '<S28>/Constant4'
-         *  Constant: '<S28>/Constant5'
-         *  Constant: '<S28>/Constant6'
-         *  Constant: '<S28>/Constant8'
-         *  Constant: '<S28>/Constant9'
+        /* Product: '<S29>/Product1' incorporates:
+         *  Constant: '<S29>/Constant4'
+         *  Constant: '<S29>/Constant5'
+         *  Constant: '<S29>/Constant6'
+         *  Constant: '<S29>/Constant8'
+         *  Constant: '<S29>/Constant9'
          */
         wturbines_B.CoreSubsys[ForEach_itr].Product1 =
           wturbines_cal->wturbines_CoreSubsys_cal.Constant4_Value_g * tmp_6 *
           wturbines_cal->wturbines_CoreSubsys_cal.Constant6_Value *
           wturbines_B.CoreSubsys[ForEach_itr].Square * *get_Cp_opt() * tmp_7;
 
-        /* Product: '<S28>/Divide1' */
+        /* Product: '<S29>/Divide1' */
         wturbines_B.CoreSubsys[ForEach_itr].Divide1 =
           wturbines_B.CoreSubsys[ForEach_itr].P_sett /
           wturbines_B.CoreSubsys[ForEach_itr].Product1;
 
-        /* Math: '<S28>/Power' incorporates:
-         *  Constant: '<S28>/Constant3'
+        /* Math: '<S29>/Power' incorporates:
+         *  Constant: '<S29>/Constant3'
          */
         wturbines_B.CoreSubsys[ForEach_itr].ws_drt = rt_powd_snf
           (wturbines_B.CoreSubsys[ForEach_itr].Divide1,
            wturbines_cal->wturbines_CoreSubsys_cal.Constant3_Value);
 
-        /* Sum: '<S28>/Sum1' */
+        /* Sum: '<S29>/Sum1' */
         wturbines_B.CoreSubsys[ForEach_itr].ws_drwst =
           wturbines_B.CoreSubsys[ForEach_itr].ws_drt -
-          wturbines_B.CoreSubsys[ForEach_itr].RateTransition_k;
+          wturbines_B.CoreSubsys[ForEach_itr].RateTransition13;
 
-        /* Switch: '<S28>/Derating' */
+        /* Switch: '<S29>/Derating' */
         if (wturbines_B.CoreSubsys[ForEach_itr].ws_drwst >
             wturbines_cal->wturbines_CoreSubsys_cal.Derating_Threshold_l) {
-          /* Product: '<S28>/Divide3' incorporates:
-           *  Constant: '<S28>/Constant'
-           *  Constant: '<S28>/Constant1'
+          /* Product: '<S29>/Divide3' incorporates:
+           *  Constant: '<S29>/Constant'
+           *  Constant: '<S29>/Constant1'
            */
           wturbines_B.CoreSubsys[ForEach_itr].Divide3 = tmp_c *
-            wturbines_B.CoreSubsys[ForEach_itr].RateTransition_k / tmp_4;
+            wturbines_B.CoreSubsys[ForEach_itr].RateTransition13 / tmp_4;
 
-          /* Switch: '<S28>/Derating' */
+          /* Switch: '<S29>/Derating' */
           wturbines_B.CoreSubsys[ForEach_itr]._sett =
             wturbines_B.CoreSubsys[ForEach_itr].Divide3;
         } else {
-          /* MultiPortSwitch: '<S28>/Multiport Switch' incorporates:
-           *  Constant: '<S28>/Mode'
+          /* MultiPortSwitch: '<S29>/Multiport Switch' incorporates:
+           *  Constant: '<S29>/Mode'
            */
           switch (static_cast<int32_T>(*get_dr_mode())) {
            case 1:
-            /* Gain: '<S154>/Multiply' incorporates:
-             *  Constant: '<S28>/&#x3C9;_set'
+            /* Gain: '<S155>/Multiply' incorporates:
+             *  Constant: '<S29>/&#x3C9;_set'
              */
             wturbines_B.CoreSubsys[ForEach_itr].Multiply_d =
-              wturbines_cal->wturbines_CoreSubsys_cal.Multiply_Gain * tmp_9;
+              wturbines_cal->wturbines_CoreSubsys_cal.Multiply_Gain * tmp_a;
 
-            /* Gain: '<S154>/Multiply1' */
+            /* Gain: '<S155>/Multiply1' */
             wturbines_B.CoreSubsys[ForEach_itr].Multiply1_g =
               wturbines_cal->wturbines_CoreSubsys_cal.Multiply1_Gain *
               wturbines_B.CoreSubsys[ForEach_itr].Multiply_d;
 
-            /* MultiPortSwitch: '<S28>/Multiport Switch' */
+            /* MultiPortSwitch: '<S29>/Multiport Switch' */
             wturbines_B.CoreSubsys[ForEach_itr]._drt =
               wturbines_B.CoreSubsys[ForEach_itr].Multiply1_g;
             break;
 
            case 2:
-            /* Product: '<S28>/Divide2' incorporates:
-             *  Constant: '<S28>/Constant10'
-             *  Constant: '<S28>/Constant2'
+            /* Product: '<S29>/Divide2' incorporates:
+             *  Constant: '<S29>/Constant10'
+             *  Constant: '<S29>/Constant2'
              */
             wturbines_B.CoreSubsys[ForEach_itr]._drt_n = tmp_c *
               wturbines_B.CoreSubsys[ForEach_itr].ws_drt / tmp_4;
 
-            /* MultiPortSwitch: '<S28>/Multiport Switch' */
+            /* MultiPortSwitch: '<S29>/Multiport Switch' */
             wturbines_B.CoreSubsys[ForEach_itr]._drt =
               wturbines_B.CoreSubsys[ForEach_itr]._drt_n;
             break;
 
            case 3:
-            /* Product: '<S28>/Divide4' incorporates:
-             *  Constant: '<S28>/Constant11'
-             *  Constant: '<S28>/Constant12'
+            /* Product: '<S29>/Divide4' incorporates:
+             *  Constant: '<S29>/Constant11'
+             *  Constant: '<S29>/Constant12'
              */
             wturbines_B.CoreSubsys[ForEach_itr]._drt_o = tmp_c *
-              wturbines_B.CoreSubsys[ForEach_itr].RateTransition_k / tmp_4;
+              wturbines_B.CoreSubsys[ForEach_itr].RateTransition13 / tmp_4;
 
-            /* MultiPortSwitch: '<S28>/Multiport Switch' */
+            /* MultiPortSwitch: '<S29>/Multiport Switch' */
             wturbines_B.CoreSubsys[ForEach_itr]._drt =
               wturbines_B.CoreSubsys[ForEach_itr]._drt_o;
             break;
 
            case 4:
-            /* MultiPortSwitch: '<S28>/Multiport Switch' */
+            /* MultiPortSwitch: '<S29>/Multiport Switch' */
             wturbines_B.CoreSubsys[ForEach_itr]._drt = 0.0;
             break;
 
            default:
-            /* MultiPortSwitch: '<S28>/Multiport Switch' incorporates:
-             *  Constant: '<S28>/Constant13'
+            /* MultiPortSwitch: '<S29>/Multiport Switch' incorporates:
+             *  Constant: '<S29>/Constant13'
              */
             wturbines_B.CoreSubsys[ForEach_itr]._drt =
               wturbines_cal->wturbines_CoreSubsys_cal.Constant13_Value;
             break;
           }
 
-          /* End of MultiPortSwitch: '<S28>/Multiport Switch' */
+          /* End of MultiPortSwitch: '<S29>/Multiport Switch' */
 
-          /* Switch: '<S28>/Derating' */
+          /* Switch: '<S29>/Derating' */
           wturbines_B.CoreSubsys[ForEach_itr]._sett =
             wturbines_B.CoreSubsys[ForEach_itr]._drt;
         }
 
-        /* End of Switch: '<S28>/Derating' */
+        /* End of Switch: '<S29>/Derating' */
 
         /* RateTransition: '<S2>/Rate Transition4' */
         wturbines_B.CoreSubsys[ForEach_itr].RateTransition4_e =
           wturbines_B.CoreSubsys[ForEach_itr].IC4;
 
-        /* Chart: '<S8>/Wind Turbine State Machine' */
+        /* Chart: '<S9>/Wind Turbine State Machine' */
         wturbines_DW.CoreSubsys[ForEach_itr].sfEvent_g = wturbines_CALL_EVENT;
         if (wturbines_DW.CoreSubsys[ForEach_itr].is_active_c9_wturbines == 0) {
           wturbines_DW.CoreSubsys[ForEach_itr].is_active_c9_wturbines = 1U;
@@ -1538,7 +1565,7 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
            case op_mode_parked:
             d_out = (wturbines_B.CoreSubsys[ForEach_itr].RateTransition2_b &&
                      (!wturbines_B.CoreSubsys[ForEach_itr].RateTransition3_j) &&
-                     (wturbines_B.CoreSubsys[ForEach_itr].RateTransition_k >=
+                     (wturbines_B.CoreSubsys[ForEach_itr].RateTransition13 >=
                       tmp_e));
             if (d_out) {
               wturbines_B.CoreSubsys[ForEach_itr].op_mode_m =
@@ -1549,17 +1576,17 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
            case op_mode_power_production:
             d_out = (((!wturbines_B.CoreSubsys[ForEach_itr].RateTransition2_b) &&
                       (!wturbines_B.CoreSubsys[ForEach_itr].RateTransition3_j)) ||
-                     (wturbines_B.CoreSubsys[ForEach_itr].RateTransition_k <=
+                     (wturbines_B.CoreSubsys[ForEach_itr].RateTransition13 <=
                       tmp_e) || (wturbines_B.CoreSubsys[ForEach_itr].
-                                 RateTransition_k >= *get_cut_out_wind_speed()));
+                                 RateTransition13 >= *get_cut_out_wind_speed()));
             if (d_out) {
               wturbines_B.CoreSubsys[ForEach_itr].op_mode_m =
                 op_mode_shutting_down;
             } else if (wturbines_B.CoreSubsys[ForEach_itr].RateTransition3_j) {
               wturbines_B.CoreSubsys[ForEach_itr].op_mode_m =
                 op_mode_emergency_stop;
-            } else if (wturbines_B.CoreSubsys[ForEach_itr].RateTransition2 <
-                       tmp_f) {
+            } else if (wturbines_B.CoreSubsys[ForEach_itr].RateTransition2 < 0.5
+                       * tmp_f) {
               wturbines_B.CoreSubsys[ForEach_itr].op_mode_m =
                 op_mode_starting_up;
             }
@@ -1589,262 +1616,276 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
             {
               wturbines_B.CoreSubsys[ForEach_itr].op_mode_m =
                 op_mode_power_production;
-            } else if (!wturbines_B.CoreSubsys[ForEach_itr].RateTransition2_b) {
-              wturbines_B.CoreSubsys[ForEach_itr].op_mode_m =
-                op_mode_shutting_down;
+            } else {
+              d_out = (((!wturbines_B.CoreSubsys[ForEach_itr].RateTransition2_b)
+                        && (!wturbines_B.CoreSubsys[ForEach_itr].
+                            RateTransition3_j)) ||
+                       (wturbines_B.CoreSubsys[ForEach_itr].RateTransition13 <=
+                        tmp_e));
+              if (d_out) {
+                wturbines_B.CoreSubsys[ForEach_itr].op_mode_m =
+                  op_mode_shutting_down;
+              }
             }
             break;
           }
         }
 
-        /* RelationalOperator: '<S16>/Compare' incorporates:
-         *  Constant: '<S16>/Constant'
+        /* RelationalOperator: '<S17>/Compare' incorporates:
+         *  Constant: '<S17>/Constant'
          */
         wturbines_B.CoreSubsys[ForEach_itr].Compare =
           (wturbines_B.CoreSubsys[ForEach_itr].op_mode_m ==
            wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant3_const_a);
 
-        /* RelationalOperator: '<S18>/Compare' incorporates:
-         *  Constant: '<S18>/Constant'
+        /* RelationalOperator: '<S19>/Compare' incorporates:
+         *  Constant: '<S19>/Constant'
          */
         wturbines_B.CoreSubsys[ForEach_itr].Compare_c =
           (wturbines_B.CoreSubsys[ForEach_itr].op_mode_m ==
            wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant5_const);
 
-        /* RelationalOperator: '<S17>/Compare' incorporates:
-         *  Constant: '<S17>/Constant'
+        /* RelationalOperator: '<S18>/Compare' incorporates:
+         *  Constant: '<S18>/Constant'
          */
         wturbines_B.CoreSubsys[ForEach_itr].Compare_j =
           (wturbines_B.CoreSubsys[ForEach_itr].op_mode_m ==
            wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant4_const);
 
-        /* Logic: '<S8>/OR1' */
+        /* Logic: '<S9>/OR1' */
         wturbines_B.CoreSubsys[ForEach_itr].OR1 =
           (wturbines_B.CoreSubsys[ForEach_itr].Compare ||
            wturbines_B.CoreSubsys[ForEach_itr].Compare_c ||
            wturbines_B.CoreSubsys[ForEach_itr].Compare_j);
+      }
 
-        /* Math: '<S150>/Square' */
+      /* Gain: '<S11>/Multiply2' */
+      wturbines_B.CoreSubsys[ForEach_itr].Multiply2 = tmp_8 *
+        wturbines_B.CoreSubsys[ForEach_itr].Saturation;
+
+      /* Integrator: '<S247>/Integrator' */
+      wturbines_B.CoreSubsys[ForEach_itr].Integrator =
+        wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_o;
+
+      /* Integrator: '<S194>/Integrator' */
+      wturbines_B.CoreSubsys[ForEach_itr].Integrator_i =
+        wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_l;
+
+      /* Integrator: '<S132>/Integrator' */
+      wturbines_B.CoreSubsys[ForEach_itr].Integrator_e =
+        wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_e;
+
+      /* RateTransition: '<S10>/Rate Transition10' */
+      if (tmp) {
+        /* RateTransition: '<S10>/Rate Transition10' */
+        wturbines_B.CoreSubsys[ForEach_itr].RateTransition10 =
+          wturbines_B.CoreSubsys[ForEach_itr].Multiply2;
+
+        /* RateTransition: '<S10>/Rate Transition3' */
+        wturbines_B.CoreSubsys[ForEach_itr].RateTransition3 =
+          wturbines_B.CoreSubsys[ForEach_itr].RateTransition10;
+
+        /* Math: '<S151>/Square' */
         wturbines_B.CoreSubsys[ForEach_itr].Square_b =
-          wturbines_B.CoreSubsys[ForEach_itr].RateTransition2 *
-          wturbines_B.CoreSubsys[ForEach_itr].RateTransition2;
+          wturbines_B.CoreSubsys[ForEach_itr].RateTransition3 *
+          wturbines_B.CoreSubsys[ForEach_itr].RateTransition3;
 
-        /* Product: '<S150>/Product' incorporates:
-         *  Constant: '<S150>/Constant'
+        /* Product: '<S151>/Product' incorporates:
+         *  Constant: '<S151>/Constant'
          */
         wturbines_B.CoreSubsys[ForEach_itr].Product_b =
           wturbines_B.CoreSubsys[ForEach_itr].Square_b * *get_K_omega_sq();
 
-        /* RelationalOperator: '<S149>/IsNaN1' incorporates:
-         *  Constant: '<S149>/Constant1'
+        /* RelationalOperator: '<S150>/IsNaN1' incorporates:
+         *  Constant: '<S150>/Constant1'
          */
-        wturbines_B.CoreSubsys[ForEach_itr].IsNaN1 = rtIsNaN(tmp_8);
+        wturbines_B.CoreSubsys[ForEach_itr].IsNaN1 = rtIsNaN(tmp_9);
 
-        /* Logic: '<S149>/NOT' */
+        /* Logic: '<S150>/NOT' */
         wturbines_B.CoreSubsys[ForEach_itr].is_not_nan =
           !wturbines_B.CoreSubsys[ForEach_itr].IsNaN1;
 
-        /* Switch: '<S149>/Switch' */
+        /* Switch: '<S150>/Switch' */
         if (wturbines_B.CoreSubsys[ForEach_itr].is_not_nan) {
-          /* Gain: '<S151>/Multiply' incorporates:
-           *  Constant: '<S149>/Constant'
+          /* Gain: '<S152>/Multiply' incorporates:
+           *  Constant: '<S150>/Constant'
            */
           wturbines_B.CoreSubsys[ForEach_itr].Multiply_p =
-            wturbines_cal->wturbines_CoreSubsys_cal.Multiply_Gain_c * tmp_9;
+            wturbines_cal->wturbines_CoreSubsys_cal.Multiply_Gain_c * tmp_a;
 
-          /* Gain: '<S151>/Multiply1' */
+          /* Gain: '<S152>/Multiply1' */
           wturbines_B.CoreSubsys[ForEach_itr].Multiply1_e =
             wturbines_cal->wturbines_CoreSubsys_cal.Multiply1_Gain_f *
             wturbines_B.CoreSubsys[ForEach_itr].Multiply_p;
 
-          /* Sum: '<S149>/Sum' */
+          /* Sum: '<S150>/Sum' */
           wturbines_B.CoreSubsys[ForEach_itr].Sum_d =
-            wturbines_B.CoreSubsys[ForEach_itr].RateTransition2 -
+            wturbines_B.CoreSubsys[ForEach_itr].RateTransition3 -
             wturbines_B.CoreSubsys[ForEach_itr].Multiply1_e;
 
-          /* Product: '<S149>/Product1' incorporates:
-           *  Constant: '<S149>/Constant1'
+          /* Product: '<S150>/Product1' incorporates:
+           *  Constant: '<S150>/Constant1'
            */
           wturbines_B.CoreSubsys[ForEach_itr].Product1_n =
-            wturbines_B.CoreSubsys[ForEach_itr].Sum_d * tmp_8;
+            wturbines_B.CoreSubsys[ForEach_itr].Sum_d * tmp_9;
 
-          /* Math: '<S149>/Exp'
+          /* Math: '<S150>/Exp'
            *
-           * About '<S149>/Exp':
+           * About '<S150>/Exp':
            *  Operator: exp
            */
           wturbines_B.CoreSubsys[ForEach_itr].Exp = std::exp
             (wturbines_B.CoreSubsys[ForEach_itr].Product1_n);
 
-          /* Lookup_n-D: '<S149>/&#x3B2;(ws)' incorporates:
-           *  RateTransition: '<S9>/Rate Transition'
+          /* Lookup_n-D: '<S150>/&#x3B2;(ws)' incorporates:
+           *  RateTransition: '<S10>/Rate Transition13'
            */
           wturbines_B.CoreSubsys[ForEach_itr].ws = look1_binlcapw
-            (wturbines_B.CoreSubsys[ForEach_itr].RateTransition_k, get_u_all(),
-             get_pitch_all(), 22U);
+            (wturbines_B.CoreSubsys[ForEach_itr].RateTransition13, get_u_all(),
+             get_pitch_all(), 14U);
 
-          /* Gain: '<S153>/Gain1' */
+          /* Gain: '<S154>/Gain1' */
           wturbines_B.CoreSubsys[ForEach_itr].Gain1_o =
             wturbines_cal->wturbines_CoreSubsys_cal.Gain1_Gain *
             wturbines_B.CoreSubsys[ForEach_itr].ws;
 
-          /* Product: '<S149>/Product' */
+          /* Product: '<S150>/Product' */
           wturbines_B.CoreSubsys[ForEach_itr].Product_n =
             wturbines_B.CoreSubsys[ForEach_itr].Gain1_o *
             wturbines_B.CoreSubsys[ForEach_itr].Exp;
 
-          /* Switch: '<S149>/Switch' */
+          /* Switch: '<S150>/Switch' */
           wturbines_B.CoreSubsys[ForEach_itr].Switch =
             wturbines_B.CoreSubsys[ForEach_itr].Product_n;
         } else {
-          /* Switch: '<S149>/Switch' incorporates:
-           *  Constant: '<S149>/Constant2'
+          /* Switch: '<S150>/Switch' incorporates:
+           *  Constant: '<S150>/Constant2'
            */
           wturbines_B.CoreSubsys[ForEach_itr].Switch =
             wturbines_cal->wturbines_CoreSubsys_cal.Constant2_Value;
         }
 
-        /* End of Switch: '<S149>/Switch' */
+        /* End of Switch: '<S150>/Switch' */
 
-        /* Sum: '<S28>/Sum' */
+        /* Sum: '<S29>/Sum' */
         wturbines_B.CoreSubsys[ForEach_itr].e_t =
           wturbines_B.CoreSubsys[ForEach_itr].RateTransition2 -
           wturbines_B.CoreSubsys[ForEach_itr]._sett;
 
-        /* Gain: '<S251>/Proportional Gain' */
+        /* Gain: '<S252>/Proportional Gain' */
         wturbines_B.CoreSubsys[ForEach_itr].ProportionalGain = *get_K_p_gen() *
           wturbines_B.CoreSubsys[ForEach_itr].e_t;
 
-        /* Sum: '<S156>/Sum' incorporates:
-         *  Sum: '<S155>/Sum'
+        /* Sum: '<S157>/Sum' incorporates:
+         *  Sum: '<S156>/Sum'
          */
         u1 = wturbines_B.CoreSubsys[ForEach_itr].ws_drt -
-          wturbines_B.CoreSubsys[ForEach_itr].RateTransition_k;
+          wturbines_B.CoreSubsys[ForEach_itr].RateTransition13;
 
-        /* Sum: '<S156>/Sum' */
+        /* Sum: '<S157>/Sum' */
         wturbines_B.CoreSubsys[ForEach_itr].ws_drwst_p = u1;
 
-        /* Product: '<S156>/Divide' */
+        /* Product: '<S157>/Divide' */
         wturbines_B.CoreSubsys[ForEach_itr].Divide =
           wturbines_B.CoreSubsys[ForEach_itr].P_sett /
           wturbines_B.CoreSubsys[ForEach_itr]._sett;
 
-        /* Sum: '<S155>/Sum' */
+        /* Sum: '<S156>/Sum' */
         wturbines_B.CoreSubsys[ForEach_itr].ws_drwst_o = u1;
 
-        /* Gain: '<S198>/Proportional Gain' */
+        /* Gain: '<S199>/Proportional Gain' */
         wturbines_B.CoreSubsys[ForEach_itr].ProportionalGain_d = *get_K_p_pitch()
           * wturbines_B.CoreSubsys[ForEach_itr].e_t;
 
-        /* MultiPortSwitch: '<S26>/Multiport Switch' incorporates:
-         *  Constant: '<S26>/Mode'
+        /* MultiPortSwitch: '<S27>/Multiport Switch' incorporates:
+         *  Constant: '<S27>/Mode'
          */
         switch (static_cast<int32_T>(*get_rotor_speed_ref_mode())) {
          case 1:
-          /* Lookup_n-D: '<S26>/&#x3C9;_ss(u)' incorporates:
-           *  RateTransition: '<S9>/Rate Transition'
+          /* Lookup_n-D: '<S27>/&#x3C9;_ss(u)' incorporates:
+           *  RateTransition: '<S10>/Rate Transition13'
            */
           wturbines_B.CoreSubsys[ForEach_itr]._sst = look1_binlxpw
-            (wturbines_B.CoreSubsys[ForEach_itr].RateTransition_k,
+            (wturbines_B.CoreSubsys[ForEach_itr].RateTransition13,
              get_u_rotor_speed_all(), get_rotor_speed_all(), 1U);
 
-          /* Gain: '<S30>/Multiply' */
+          /* Gain: '<S31>/Multiply' */
           wturbines_B.CoreSubsys[ForEach_itr].Multiply_g =
             wturbines_cal->wturbines_CoreSubsys_cal.Multiply_Gain_e *
             wturbines_B.CoreSubsys[ForEach_itr]._sst;
 
-          /* Gain: '<S30>/Multiply1' */
+          /* Gain: '<S31>/Multiply1' */
           wturbines_B.CoreSubsys[ForEach_itr].Multiply1_j =
             wturbines_cal->wturbines_CoreSubsys_cal.Multiply1_Gain_d *
             wturbines_B.CoreSubsys[ForEach_itr].Multiply_g;
 
-          /* MultiPortSwitch: '<S26>/Multiport Switch' */
+          /* MultiPortSwitch: '<S27>/Multiport Switch' */
           wturbines_B.CoreSubsys[ForEach_itr]._rreft =
             wturbines_B.CoreSubsys[ForEach_itr].Multiply1_j;
           break;
 
          case 2:
-          /* Gain: '<S31>/Multiply' incorporates:
-           *  Constant: '<S26>/&#x3C9;_set'
+          /* Gain: '<S32>/Multiply' incorporates:
+           *  Constant: '<S27>/&#x3C9;_set'
            */
           wturbines_B.CoreSubsys[ForEach_itr].Multiply_l =
-            wturbines_cal->wturbines_CoreSubsys_cal.Multiply_Gain_m * tmp_9;
+            wturbines_cal->wturbines_CoreSubsys_cal.Multiply_Gain_m * tmp_a;
 
-          /* Gain: '<S31>/Multiply1' */
+          /* Gain: '<S32>/Multiply1' */
           wturbines_B.CoreSubsys[ForEach_itr].Multiply1_p =
             wturbines_cal->wturbines_CoreSubsys_cal.Multiply1_Gain_a *
             wturbines_B.CoreSubsys[ForEach_itr].Multiply_l;
 
-          /* MultiPortSwitch: '<S26>/Multiport Switch' */
+          /* MultiPortSwitch: '<S27>/Multiport Switch' */
           wturbines_B.CoreSubsys[ForEach_itr]._rreft =
             wturbines_B.CoreSubsys[ForEach_itr].Multiply1_p;
           break;
 
          case 3:
-          /* Product: '<S26>/Divide4' incorporates:
-           *  Constant: '<S26>/Constant11'
-           *  Constant: '<S26>/Constant12'
+          /* Product: '<S27>/Divide4' incorporates:
+           *  Constant: '<S27>/Constant11'
+           *  Constant: '<S27>/Constant12'
            */
           wturbines_B.CoreSubsys[ForEach_itr]._rreft_l = tmp_c *
-            wturbines_B.CoreSubsys[ForEach_itr].RateTransition_k / tmp_4;
+            wturbines_B.CoreSubsys[ForEach_itr].RateTransition13 / tmp_4;
 
-          /* MultiPortSwitch: '<S26>/Multiport Switch' */
+          /* MultiPortSwitch: '<S27>/Multiport Switch' */
           wturbines_B.CoreSubsys[ForEach_itr]._rreft =
             wturbines_B.CoreSubsys[ForEach_itr]._rreft_l;
           break;
 
          default:
-          /* MultiPortSwitch: '<S26>/Multiport Switch' incorporates:
-           *  Constant: '<S26>/Constant13'
+          /* MultiPortSwitch: '<S27>/Multiport Switch' incorporates:
+           *  Constant: '<S27>/Constant13'
            */
           wturbines_B.CoreSubsys[ForEach_itr]._rreft =
             wturbines_cal->wturbines_CoreSubsys_cal.Constant13_Value_n;
           break;
         }
 
-        /* Sum: '<S26>/Sum' */
+        /* Sum: '<S27>/Sum' */
         wturbines_B.CoreSubsys[ForEach_itr].e_rt =
           wturbines_B.CoreSubsys[ForEach_itr].RateTransition2 -
           wturbines_B.CoreSubsys[ForEach_itr]._rreft;
 
-        /* Gain: '<S136>/Proportional Gain' */
+        /* Gain: '<S137>/Proportional Gain' */
         wturbines_B.CoreSubsys[ForEach_itr].ProportionalGain_p = *get_A_k() *
           wturbines_B.CoreSubsys[ForEach_itr].e_rt;
-      }
 
-      /* End of RateTransition: '<S2>/Rate Transition' */
-
-      /* Product: '<S276>/Divide' */
-      wturbines_B.CoreSubsys[ForEach_itr].t_c =
-        wturbines_B.CoreSubsys[ForEach_itr].Product /
-        wturbines_B.CoreSubsys[ForEach_itr].wst;
-
-      /* Integrator: '<S246>/Integrator' */
-      wturbines_B.CoreSubsys[ForEach_itr].Integrator =
-        wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_o;
-
-      /* Integrator: '<S193>/Integrator' */
-      wturbines_B.CoreSubsys[ForEach_itr].Integrator_i =
-        wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_l;
-
-      /* Integrator: '<S131>/Integrator' */
-      wturbines_B.CoreSubsys[ForEach_itr].Integrator_e =
-        wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_e;
-      if (tmp) {
-        /* Delay: '<S26>/Delay' */
+        /* Delay: '<S27>/Delay' */
         wturbines_B.CoreSubsys[ForEach_itr].Delay =
           wturbines_DW.CoreSubsys[ForEach_itr].Delay_DSTATE;
 
-        /* Gain: '<S95>/Gain' */
+        /* Gain: '<S96>/Gain' */
         wturbines_B.CoreSubsys[ForEach_itr].Gain =
           wturbines_cal->wturbines_CoreSubsys_cal.Gain_Gain *
           wturbines_B.CoreSubsys[ForEach_itr].Delay;
 
-        /* S-Function (sfix_look1_dyn): '<S42>/Gain Dynamic Lookup' incorporates:
-         *  Constant: '<S32>/Gains'
-         *  Constant: '<S34>/Internal breakpoints'
+        /* S-Function (sfix_look1_dyn): '<S43>/Gain Dynamic Lookup' incorporates:
+         *  Constant: '<S33>/Gains'
+         *  Constant: '<S35>/Internal breakpoints'
          */
-        /* Dynamic Look-Up Table Block: '<S42>/Gain Dynamic Lookup'
+        /* Dynamic Look-Up Table Block: '<S43>/Gain Dynamic Lookup'
          * Input0  Data Type:  Floating Point real_T
          * Input1  Data Type:  Floating Point real_T
          * Input2  Data Type:  Floating Point real_T
@@ -1859,29 +1900,31 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
                              &wturbines_cal->wturbines_CoreSubsys_cal.Gainscheduler_GainArrayBreakpoi
                              [0], 1U);
 
-        /* Gain: '<S32>/Gain' */
+        /* Gain: '<S33>/Gain' */
         wturbines_B.CoreSubsys[ForEach_itr].Gain_h = *get_K_p_pitch_gs() *
           wturbines_B.CoreSubsys[ForEach_itr].GainDynamicLookup;
 
-        /* Product: '<S82>/PProd Out' */
+        /* Product: '<S83>/PProd Out' */
         wturbines_B.CoreSubsys[ForEach_itr].PProdOut =
           wturbines_B.CoreSubsys[ForEach_itr].e_rt *
           wturbines_B.CoreSubsys[ForEach_itr].Gain_h;
       }
 
-      /* Integrator: '<S77>/Integrator' */
+      /* End of RateTransition: '<S10>/Rate Transition10' */
+
+      /* Integrator: '<S78>/Integrator' */
       wturbines_B.CoreSubsys[ForEach_itr].Integrator_d =
         wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_oj;
 
-      /* Sum: '<S86>/Sum' */
+      /* Sum: '<S87>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].Sum =
         wturbines_B.CoreSubsys[ForEach_itr].PProdOut +
         wturbines_B.CoreSubsys[ForEach_itr].Integrator_d;
 
-      /* MultiPortSwitch: '<S23>/Multiport Switch' */
+      /* MultiPortSwitch: '<S24>/Multiport Switch' */
       switch (wturbines_B.CoreSubsys[ForEach_itr].RateTransition4_e) {
        case 1:
-        /* MultiPortSwitch: '<S23>/Multiport Switch' */
+        /* MultiPortSwitch: '<S24>/Multiport Switch' */
         wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[0] =
           wturbines_B.CoreSubsys[ForEach_itr].Product_b;
         wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[1] =
@@ -1889,64 +1932,64 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         break;
 
        case 2:
-        /* Switch: '<S156>/Derating' */
+        /* Switch: '<S157>/Derating' */
         if (wturbines_B.CoreSubsys[ForEach_itr].ws_drwst_p >
             wturbines_cal->wturbines_CoreSubsys_cal.Derating_Threshold) {
-          /* Sum: '<S255>/Sum' */
+          /* Sum: '<S256>/Sum' */
           wturbines_B.CoreSubsys[ForEach_itr].Sum_b =
             wturbines_B.CoreSubsys[ForEach_itr].ProportionalGain +
             wturbines_B.CoreSubsys[ForEach_itr].Integrator;
 
-          /* Switch: '<S156>/Derating' */
+          /* Switch: '<S157>/Derating' */
           wturbines_B.CoreSubsys[ForEach_itr].Derating =
             wturbines_B.CoreSubsys[ForEach_itr].Sum_b;
         } else {
-          /* Switch: '<S156>/Derating' */
+          /* Switch: '<S157>/Derating' */
           wturbines_B.CoreSubsys[ForEach_itr].Derating =
             wturbines_B.CoreSubsys[ForEach_itr].Divide;
         }
 
-        /* End of Switch: '<S156>/Derating' */
+        /* End of Switch: '<S157>/Derating' */
 
-        /* Switch: '<S155>/Derating' */
+        /* Switch: '<S156>/Derating' */
         if (wturbines_B.CoreSubsys[ForEach_itr].ws_drwst_o >
             wturbines_cal->wturbines_CoreSubsys_cal.Derating_Threshold_c) {
-          /* Switch: '<S155>/Derating' incorporates:
-           *  Constant: '<S155>/Constant'
+          /* Switch: '<S156>/Derating' incorporates:
+           *  Constant: '<S156>/Constant'
            */
           wturbines_B.CoreSubsys[ForEach_itr].Derating_e =
             wturbines_cal->wturbines_CoreSubsys_cal.Constant_Value_l;
         } else {
-          /* Sum: '<S202>/Sum' */
+          /* Sum: '<S203>/Sum' */
           wturbines_B.CoreSubsys[ForEach_itr].Sum_n =
             wturbines_B.CoreSubsys[ForEach_itr].ProportionalGain_d +
             wturbines_B.CoreSubsys[ForEach_itr].Integrator_i;
 
-          /* Switch: '<S155>/Derating' */
+          /* Switch: '<S156>/Derating' */
           wturbines_B.CoreSubsys[ForEach_itr].Derating_e =
             wturbines_B.CoreSubsys[ForEach_itr].Sum_n;
         }
 
-        /* End of Switch: '<S155>/Derating' */
+        /* End of Switch: '<S156>/Derating' */
 
-        /* Saturate: '<S28>/Saturation' */
+        /* Saturate: '<S29>/Saturation' */
         u0 = wturbines_B.CoreSubsys[ForEach_itr].Derating_e;
         u1 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation_LowerSat;
         u2 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation_UpperSat;
         if (u0 > u2) {
-          /* Saturate: '<S28>/Saturation' */
+          /* Saturate: '<S29>/Saturation' */
           wturbines_B.CoreSubsys[ForEach_itr].Saturation_k = u2;
         } else if (u0 < u1) {
-          /* Saturate: '<S28>/Saturation' */
+          /* Saturate: '<S29>/Saturation' */
           wturbines_B.CoreSubsys[ForEach_itr].Saturation_k = u1;
         } else {
-          /* Saturate: '<S28>/Saturation' */
+          /* Saturate: '<S29>/Saturation' */
           wturbines_B.CoreSubsys[ForEach_itr].Saturation_k = u0;
         }
 
-        /* End of Saturate: '<S28>/Saturation' */
+        /* End of Saturate: '<S29>/Saturation' */
 
-        /* MultiPortSwitch: '<S23>/Multiport Switch' */
+        /* MultiPortSwitch: '<S24>/Multiport Switch' */
         wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[0] =
           wturbines_B.CoreSubsys[ForEach_itr].Derating;
         wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[1] =
@@ -1954,18 +1997,18 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         break;
 
        case 3:
-        /* MultiPortSwitch: '<S23>/Multiport Switch' */
+        /* MultiPortSwitch: '<S24>/Multiport Switch' */
         wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[0] = 0.0;
         wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[1] = 0.0;
         break;
 
        case 4:
-        /* Sum: '<S140>/Sum' */
+        /* Sum: '<S141>/Sum' */
         wturbines_B.CoreSubsys[ForEach_itr].Sum_a =
           wturbines_B.CoreSubsys[ForEach_itr].ProportionalGain_p +
           wturbines_B.CoreSubsys[ForEach_itr].Integrator_e;
 
-        /* MultiPortSwitch: '<S23>/Multiport Switch' */
+        /* MultiPortSwitch: '<S24>/Multiport Switch' */
         wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[0] =
           wturbines_B.CoreSubsys[ForEach_itr].Sum_a;
         wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[1] =
@@ -1973,30 +2016,30 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         break;
 
        default:
-        /* MultiPortSwitch: '<S23>/Multiport Switch' */
+        /* MultiPortSwitch: '<S24>/Multiport Switch' */
         wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[0] = 0.0;
         wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[1] = 0.0;
         break;
       }
 
-      /* End of MultiPortSwitch: '<S23>/Multiport Switch' */
+      /* End of MultiPortSwitch: '<S24>/Multiport Switch' */
 
-      /* Switch: '<S8>/Switch2' */
+      /* Switch: '<S9>/Switch2' */
       if (wturbines_B.CoreSubsys[ForEach_itr].OR1) {
-        /* Switch: '<S8>/Switch2' */
+        /* Switch: '<S9>/Switch2' */
         wturbines_B.CoreSubsys[ForEach_itr].Switch2 =
           wturbines_B.CoreSubsys[ForEach_itr].Gain1_f;
       } else {
-        /* Switch: '<S8>/Switch2' */
+        /* Switch: '<S9>/Switch2' */
         wturbines_B.CoreSubsys[ForEach_itr].Switch2 =
           wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[1];
       }
 
-      /* End of Switch: '<S8>/Switch2' */
+      /* End of Switch: '<S9>/Switch2' */
 
-      /* RateLimiter: '<S8>/Rate Limiter' */
+      /* RateLimiter: '<S9>/Rate Limiter' */
       if (wturbines_DW.CoreSubsys[ForEach_itr].LastMajorTime == (rtInf)) {
-        /* RateLimiter: '<S8>/Rate Limiter' */
+        /* RateLimiter: '<S9>/Rate Limiter' */
         wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_c =
           wturbines_B.CoreSubsys[ForEach_itr].Switch2;
       } else {
@@ -2004,11 +2047,11 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         u2 = u1 - wturbines_DW.CoreSubsys[ForEach_itr].LastMajorTime;
         if (wturbines_DW.CoreSubsys[ForEach_itr].LastMajorTime == u1) {
           if (wturbines_DW.CoreSubsys[ForEach_itr].PrevLimited) {
-            /* RateLimiter: '<S8>/Rate Limiter' */
+            /* RateLimiter: '<S9>/Rate Limiter' */
             wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_c =
               wturbines_DW.CoreSubsys[ForEach_itr].PrevY_m;
           } else {
-            /* RateLimiter: '<S8>/Rate Limiter' */
+            /* RateLimiter: '<S9>/Rate Limiter' */
             wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_c =
               wturbines_B.CoreSubsys[ForEach_itr].Switch2;
           }
@@ -2018,7 +2061,7 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
           u1 = wturbines_B.CoreSubsys[ForEach_itr].Switch2 -
             wturbines_DW.CoreSubsys[ForEach_itr].PrevY_m;
           if (u1 > u0) {
-            /* RateLimiter: '<S8>/Rate Limiter' */
+            /* RateLimiter: '<S9>/Rate Limiter' */
             wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_c =
               wturbines_DW.CoreSubsys[ForEach_itr].PrevY_m + u0;
             d_out = true;
@@ -2026,12 +2069,12 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
             u0 = -tmp_h * 0.017453292519943295;
             u2 *= u0;
             if (u1 < u2) {
-              /* RateLimiter: '<S8>/Rate Limiter' */
+              /* RateLimiter: '<S9>/Rate Limiter' */
               wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_c =
                 wturbines_DW.CoreSubsys[ForEach_itr].PrevY_m + u2;
               d_out = true;
             } else {
-              /* RateLimiter: '<S8>/Rate Limiter' */
+              /* RateLimiter: '<S9>/Rate Limiter' */
               wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_c =
                 wturbines_B.CoreSubsys[ForEach_itr].Switch2;
               d_out = false;
@@ -2044,9 +2087,9 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         }
       }
 
-      /* RateLimiter: '<S270>/Rate Limiter' */
+      /* RateLimiter: '<S271>/Rate Limiter' */
       if (wturbines_DW.CoreSubsys[ForEach_itr].LastMajorTime_n == (rtInf)) {
-        /* RateLimiter: '<S270>/Rate Limiter' */
+        /* RateLimiter: '<S271>/Rate Limiter' */
         wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_n =
           wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_c;
       } else {
@@ -2054,11 +2097,11 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         u2 = u1 - wturbines_DW.CoreSubsys[ForEach_itr].LastMajorTime_n;
         if (wturbines_DW.CoreSubsys[ForEach_itr].LastMajorTime_n == u1) {
           if (wturbines_DW.CoreSubsys[ForEach_itr].PrevLimited_m) {
-            /* RateLimiter: '<S270>/Rate Limiter' */
+            /* RateLimiter: '<S271>/Rate Limiter' */
             wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_n =
               wturbines_DW.CoreSubsys[ForEach_itr].PrevY_d;
           } else {
-            /* RateLimiter: '<S270>/Rate Limiter' */
+            /* RateLimiter: '<S271>/Rate Limiter' */
             wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_n =
               wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_c;
           }
@@ -2068,7 +2111,7 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
           u1 = wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_c -
             wturbines_DW.CoreSubsys[ForEach_itr].PrevY_d;
           if (u1 > u0) {
-            /* RateLimiter: '<S270>/Rate Limiter' */
+            /* RateLimiter: '<S271>/Rate Limiter' */
             wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_n =
               wturbines_DW.CoreSubsys[ForEach_itr].PrevY_d + u0;
             d_out = true;
@@ -2076,12 +2119,12 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
             u2 *=
               wturbines_cal->wturbines_CoreSubsys_cal.RateLimiter_FallingLim_e;
             if (u1 < u2) {
-              /* RateLimiter: '<S270>/Rate Limiter' */
+              /* RateLimiter: '<S271>/Rate Limiter' */
               wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_n =
                 wturbines_DW.CoreSubsys[ForEach_itr].PrevY_d + u2;
               d_out = true;
             } else {
-              /* RateLimiter: '<S270>/Rate Limiter' */
+              /* RateLimiter: '<S271>/Rate Limiter' */
               wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_n =
                 wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_c;
               d_out = false;
@@ -2094,16 +2137,16 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         }
       }
 
-      /* End of RateLimiter: '<S270>/Rate Limiter' */
+      /* End of RateLimiter: '<S271>/Rate Limiter' */
 
-      /* Gain: '<S277>/Gain' */
+      /* Gain: '<S278>/Gain' */
       wturbines_B.CoreSubsys[ForEach_itr].Gain_n =
         wturbines_cal->wturbines_CoreSubsys_cal.Gain_Gain_f *
         wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_n;
 
-      /* Lookup_n-D: '<S10>/Ct(&#x3BB;, &#x3B2;)' */
+      /* Lookup_n-D: '<S11>/Ct(&#x3BB;, &#x3B2;)' */
       /*
-       * About '<S10>/Ct(&#x3BB;, &#x3B2;)':
+       * About '<S11>/Ct(&#x3BB;, &#x3B2;)':
        *       Table size:  20 x 20
        *    Interpolation:  Spline
        *    Extrapolation:  None - Clip
@@ -2119,22 +2162,22 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
           SWork[0]);
       }
 
-      /* Saturate: '<S10>/Saturation1' */
+      /* Saturate: '<S11>/Saturation1' */
       u0 = wturbines_B.CoreSubsys[ForEach_itr].Ct;
       u1 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation1_LowerSat;
       u2 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation1_UpperSat;
       if (u0 > u2) {
-        /* Saturate: '<S10>/Saturation1' */
+        /* Saturate: '<S11>/Saturation1' */
         wturbines_B.CoreSubsys[ForEach_itr].Saturation1 = u2;
       } else if (u0 < u1) {
-        /* Saturate: '<S10>/Saturation1' */
+        /* Saturate: '<S11>/Saturation1' */
         wturbines_B.CoreSubsys[ForEach_itr].Saturation1 = u1;
       } else {
-        /* Saturate: '<S10>/Saturation1' */
+        /* Saturate: '<S11>/Saturation1' */
         wturbines_B.CoreSubsys[ForEach_itr].Saturation1 = u0;
       }
 
-      /* End of Saturate: '<S10>/Saturation1' */
+      /* End of Saturate: '<S11>/Saturation1' */
 
       /* RateTransition: '<S2>/Rate Transition8' */
       if (tmp) {
@@ -2146,14 +2189,22 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         wturbines_B.CoreSubsys[ForEach_itr].RateTransition9_m =
           wturbines_B.CoreSubsys[ForEach_itr].yaw;
 
-        /* RateTransition: '<S9>/Rate Transition5' */
+        /* RateTransition: '<S10>/Rate Transition6' */
+        wturbines_B.CoreSubsys[ForEach_itr].RateTransition6_o =
+          wturbines_B.CoreSubsys[ForEach_itr].RateLimiter;
+
+        /* RateTransition: '<S10>/Rate Transition' */
+        wturbines_B.CoreSubsys[ForEach_itr].RateTransition_k =
+          wturbines_B.CoreSubsys[ForEach_itr].RateTransition6_o;
+
+        /* RateTransition: '<S10>/Rate Transition5' */
         if (wturbines_M->Timing.RateInteraction.TID1_2 == 1) {
           wturbines_DW.CoreSubsys[ForEach_itr].RateTransition5_RdBufIdx =
             static_cast<int8_T>(wturbines_DW.CoreSubsys[ForEach_itr].
                                 RateTransition5_RdBufIdx == 0);
         }
 
-        /* RateTransition: '<S9>/Rate Transition5' */
+        /* RateTransition: '<S10>/Rate Transition5' */
         wturbines_B.CoreSubsys[ForEach_itr].RateTransition5_i =
           wturbines_DW.CoreSubsys[ForEach_itr]
           .RateTransition5_Buf[wturbines_DW.CoreSubsys[ForEach_itr].
@@ -2162,37 +2213,25 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         /* RelationalOperator: '<S21>/Compare' incorporates:
          *  Constant: '<S21>/Constant'
          */
-        wturbines_B.CoreSubsys[ForEach_itr].Compare_n =
-          (wturbines_B.CoreSubsys[ForEach_itr].RateTransition4_e ==
-           wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant8_const);
-
-        /* RelationalOperator: '<S20>/Compare' incorporates:
-         *  Constant: '<S20>/Constant'
-         */
         wturbines_B.CoreSubsys[ForEach_itr].Compare_k =
           (wturbines_B.CoreSubsys[ForEach_itr].op_mode_m ==
            wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant7_const);
 
-        /* Logic: '<S8>/AND' */
-        wturbines_B.CoreSubsys[ForEach_itr].AND =
-          (wturbines_B.CoreSubsys[ForEach_itr].Compare_n &&
-           wturbines_B.CoreSubsys[ForEach_itr].Compare_k);
-
-        /* RelationalOperator: '<S14>/Compare' incorporates:
-         *  Constant: '<S14>/Constant'
+        /* RelationalOperator: '<S15>/Compare' incorporates:
+         *  Constant: '<S15>/Constant'
          */
         wturbines_B.CoreSubsys[ForEach_itr].Compare_d =
           (wturbines_B.CoreSubsys[ForEach_itr].op_mode_m ==
            wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant1_const);
 
-        /* RelationalOperator: '<S15>/Compare' incorporates:
-         *  Constant: '<S15>/Constant'
+        /* RelationalOperator: '<S16>/Compare' incorporates:
+         *  Constant: '<S16>/Constant'
          */
         wturbines_B.CoreSubsys[ForEach_itr].Compare_ks =
           (wturbines_B.CoreSubsys[ForEach_itr].op_mode_m ==
            wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant2_const_l);
 
-        /* Logic: '<S8>/OR' */
+        /* Logic: '<S9>/OR' */
         wturbines_B.CoreSubsys[ForEach_itr].OR =
           (wturbines_B.CoreSubsys[ForEach_itr].Compare_d ||
            wturbines_B.CoreSubsys[ForEach_itr].Compare_ks);
@@ -2200,59 +2239,62 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
 
       /* End of RateTransition: '<S2>/Rate Transition8' */
 
-      /* Switch: '<S8>/Switch4' incorporates:
-       *  Switch: '<S8>/Switch1'
+      /* Switch: '<S9>/Switch4' incorporates:
+       *  Switch: '<S9>/Switch1'
        */
-      if (wturbines_B.CoreSubsys[ForEach_itr].AND) {
-        /* Switch: '<S8>/Switch4' */
-        wturbines_B.CoreSubsys[ForEach_itr].Switch4 = 0.0;
+      if (wturbines_B.CoreSubsys[ForEach_itr].Compare_k) {
+        /* Switch: '<S9>/Switch4' incorporates:
+         *  Constant: '<S9>/Constant5'
+         */
+        wturbines_B.CoreSubsys[ForEach_itr].Switch4 =
+          wturbines_cal->wturbines_CoreSubsys_cal.Constant5_Value;
       } else {
         if (wturbines_B.CoreSubsys[ForEach_itr].OR) {
-          /* Switch: '<S8>/Switch1' incorporates:
-           *  Constant: '<S8>/Constant2'
+          /* Switch: '<S9>/Switch1' incorporates:
+           *  Constant: '<S9>/Constant2'
            */
           wturbines_B.CoreSubsys[ForEach_itr].Switch1 =
             wturbines_cal->wturbines_CoreSubsys_cal.Constant2_Value_d;
         } else {
-          /* Switch: '<S8>/Switch1' */
+          /* Switch: '<S9>/Switch1' */
           wturbines_B.CoreSubsys[ForEach_itr].Switch1 =
             wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[0];
         }
 
-        /* Switch: '<S8>/Switch4' */
+        /* Switch: '<S9>/Switch4' */
         wturbines_B.CoreSubsys[ForEach_itr].Switch4 =
           wturbines_B.CoreSubsys[ForEach_itr].Switch1;
       }
 
-      /* End of Switch: '<S8>/Switch4' */
+      /* End of Switch: '<S9>/Switch4' */
 
-      /* Saturate: '<S8>/Saturation' */
+      /* Saturate: '<S9>/Saturation' */
       u0 = wturbines_B.CoreSubsys[ForEach_itr].Switch4;
       u1 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation_LowerSat_c;
       u2 = *get_max_gen_torque();
       if (u0 > u2) {
-        /* Saturate: '<S8>/Saturation' */
+        /* Saturate: '<S9>/Saturation' */
         wturbines_B.CoreSubsys[ForEach_itr].Saturation_p = u2;
       } else if (u0 < u1) {
-        /* Saturate: '<S8>/Saturation' */
+        /* Saturate: '<S9>/Saturation' */
         wturbines_B.CoreSubsys[ForEach_itr].Saturation_p = u1;
       } else {
-        /* Saturate: '<S8>/Saturation' */
+        /* Saturate: '<S9>/Saturation' */
         wturbines_B.CoreSubsys[ForEach_itr].Saturation_p = u0;
       }
 
-      /* End of Saturate: '<S8>/Saturation' */
+      /* End of Saturate: '<S9>/Saturation' */
 
-      /* Product: '<S273>/Product' */
+      /* Product: '<S274>/Product' */
       wturbines_B.CoreSubsys[ForEach_itr].Product_m =
-        wturbines_B.CoreSubsys[ForEach_itr].Saturation *
+        wturbines_B.CoreSubsys[ForEach_itr].Multiply2 *
         wturbines_B.CoreSubsys[ForEach_itr].Saturation_p;
 
-      /* Gain: '<S273>/Multiply' */
+      /* Gain: '<S274>/Multiply' */
       wturbines_B.CoreSubsys[ForEach_itr].Multiply = tmp_7 *
         wturbines_B.CoreSubsys[ForEach_itr].Product_m;
 
-      /* RateTransition: '<S9>/Rate Transition1' */
+      /* RateTransition: '<S10>/Rate Transition1' */
       if (tmp) {
         if (wturbines_M->Timing.RateInteraction.TID1_2 == 1) {
           wturbines_DW.CoreSubsys[ForEach_itr].RateTransition1_RdBufIdx =
@@ -2260,22 +2302,27 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
                                 RateTransition1_RdBufIdx == 0);
         }
 
-        /* RateTransition: '<S9>/Rate Transition1' */
+        /* RateTransition: '<S10>/Rate Transition1' */
         wturbines_B.CoreSubsys[ForEach_itr].RateTransition1_h =
           wturbines_DW.CoreSubsys[ForEach_itr]
           .RateTransition1_Buf[wturbines_DW.CoreSubsys[ForEach_itr].
           RateTransition1_RdBufIdx];
 
-        /* RateTransition: '<S9>/Rate Transition11' */
+        /* Gain: '<S8>/Gain' */
+        wturbines_B.CoreSubsys[ForEach_itr].Gain_i =
+          wturbines_cal->wturbines_CoreSubsys_cal.Gain_Gain_d *
+          wturbines_B.CoreSubsys[ForEach_itr].RateTransition2;
+
+        /* RateTransition: '<S10>/Rate Transition11' */
         wturbines_B.CoreSubsys[ForEach_itr].RateTransition11 =
           wturbines_B.CoreSubsys[ForEach_itr].Gain_n;
 
-        /* RateTransition: '<S9>/Rate Transition4' */
+        /* RateTransition: '<S10>/Rate Transition4' */
         wturbines_B.CoreSubsys[ForEach_itr].RateTransition4 =
           wturbines_B.CoreSubsys[ForEach_itr].RateTransition11;
       }
 
-      /* Gain: '<S11>/Gain' */
+      /* Gain: '<S12>/Gain' */
       wturbines_B.CoreSubsys[ForEach_itr].Gain_o =
         wturbines_cal->wturbines_CoreSubsys_cal.Gain_Gain_i *
         wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_c;
@@ -2298,7 +2345,7 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_Buf[i + 3] =
           wturbines_B.CoreSubsys[ForEach_itr].RateTransition1_h;
         wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_Buf[i + 4] =
-          wturbines_B.CoreSubsys[ForEach_itr].RateTransition2;
+          wturbines_B.CoreSubsys[ForEach_itr].Gain_i;
         wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_Buf[i + 5] =
           wturbines_B.CoreSubsys[ForEach_itr].RateTransition4;
         wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_Buf[i + 6] =
@@ -2306,25 +2353,25 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_Buf[i + 7] =
           wturbines_B.CoreSubsys[ForEach_itr].Saturation_p;
 
-        /* RelationalOperator: '<S19>/Compare' incorporates:
-         *  Constant: '<S19>/Constant'
+        /* RelationalOperator: '<S20>/Compare' incorporates:
+         *  Constant: '<S20>/Constant'
          */
         wturbines_B.CoreSubsys[ForEach_itr].Compare_b =
           (wturbines_B.CoreSubsys[ForEach_itr].op_mode_m ==
            wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant6_const);
 
-        /* SignalConversion: '<S32>/Signal Copy' incorporates:
-         *  Constant: '<S32>/Gains'
+        /* SignalConversion: '<S33>/Signal Copy' incorporates:
+         *  Constant: '<S33>/Gains'
          */
         wturbines_B.CoreSubsys[ForEach_itr].I[0] =
           wturbines_cal->wturbines_CoreSubsys_cal.Gains_Value[0];
         wturbines_B.CoreSubsys[ForEach_itr].I[1] =
           wturbines_cal->wturbines_CoreSubsys_cal.Gains_Value[1];
 
-        /* S-Function (sfix_look1_dyn): '<S41>/Gain Dynamic Lookup' incorporates:
-         *  Constant: '<S34>/Internal breakpoints'
+        /* S-Function (sfix_look1_dyn): '<S42>/Gain Dynamic Lookup' incorporates:
+         *  Constant: '<S35>/Internal breakpoints'
          */
-        /* Dynamic Look-Up Table Block: '<S41>/Gain Dynamic Lookup'
+        /* Dynamic Look-Up Table Block: '<S42>/Gain Dynamic Lookup'
          * Input0  Data Type:  Floating Point real_T
          * Input1  Data Type:  Floating Point real_T
          * Input2  Data Type:  Floating Point real_T
@@ -2338,89 +2385,97 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
                              &wturbines_cal->wturbines_CoreSubsys_cal.Gainscheduler_GainArrayBreakpoi
                              [0], 1U);
 
-        /* Gain: '<S32>/Gain1' */
+        /* Gain: '<S33>/Gain1' */
         wturbines_B.CoreSubsys[ForEach_itr].Gain1_g = *get_K_i_pitch_gs() *
           wturbines_B.CoreSubsys[ForEach_itr].GainDynamicLookup_f;
 
-        /* Product: '<S74>/IProd Out' */
+        /* Product: '<S75>/IProd Out' */
         wturbines_B.CoreSubsys[ForEach_itr].IProdOut =
           wturbines_B.CoreSubsys[ForEach_itr].e_rt *
           wturbines_B.CoreSubsys[ForEach_itr].Gain1_g;
 
-        /* Gain: '<S128>/Integral Gain' */
+        /* Gain: '<S129>/Integral Gain' */
         wturbines_B.CoreSubsys[ForEach_itr].IntegralGain = *get_B_k() *
           wturbines_B.CoreSubsys[ForEach_itr].e_rt;
       }
 
-      /* StateSpace: '<S33>/H&#x221E; controller ' */
+      /* StateSpace: '<S34>/H&#x221E; controller ' */
       wturbines_B.CoreSubsys[ForEach_itr].Hcontroller = *get_C_k() *
         wturbines_X.CoreSubsys[ForEach_itr].Hcontroller_CSTATE;
       if (tmp) {
-        /* Gain: '<S157>/Multiply' */
+        /* Gain: '<S158>/Multiply' */
         wturbines_B.CoreSubsys[ForEach_itr].Multiply_k =
           wturbines_cal->wturbines_CoreSubsys_cal.Multiply_Gain_g *
           wturbines_B.CoreSubsys[ForEach_itr]._sett;
 
-        /* Gain: '<S157>/Multiply1' */
+        /* Gain: '<S158>/Multiply1' */
         wturbines_B.CoreSubsys[ForEach_itr].Multiply1 =
           wturbines_cal->wturbines_CoreSubsys_cal.Multiply1_Gain_o *
           wturbines_B.CoreSubsys[ForEach_itr].Multiply_k;
 
-        /* Gain: '<S190>/Integral Gain' */
+        /* Gain: '<S191>/Integral Gain' */
         wturbines_B.CoreSubsys[ForEach_itr].IntegralGain_g = *get_K_i_pitch() *
           wturbines_B.CoreSubsys[ForEach_itr].e_t;
 
-        /* Gain: '<S243>/Integral Gain' */
+        /* Gain: '<S244>/Integral Gain' */
         wturbines_B.CoreSubsys[ForEach_itr].IntegralGain_a = *get_K_i_gen() *
           wturbines_B.CoreSubsys[ForEach_itr].e_t;
 
-        /* Gain: '<S264>/Gain' incorporates:
-         *  Constant: '<S264>/Constant'
+        /* Gain: '<S265>/Gain' incorporates:
+         *  Constant: '<S265>/Constant'
          */
-        wturbines_B.CoreSubsys[ForEach_itr]._grated = tmp_a * tmp_9;
+        wturbines_B.CoreSubsys[ForEach_itr]._grated = tmp_8 * tmp_a;
 
-        /* Switch: '<S8>/Switch3' */
+        /* Switch: '<S9>/Switch3' */
         if (wturbines_B.CoreSubsys[ForEach_itr].Compare_b) {
-          /* Product: '<S8>/Product' incorporates:
-           *  Constant: '<S8>/Constant3'
+          /* Product: '<S9>/Product' incorporates:
+           *  Constant: '<S9>/Constant3'
            */
-          wturbines_B.CoreSubsys[ForEach_itr].Product_l = tmp_g *
+          u0 = tmp_g / tmp_8;
+
+          /* Product: '<S9>/Product' */
+          wturbines_B.CoreSubsys[ForEach_itr].Product_l1 = u0 *
             wturbines_B.CoreSubsys[ForEach_itr].RateTransition2;
 
-          /* Switch: '<S8>/Switch3' */
+          /* Switch: '<S9>/Switch3' */
           wturbines_B.CoreSubsys[ForEach_itr].Switch3 =
-            wturbines_B.CoreSubsys[ForEach_itr].Product_l;
+            wturbines_B.CoreSubsys[ForEach_itr].Product_l1;
         } else {
-          /* RelationalOperator: '<S13>/Compare' incorporates:
-           *  Constant: '<S13>/Constant'
+          /* RelationalOperator: '<S14>/Compare' incorporates:
+           *  Constant: '<S14>/Constant'
            */
           wturbines_B.CoreSubsys[ForEach_itr].Compare_i =
             (wturbines_B.CoreSubsys[ForEach_itr].op_mode_m ==
              wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant_const);
 
-          /* Switch: '<S8>/Switch' */
+          /* Switch: '<S9>/Switch' */
           if (wturbines_B.CoreSubsys[ForEach_itr].Compare_i) {
-            /* Switch: '<S8>/Switch' incorporates:
-             *  Constant: '<S8>/Constant1'
+            /* Switch: '<S9>/Switch' incorporates:
+             *  Constant: '<S9>/Constant1'
              */
             wturbines_B.CoreSubsys[ForEach_itr].Switch_a = tmp_g;
           } else {
-            /* Switch: '<S8>/Switch' incorporates:
-             *  Constant: '<S8>/Constant'
+            /* Switch: '<S9>/Switch' incorporates:
+             *  Constant: '<S9>/Constant'
              */
             wturbines_B.CoreSubsys[ForEach_itr].Switch_a =
               wturbines_cal->wturbines_CoreSubsys_cal.Constant_Value;
           }
 
-          /* End of Switch: '<S8>/Switch' */
-
-          /* Switch: '<S8>/Switch3' */
+          /* Switch: '<S9>/Switch3' */
           wturbines_B.CoreSubsys[ForEach_itr].Switch3 =
             wturbines_B.CoreSubsys[ForEach_itr].Switch_a;
         }
 
-        /* RateTransition: '<S9>/Rate Transition7' incorporates:
-         *  RateTransition: '<S9>/Rate Transition8'
+        /* RelationalOperator: '<S22>/Compare' incorporates:
+         *  Constant: '<S22>/Constant'
+         */
+        wturbines_B.CoreSubsys[ForEach_itr].Compare_n =
+          (wturbines_B.CoreSubsys[ForEach_itr].RateTransition4_e ==
+           wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant8_const);
+
+        /* RateTransition: '<S10>/Rate Transition7' incorporates:
+         *  RateTransition: '<S10>/Rate Transition8'
          */
         d_out = (wturbines_M->Timing.RateInteraction.TID1_2 == 1);
         if (d_out) {
@@ -2434,9 +2489,9 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
           RateTransition7_WrBufIdx_e] = wturbines_B.CoreSubsys[ForEach_itr].
           RateLimiter1;
 
-        /* End of RateTransition: '<S9>/Rate Transition7' */
+        /* End of RateTransition: '<S10>/Rate Transition7' */
 
-        /* RateTransition: '<S9>/Rate Transition8' */
+        /* RateTransition: '<S10>/Rate Transition8' */
         if (d_out) {
           wturbines_DW.CoreSubsys[ForEach_itr].RateTransition8_WrBufIdx =
             static_cast<int8_T>(wturbines_DW.CoreSubsys[ForEach_itr].
@@ -2449,83 +2504,8 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
           RateLimiter_p;
       }
 
-      /* Gain: '<S10>/Multiply2' */
-      wturbines_B.CoreSubsys[ForEach_itr].Multiply2 = tmp_a *
-        wturbines_B.CoreSubsys[ForEach_itr].Saturation;
-
-      /* RateTransition: '<S9>/Rate Transition10' */
-      if (tmp) {
-        /* RateTransition: '<S9>/Rate Transition10' */
-        wturbines_B.CoreSubsys[ForEach_itr].RateTransition10 =
-          wturbines_B.CoreSubsys[ForEach_itr].Multiply2;
-
-        /* RateTransition: '<S9>/Rate Transition3' */
-        wturbines_B.CoreSubsys[ForEach_itr].RateTransition3 =
-          wturbines_B.CoreSubsys[ForEach_itr].RateTransition10;
-      }
-
-      /* End of RateTransition: '<S9>/Rate Transition10' */
-
-      /* RelationalOperator: '<S279>/Compare' incorporates:
-       *  Constant: '<S279>/Constant'
-       */
-      wturbines_B.CoreSubsys[ForEach_itr].Compare_p =
-        (wturbines_B.CoreSubsys[ForEach_itr].Gain_n <
-         wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant2_const);
-
-      /* RelationalOperator: '<S280>/Compare' incorporates:
-       *  Constant: '<S280>/Constant'
-       */
-      wturbines_B.CoreSubsys[ForEach_itr].Compare_a =
-        (wturbines_B.CoreSubsys[ForEach_itr].Gain_n >
-         wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant3_const);
-
-      /* Logic: '<S271>/OR1' */
-      wturbines_B.CoreSubsys[ForEach_itr].OR1_g =
-        (wturbines_B.CoreSubsys[ForEach_itr].Compare_p ||
-         wturbines_B.CoreSubsys[ForEach_itr].Compare_a);
-
-      /* Switch: '<S271>/Switch' */
-      if (wturbines_B.CoreSubsys[ForEach_itr].OR1_g) {
-        /* Switch: '<S271>/Switch' incorporates:
-         *  Constant: '<S271>/Constant'
-         */
-        wturbines_B.CoreSubsys[ForEach_itr].Switch_f =
-          wturbines_cal->wturbines_CoreSubsys_cal.Constant_Value_h;
-      } else {
-        /* Lookup_n-D: '<S271>/Cp(&#x3BB;, &#x3B2;) ' incorporates:
-         *  Gain: '<S277>/Gain'
-         *  Product: '<S276>/Divide'
-         */
-        wturbines_B.CoreSubsys[ForEach_itr].Cpt = look2_binlcpw
-          (wturbines_B.CoreSubsys[ForEach_itr].t_c,
-           wturbines_B.CoreSubsys[ForEach_itr].Gain_n, tmp_i, tmp_j, get_Cp_mat(),
-           wturbines_cal->wturbines_CoreSubsys_cal.Cp_maxIndex, 20U);
-
-        /* Switch: '<S271>/Switch' */
-        wturbines_B.CoreSubsys[ForEach_itr].Switch_f =
-          wturbines_B.CoreSubsys[ForEach_itr].Cpt;
-      }
-
-      /* Saturate: '<S271>/Saturation' */
-      u0 = wturbines_B.CoreSubsys[ForEach_itr].Switch_f;
-      u1 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation_LowerSat_j;
-      u2 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation_UpperSat_g;
-      if (u0 > u2) {
-        /* Saturate: '<S271>/Saturation' */
-        wturbines_B.CoreSubsys[ForEach_itr].Saturation_g = u2;
-      } else if (u0 < u1) {
-        /* Saturate: '<S271>/Saturation' */
-        wturbines_B.CoreSubsys[ForEach_itr].Saturation_g = u1;
-      } else {
-        /* Saturate: '<S271>/Saturation' */
-        wturbines_B.CoreSubsys[ForEach_itr].Saturation_g = u0;
-      }
-
-      /* End of Saturate: '<S271>/Saturation' */
-
-      /* MinMax: '<S274>/Max' incorporates:
-       *  Constant: '<S274>/Constant'
+      /* MinMax: '<S275>/Max' incorporates:
+       *  Constant: '<S275>/Constant'
        */
       u0 = wturbines_B.CoreSubsys[ForEach_itr].Saturation;
       u1 = wturbines_cal->wturbines_CoreSubsys_cal.Constant_Value_j;
@@ -2533,40 +2513,98 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         u1 = u0;
       }
 
-      /* MinMax: '<S274>/Max' */
+      /* MinMax: '<S275>/Max' */
       wturbines_B.CoreSubsys[ForEach_itr].Max = u1;
 
-      /* Math: '<S274>/  '
+      /* Math: '<S275>/  '
        *
-       * About '<S274>/  ':
+       * About '<S275>/  ':
        *  Operator: reciprocal
        */
       u0 = wturbines_B.CoreSubsys[ForEach_itr].Max;
 
-      /* Math: '<S274>/  '
+      /* Math: '<S275>/  '
        *
-       * About '<S274>/  ':
+       * About '<S275>/  ':
        *  Operator: reciprocal
        */
       wturbines_B.CoreSubsys[ForEach_itr].ut = 1.0 / u0;
+
+      /* RelationalOperator: '<S280>/Compare' incorporates:
+       *  Constant: '<S280>/Constant'
+       */
+      wturbines_B.CoreSubsys[ForEach_itr].Compare_p =
+        (wturbines_B.CoreSubsys[ForEach_itr].Gain_n <
+         wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant2_const);
+
+      /* RelationalOperator: '<S281>/Compare' incorporates:
+       *  Constant: '<S281>/Constant'
+       */
+      wturbines_B.CoreSubsys[ForEach_itr].Compare_a =
+        (wturbines_B.CoreSubsys[ForEach_itr].Gain_n >
+         wturbines_cal->wturbines_CoreSubsys_cal.CompareToConstant3_const);
+
+      /* Logic: '<S272>/OR1' */
+      wturbines_B.CoreSubsys[ForEach_itr].OR1_g =
+        (wturbines_B.CoreSubsys[ForEach_itr].Compare_p ||
+         wturbines_B.CoreSubsys[ForEach_itr].Compare_a);
+
+      /* Switch: '<S272>/Switch' */
+      if (wturbines_B.CoreSubsys[ForEach_itr].OR1_g) {
+        /* Switch: '<S272>/Switch' incorporates:
+         *  Constant: '<S272>/Constant'
+         */
+        wturbines_B.CoreSubsys[ForEach_itr].Switch_f =
+          wturbines_cal->wturbines_CoreSubsys_cal.Constant_Value_h;
+      } else {
+        /* Lookup_n-D: '<S272>/Cp(&#x3BB;, &#x3B2;) ' incorporates:
+         *  Gain: '<S278>/Gain'
+         *  Product: '<S277>/Divide'
+         */
+        wturbines_B.CoreSubsys[ForEach_itr].Cpt = look2_binlcpw
+          (wturbines_B.CoreSubsys[ForEach_itr].t_c,
+           wturbines_B.CoreSubsys[ForEach_itr].Gain_n, tmp_i, tmp_j, get_Cp_mat(),
+           wturbines_cal->wturbines_CoreSubsys_cal.Cp_maxIndex, 20U);
+
+        /* Switch: '<S272>/Switch' */
+        wturbines_B.CoreSubsys[ForEach_itr].Switch_f =
+          wturbines_B.CoreSubsys[ForEach_itr].Cpt;
+      }
+
+      /* Saturate: '<S272>/Saturation' */
+      u0 = wturbines_B.CoreSubsys[ForEach_itr].Switch_f;
+      u1 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation_LowerSat_j;
+      u2 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation_UpperSat_g;
+      if (u0 > u2) {
+        /* Saturate: '<S272>/Saturation' */
+        wturbines_B.CoreSubsys[ForEach_itr].Saturation_g = u2;
+      } else if (u0 < u1) {
+        /* Saturate: '<S272>/Saturation' */
+        wturbines_B.CoreSubsys[ForEach_itr].Saturation_g = u1;
+      } else {
+        /* Saturate: '<S272>/Saturation' */
+        wturbines_B.CoreSubsys[ForEach_itr].Saturation_g = u0;
+      }
+
+      /* End of Saturate: '<S272>/Saturation' */
       if (tmp) {
-        /* Math: '<S274>/Square' incorporates:
-         *  Constant: '<S274>/Constant7'
+        /* Math: '<S275>/Square' incorporates:
+         *  Constant: '<S275>/Constant7'
          */
         wturbines_B.CoreSubsys[ForEach_itr].Square_o = tmp_4 * tmp_4;
 
-        /* Math: '<S274>/Power' incorporates:
-         *  Constant: '<S274>/Constant8'
+        /* Math: '<S275>/Power' incorporates:
+         *  Constant: '<S275>/Constant8'
          */
         wturbines_B.CoreSubsys[ForEach_itr].Power = rt_powd_snf
-          (wturbines_B.CoreSubsys[ForEach_itr].wst,
+          (wturbines_B.CoreSubsys[ForEach_itr].ws_eff,
            wturbines_cal->wturbines_CoreSubsys_cal.Constant8_Value);
       }
 
-      /* Product: '<S274>/Product' incorporates:
-       *  Constant: '<S274>/Constant4'
-       *  Constant: '<S274>/Constant5'
-       *  Constant: '<S274>/Constant6'
+      /* Product: '<S275>/Product' incorporates:
+       *  Constant: '<S275>/Constant4'
+       *  Constant: '<S275>/Constant5'
+       *  Constant: '<S275>/Constant6'
        */
       wturbines_B.CoreSubsys[ForEach_itr].T_at =
         wturbines_B.CoreSubsys[ForEach_itr].ut *
@@ -2576,35 +2614,51 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
         wturbines_cal->wturbines_CoreSubsys_cal.Constant6_Value_l *
         wturbines_B.CoreSubsys[ForEach_itr].Power;
 
-      /* Saturate: '<S274>/Saturation' */
+      /* Saturate: '<S275>/Saturation' */
       u0 = wturbines_B.CoreSubsys[ForEach_itr].T_at;
       u1 = wturbines_cal->wturbines_CoreSubsys_cal.Saturation_LowerSat_k;
       u2 = *get_rated_torque();
       if (u0 > u2) {
-        /* Saturate: '<S274>/Saturation' */
+        /* Saturate: '<S275>/Saturation' */
         wturbines_B.CoreSubsys[ForEach_itr].Saturation_f = u2;
       } else if (u0 < u1) {
-        /* Saturate: '<S274>/Saturation' */
+        /* Saturate: '<S275>/Saturation' */
         wturbines_B.CoreSubsys[ForEach_itr].Saturation_f = u1;
       } else {
-        /* Saturate: '<S274>/Saturation' */
+        /* Saturate: '<S275>/Saturation' */
         wturbines_B.CoreSubsys[ForEach_itr].Saturation_f = u0;
       }
 
-      /* End of Saturate: '<S274>/Saturation' */
+      /* End of Saturate: '<S275>/Saturation' */
+      if (tmp) {
+      }
 
-      /* Sum: '<S10>/Sum' */
+      /* Gain: '<S11>/Friction' */
+      wturbines_B.CoreSubsys[ForEach_itr].Friction =
+        wturbines_cal->wturbines_CoreSubsys_cal.Friction_Gain *
+        wturbines_B.CoreSubsys[ForEach_itr].Saturation;
+
+      /* Gain: '<S11>/Gain' */
+      wturbines_B.CoreSubsys[ForEach_itr].Gain_m = tmp_8 *
+        wturbines_B.CoreSubsys[ForEach_itr].Saturation_p;
+
+      /* Sum: '<S11>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].Sum_g =
         (wturbines_B.CoreSubsys[ForEach_itr].Saturation_f -
-         wturbines_B.CoreSubsys[ForEach_itr].Saturation_p) -
+         wturbines_B.CoreSubsys[ForEach_itr].Gain_m) -
         wturbines_B.CoreSubsys[ForEach_itr].Switch3;
 
-      /* Gain: '<S10>/Multiply1' */
+      /* Gain: '<S11>/Multiply1' */
       u0 = 1.0 / *get_inertia();
 
-      /* Gain: '<S10>/Multiply1' */
+      /* Gain: '<S11>/Multiply1' */
       wturbines_B.CoreSubsys[ForEach_itr]._dott = u0 *
         wturbines_B.CoreSubsys[ForEach_itr].Sum_g;
+
+      /* Sum: '<S11>/Sum1' */
+      wturbines_B.CoreSubsys[ForEach_itr].Sum1 =
+        wturbines_B.CoreSubsys[ForEach_itr]._dott -
+        wturbines_B.CoreSubsys[ForEach_itr].Friction;
       if (rtmIsMajorTimeStep(wturbines_M)) {
         /* ForEachSliceAssignment generated from: '<S2>/ctrlState' */
         wturbines_B.ImpAsg_InsertedFor_ctrlState_at[ForEach_itr] =
@@ -2651,20 +2705,20 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
     /* Update for Iterator SubSystem: '<Root>/For Each Subsystem' */
     for (ForEach_itr = 0; ForEach_itr < 9; ForEach_itr++) {
       if (rtmIsMajorTimeStep(wturbines_M)) {
-        /* Update for Delay: '<S26>/Delay' */
+        /* Update for Delay: '<S27>/Delay' */
         wturbines_DW.CoreSubsys[ForEach_itr].Delay_DSTATE =
           wturbines_B.CoreSubsys[ForEach_itr].Sum;
       }
 
-      /* Update for RateLimiter: '<S8>/Rate Limiter' incorporates:
-       *  RateLimiter: '<S270>/Rate Limiter'
+      /* Update for RateLimiter: '<S9>/Rate Limiter' incorporates:
+       *  RateLimiter: '<S271>/Rate Limiter'
        */
       wturbines_DW.CoreSubsys[ForEach_itr].PrevY_m =
         wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_c;
       LastMajorTime_tmp = wturbines_M->Timing.t[0];
       wturbines_DW.CoreSubsys[ForEach_itr].LastMajorTime = LastMajorTime_tmp;
 
-      /* Update for RateLimiter: '<S270>/Rate Limiter' */
+      /* Update for RateLimiter: '<S271>/Rate Limiter' */
       wturbines_DW.CoreSubsys[ForEach_itr].PrevY_d =
         wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_n;
       wturbines_DW.CoreSubsys[ForEach_itr].LastMajorTime_n = LastMajorTime_tmp;
@@ -2717,27 +2771,27 @@ void wturbines_derivatives(void)
 
   /* Derivatives for Iterator SubSystem: '<Root>/For Each Subsystem' */
   for (ForEach_itr = 0; ForEach_itr < 9; ForEach_itr++) {
-    /* Derivatives for Integrator: '<S10>/Integrator' */
+    /* Derivatives for Integrator: '<S11>/Integrator' */
     _rtXdot->CoreSubsys[ForEach_itr].Integrator_CSTATE =
-      wturbines_B.CoreSubsys[ForEach_itr]._dott;
+      wturbines_B.CoreSubsys[ForEach_itr].Sum1;
 
-    /* Derivatives for Integrator: '<S246>/Integrator' */
+    /* Derivatives for Integrator: '<S247>/Integrator' */
     _rtXdot->CoreSubsys[ForEach_itr].Integrator_CSTATE_o =
       wturbines_B.CoreSubsys[ForEach_itr].IntegralGain_a;
 
-    /* Derivatives for Integrator: '<S193>/Integrator' */
+    /* Derivatives for Integrator: '<S194>/Integrator' */
     _rtXdot->CoreSubsys[ForEach_itr].Integrator_CSTATE_l =
       wturbines_B.CoreSubsys[ForEach_itr].IntegralGain_g;
 
-    /* Derivatives for Integrator: '<S131>/Integrator' */
+    /* Derivatives for Integrator: '<S132>/Integrator' */
     _rtXdot->CoreSubsys[ForEach_itr].Integrator_CSTATE_e =
       wturbines_B.CoreSubsys[ForEach_itr].IntegralGain;
 
-    /* Derivatives for Integrator: '<S77>/Integrator' */
+    /* Derivatives for Integrator: '<S78>/Integrator' */
     _rtXdot->CoreSubsys[ForEach_itr].Integrator_CSTATE_oj =
       wturbines_B.CoreSubsys[ForEach_itr].IProdOut;
 
-    /* Derivatives for StateSpace: '<S33>/H&#x221E; controller ' */
+    /* Derivatives for StateSpace: '<S34>/H&#x221E; controller ' */
     _rtXdot->CoreSubsys[ForEach_itr].Hcontroller_CSTATE = *get_A_k() *
       wturbines_X.CoreSubsys[ForEach_itr].Hcontroller_CSTATE;
     _rtXdot->CoreSubsys[ForEach_itr].Hcontroller_CSTATE += *get_B_k() * 0.0;
@@ -2761,9 +2815,9 @@ void wturbines_step2(void)             /* Sample time: [0.1s, 0.0s] */
   boolean_T y;
 
   /* Outputs for Enabled SubSystem: '<S3>/Enabled Subsystem' incorporates:
-   *  EnablePort: '<S282>/Enable'
+   *  EnablePort: '<S283>/Enable'
    */
-  /* MATLAB Function: '<S282>/ZoH nan filter1' */
+  /* MATLAB Function: '<S283>/ZoH nan filter1' */
   tmp = *get_Nt();
 
   /* End of Outputs for SubSystem: '<S3>/Enabled Subsystem' */
@@ -2782,73 +2836,73 @@ void wturbines_step2(void)             /* Sample time: [0.1s, 0.0s] */
      */
     wturbines_B.ForEach = ForEach_itr;
 
-    /* RandomNumber: '<S266>/White Noise' */
+    /* RandomNumber: '<S267>/White Noise' */
     wturbines_B.CoreSubsys[ForEach_itr].WhiteNoise =
       wturbines_DW.CoreSubsys[ForEach_itr].NextOutput;
 
-    /* Gain: '<S266>/Output' */
+    /* Gain: '<S267>/Output' */
     x = wturbines_cal->wturbines_CoreSubsys_cal.BandLimitedWhiteNoise_Cov;
     x = std::sqrt(x);
     x /= 0.31622776601683794;
 
-    /* Gain: '<S266>/Output' */
+    /* Gain: '<S267>/Output' */
     wturbines_B.CoreSubsys[ForEach_itr].Output = x *
       wturbines_B.CoreSubsys[ForEach_itr].WhiteNoise;
 
-    /* RateTransition: '<S9>/Rate Transition7' */
+    /* RateTransition: '<S10>/Rate Transition7' */
     wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_RdBufIdx_g =
       static_cast<int8_T>(wturbines_DW.CoreSubsys[ForEach_itr].
                           RateTransition7_RdBufIdx_g == 0);
 
-    /* RateTransition: '<S9>/Rate Transition7' */
+    /* RateTransition: '<S10>/Rate Transition7' */
     wturbines_B.CoreSubsys[ForEach_itr].RateTransition7 =
       wturbines_DW.CoreSubsys[ForEach_itr]
       .RateTransition7_Buf_h[wturbines_DW.CoreSubsys[ForEach_itr].
       RateTransition7_RdBufIdx_g];
 
-    /* Sum: '<S9>/Sum1' */
-    wturbines_B.CoreSubsys[ForEach_itr].Sum1 =
+    /* Sum: '<S10>/Sum1' */
+    wturbines_B.CoreSubsys[ForEach_itr].Sum1_j =
       wturbines_B.CoreSubsys[ForEach_itr].RateTransition7 +
       wturbines_B.CoreSubsys[ForEach_itr].Output;
 
-    /* RateTransition: '<S9>/Rate Transition5' */
+    /* RateTransition: '<S10>/Rate Transition5' */
     wturbines_DW.CoreSubsys[ForEach_itr].RateTransition5_WrBufIdx =
       static_cast<int8_T>(wturbines_DW.CoreSubsys[ForEach_itr].
                           RateTransition5_WrBufIdx == 0);
     wturbines_DW.CoreSubsys[ForEach_itr]
       .RateTransition5_Buf[wturbines_DW.CoreSubsys[ForEach_itr].
-      RateTransition5_WrBufIdx] = wturbines_B.CoreSubsys[ForEach_itr].Sum1;
+      RateTransition5_WrBufIdx] = wturbines_B.CoreSubsys[ForEach_itr].Sum1_j;
 
-    /* RandomNumber: '<S267>/White Noise' */
+    /* RandomNumber: '<S268>/White Noise' */
     wturbines_B.CoreSubsys[ForEach_itr].WhiteNoise_p =
       wturbines_DW.CoreSubsys[ForEach_itr].NextOutput_a;
 
-    /* Gain: '<S267>/Output' */
+    /* Gain: '<S268>/Output' */
     x = wturbines_cal->wturbines_CoreSubsys_cal.BandLimitedWhiteNoise1_Cov;
     x = std::sqrt(x);
     x /= 0.31622776601683794;
 
-    /* Gain: '<S267>/Output' */
+    /* Gain: '<S268>/Output' */
     wturbines_B.CoreSubsys[ForEach_itr].Output_p = x *
       wturbines_B.CoreSubsys[ForEach_itr].WhiteNoise_p;
 
-    /* RateTransition: '<S9>/Rate Transition8' */
+    /* RateTransition: '<S10>/Rate Transition8' */
     wturbines_DW.CoreSubsys[ForEach_itr].RateTransition8_RdBufIdx =
       static_cast<int8_T>(wturbines_DW.CoreSubsys[ForEach_itr].
                           RateTransition8_RdBufIdx == 0);
 
-    /* RateTransition: '<S9>/Rate Transition8' */
+    /* RateTransition: '<S10>/Rate Transition8' */
     wturbines_B.CoreSubsys[ForEach_itr].RateTransition8_e =
       wturbines_DW.CoreSubsys[ForEach_itr]
       .RateTransition8_Buf[wturbines_DW.CoreSubsys[ForEach_itr].
       RateTransition8_RdBufIdx];
 
-    /* Sum: '<S9>/Sum' */
+    /* Sum: '<S10>/Sum' */
     wturbines_B.CoreSubsys[ForEach_itr].Sum_i =
       wturbines_B.CoreSubsys[ForEach_itr].RateTransition8_e +
       wturbines_B.CoreSubsys[ForEach_itr].Output_p;
 
-    /* RateTransition: '<S9>/Rate Transition1' */
+    /* RateTransition: '<S10>/Rate Transition1' */
     wturbines_DW.CoreSubsys[ForEach_itr].RateTransition1_WrBufIdx =
       static_cast<int8_T>(wturbines_DW.CoreSubsys[ForEach_itr].
                           RateTransition1_WrBufIdx == 0);
@@ -2890,19 +2944,19 @@ void wturbines_step2(void)             /* Sample time: [0.1s, 0.0s] */
     }
   }
 
-  /* RelationalOperator: '<S281>/Compare' incorporates:
-   *  Constant: '<S281>/Constant'
+  /* RelationalOperator: '<S282>/Compare' incorporates:
+   *  Constant: '<S282>/Constant'
    */
   wturbines_B.Compare = (wturbines_B.UDPReceive_o2 >
     wturbines_cal->CompareToConstant_const);
 
   /* Outputs for Enabled SubSystem: '<S3>/Enabled Subsystem' incorporates:
-   *  EnablePort: '<S282>/Enable'
+   *  EnablePort: '<S283>/Enable'
    */
   if (wturbines_B.Compare) {
-    /* S-Function (byte2any): '<S282>/Byte Unpack' */
+    /* S-Function (byte2any): '<S283>/Byte Unpack' */
 
-    /* Unpack: <S282>/Byte Unpack */
+    /* Unpack: <S283>/Byte Unpack */
     (void) std::memcpy(&wturbines_B.ByteUnpack_o1[0],
                        &wturbines_B.UDPReceive_o1[0],
                        36);
@@ -2910,22 +2964,22 @@ void wturbines_step2(void)             /* Sample time: [0.1s, 0.0s] */
                        &wturbines_B.UDPReceive_o1[36],
                        36);
 
-    /* MATLAB Function: '<S282>/ZoH nan filter1' */
+    /* MATLAB Function: '<S283>/ZoH nan filter1' */
     wturbines_DW.sfEvent_n = wturbines_CALL_EVENT;
     for (i = 0; i < 9; i++) {
-      /* UnitDelay: '<S282>/Unit Delay' */
+      /* UnitDelay: '<S283>/Unit Delay' */
       wturbines_B.UnitDelay[i] = wturbines_DW.UnitDelay_DSTATE[i];
 
-      /* UnitDelay: '<S282>/Unit Delay1' */
+      /* UnitDelay: '<S283>/Unit Delay1' */
       wturbines_B.UnitDelay1[i] = wturbines_DW.UnitDelay1_DSTATE[i];
 
-      /* MATLAB Function: '<S282>/ZoH nan filter1' */
+      /* MATLAB Function: '<S283>/ZoH nan filter1' */
       ByteUnpack_o1 = wturbines_B.ByteUnpack_o1[i];
       wturbines_B.w_filtered_k[i] = ByteUnpack_o1;
       nan_idx[i] = (ByteUnpack_o1 == 0.0F);
     }
 
-    /* MATLAB Function: '<S282>/ZoH nan filter1' */
+    /* MATLAB Function: '<S283>/ZoH nan filter1' */
     y = true;
     k = 0;
     exitg1 = false;
@@ -2945,23 +2999,23 @@ void wturbines_step2(void)             /* Sample time: [0.1s, 0.0s] */
       }
     }
 
-    /* MATLAB Function: '<S282>/ZoH nan filter2' */
+    /* MATLAB Function: '<S283>/ZoH nan filter2' */
     wturbines_DW.sfEvent = wturbines_CALL_EVENT;
     for (i = 0; i < 9; i++) {
-      /* MATLAB Function: '<S282>/ZoH nan filter1' */
+      /* MATLAB Function: '<S283>/ZoH nan filter1' */
       y = rtIsNaNF(wturbines_B.w_filtered_k[i]);
       if (y) {
         wturbines_B.w_filtered_k[i] = wturbines_B.UnitDelay[i];
       }
 
-      /* MATLAB Function: '<S282>/ZoH nan filter2' */
+      /* MATLAB Function: '<S283>/ZoH nan filter2' */
       ByteUnpack_o1 = wturbines_B.ByteUnpack_o2[i];
       wturbines_B.w_filtered[i] = ByteUnpack_o1;
       y = (ByteUnpack_o1 == 0.0F);
       nan_idx[i] = y;
     }
 
-    /* MATLAB Function: '<S282>/ZoH nan filter2' */
+    /* MATLAB Function: '<S283>/ZoH nan filter2' */
     y = true;
     k = 0;
     exitg1 = false;
@@ -2988,10 +3042,10 @@ void wturbines_step2(void)             /* Sample time: [0.1s, 0.0s] */
         wturbines_B.w_filtered[i] = wturbines_B.UnitDelay1[i];
       }
 
-      /* Update for UnitDelay: '<S282>/Unit Delay' */
+      /* Update for UnitDelay: '<S283>/Unit Delay' */
       wturbines_DW.UnitDelay_DSTATE[i] = wturbines_B.w_filtered_k[i];
 
-      /* Update for UnitDelay: '<S282>/Unit Delay1' */
+      /* Update for UnitDelay: '<S283>/Unit Delay1' */
       wturbines_DW.UnitDelay1_DSTATE[i] = wturbines_B.w_filtered[i];
     }
 
@@ -3053,19 +3107,19 @@ void wturbines_step2(void)             /* Sample time: [0.1s, 0.0s] */
     }
   }
 
-  /* RelationalOperator: '<S285>/Compare' incorporates:
-   *  Constant: '<S285>/Constant'
+  /* RelationalOperator: '<S286>/Compare' incorporates:
+   *  Constant: '<S286>/Constant'
    */
   wturbines_B.Compare_h = (wturbines_B.UDPReceive_o2_m >
     wturbines_cal->CompareToConstant_const_m);
 
   /* Outputs for Enabled SubSystem: '<S4>/Enabled Subsystem' incorporates:
-   *  EnablePort: '<S286>/Enable'
+   *  EnablePort: '<S287>/Enable'
    */
   if (wturbines_B.Compare_h) {
-    /* S-Function (byte2any): '<S286>/Byte Unpack' */
+    /* S-Function (byte2any): '<S287>/Byte Unpack' */
 
-    /* Unpack: <S286>/Byte Unpack */
+    /* Unpack: <S287>/Byte Unpack */
     (void) std::memcpy(&wturbines_B.ByteUnpack_o1_f[0],
                        &wturbines_B.UDPReceive_o1_d[0],
                        9);
@@ -3082,27 +3136,27 @@ void wturbines_step2(void)             /* Sample time: [0.1s, 0.0s] */
                        &wturbines_B.UDPReceive_o1_d[63],
                        36);
     for (i = 0; i < 9; i++) {
-      /* ZeroOrderHold: '<S286>/Zero-Order Hold1' */
+      /* ZeroOrderHold: '<S287>/Zero-Order Hold1' */
       wturbines_B.ZeroOrderHold1[i] = wturbines_B.ByteUnpack_o2_k[i];
     }
 
     for (i = 0; i < 9; i++) {
-      /* ZeroOrderHold: '<S286>/Zero-Order Hold2' */
+      /* ZeroOrderHold: '<S287>/Zero-Order Hold2' */
       wturbines_B.ZeroOrderHold2[i] = wturbines_B.ByteUnpack_o3[i];
     }
 
     for (i = 0; i < 9; i++) {
-      /* ZeroOrderHold: '<S286>/Zero-Order Hold3' */
+      /* ZeroOrderHold: '<S287>/Zero-Order Hold3' */
       wturbines_B.ZeroOrderHold3[i] = wturbines_B.ByteUnpack_o4[i];
     }
 
     for (i = 0; i < 9; i++) {
-      /* ZeroOrderHold: '<S286>/Zero-Order Hold4' */
+      /* ZeroOrderHold: '<S287>/Zero-Order Hold4' */
       wturbines_B.ZeroOrderHold4[i] = wturbines_B.ByteUnpack_o5[i];
     }
 
     for (i = 0; i < 9; i++) {
-      /* ZeroOrderHold: '<S286>/Zero-Order Hold' */
+      /* ZeroOrderHold: '<S287>/Zero-Order Hold' */
       wturbines_B.ZeroOrderHold[i] = wturbines_B.ByteUnpack_o1_f[i];
     }
 
@@ -3165,13 +3219,13 @@ void wturbines_step2(void)             /* Sample time: [0.1s, 0.0s] */
 
   /* Update for Iterator SubSystem: '<Root>/For Each Subsystem' */
   for (ForEach_itr = 0; ForEach_itr < 9; ForEach_itr++) {
-    /* Update for RandomNumber: '<S266>/White Noise' */
+    /* Update for RandomNumber: '<S267>/White Noise' */
     wturbines_DW.CoreSubsys[ForEach_itr].NextOutput = rt_nrand_Upu32_Yd_f_pw_snf
       (&wturbines_DW.CoreSubsys[ForEach_itr].RandSeed) *
       wturbines_cal->wturbines_CoreSubsys_cal.WhiteNoise_StdDev +
       wturbines_cal->wturbines_CoreSubsys_cal.WhiteNoise_Mean;
 
-    /* Update for RandomNumber: '<S267>/White Noise' */
+    /* Update for RandomNumber: '<S268>/White Noise' */
     wturbines_DW.CoreSubsys[ForEach_itr].NextOutput_a =
       rt_nrand_Upu32_Yd_f_pw_snf(&wturbines_DW.CoreSubsys[ForEach_itr].
       RandSeed_j) * wturbines_cal->wturbines_CoreSubsys_cal.WhiteNoise_StdDev_a
@@ -3392,6 +3446,11 @@ void wturbines_initialize(void)
 
   /* non-finite (run-time) assignments */
   wturbines_cal->wturbines_CoreSubsys_cal.Saturation_UpperSat_e = rtInf;
+  wturbines_cal->wturbines_CoreSubsys_cal.RateLimiter_RisingLim = rtInf;
+  wturbines_cal->wturbines_CoreSubsys_cal.RateLimiter_FallingLim = rtMinusInf;
+  wturbines_cal->wturbines_CoreSubsys_cal.RateLimiter1_RisingLim = rtInf;
+  wturbines_cal->wturbines_CoreSubsys_cal.RateLimiter1_FallingLim = rtMinusInf;
+  wturbines_cal->wturbines_CoreSubsys_cal.Saturation2_UpperSat = rtInf;
   wturbines_cal->wturbines_CoreSubsys_cal.Saturation1_UpperSat = rtInf;
 
   /* Set task counter limit used by the static main program */
@@ -3759,13 +3818,13 @@ void wturbines_initialize(void)
       /* SystemInitialize for InitialCondition: '<S2>/IC6' */
       wturbines_B.CoreSubsys[ForEach_itr].IC6 = 0.0;
 
-      /* SystemInitialize for Integrator: '<S10>/Integrator' */
+      /* SystemInitialize for Integrator: '<S11>/Integrator' */
       wturbines_B.CoreSubsys[ForEach_itr].t = 0.0;
 
-      /* SystemInitialize for Saturate: '<S10>/Saturation' */
+      /* SystemInitialize for Saturate: '<S11>/Saturation' */
       wturbines_B.CoreSubsys[ForEach_itr].Saturation = 0.0;
 
-      /* SystemInitialize for Product: '<S276>/Product' */
+      /* SystemInitialize for Product: '<S277>/Product' */
       wturbines_B.CoreSubsys[ForEach_itr].Product = 0.0;
 
       /* SystemInitialize for RateTransition: '<S2>/Rate Transition' */
@@ -3785,35 +3844,38 @@ void wturbines_initialize(void)
       /* SystemInitialize for RateTransition: '<S2>/Rate Transition6' */
       wturbines_B.CoreSubsys[ForEach_itr].RateTransition6 = 0.0;
 
-      /* SystemInitialize for RateLimiter: '<S272>/Rate Limiter' */
+      /* SystemInitialize for RateLimiter: '<S273>/Rate Limiter' */
       wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_p = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].PrevY_n = 0.0;
 
-      /* SystemInitialize for Gain: '<S278>/Gain1' */
+      /* SystemInitialize for Gain: '<S279>/Gain1' */
       wturbines_B.CoreSubsys[ForEach_itr].Gain1 = 0.0;
 
-      /* SystemInitialize for Trigonometry: '<S10>/Trigonometric Function' */
+      /* SystemInitialize for Trigonometry: '<S11>/Trigonometric Function' */
       wturbines_B.CoreSubsys[ForEach_itr].TrigonometricFunction = 0.0;
 
-      /* SystemInitialize for Product: '<S10>/Product' */
-      wturbines_B.CoreSubsys[ForEach_itr].wst = 0.0;
+      /* SystemInitialize for Product: '<S11>/Product' */
+      wturbines_B.CoreSubsys[ForEach_itr].Product_l = 0.0;
 
-      /* SystemInitialize for Product: '<S276>/Divide' */
+      /* SystemInitialize for Saturate: '<S11>/Saturation2' */
+      wturbines_B.CoreSubsys[ForEach_itr].ws_eff = 0.0;
+
+      /* SystemInitialize for Product: '<S277>/Divide' */
       wturbines_B.CoreSubsys[ForEach_itr].t_c = 0.0;
 
-      /* SystemInitialize for Gain: '<S25>/Gain1' */
+      /* SystemInitialize for Gain: '<S26>/Gain1' */
       wturbines_B.CoreSubsys[ForEach_itr].Gain1_f = 0.0;
 
-      /* SystemInitialize for RateTransition: '<S9>/Rate Transition6' */
-      wturbines_B.CoreSubsys[ForEach_itr].RateTransition6_o = 0.0;
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition12' */
+      wturbines_B.CoreSubsys[ForEach_itr].RateTransition12 = 0.0;
 
-      /* SystemInitialize for RateTransition: '<S9>/Rate Transition' */
-      wturbines_B.CoreSubsys[ForEach_itr].RateTransition_k = 0.0;
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition13' */
+      wturbines_B.CoreSubsys[ForEach_itr].RateTransition13 = 0.0;
 
-      /* SystemInitialize for RateTransition: '<S9>/Rate Transition9' */
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition9' */
       wturbines_B.CoreSubsys[ForEach_itr].RateTransition9 = 0.0;
 
-      /* SystemInitialize for RateTransition: '<S9>/Rate Transition2' */
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition2' */
       wturbines_B.CoreSubsys[ForEach_itr].RateTransition2 = 0.0;
 
       /* SystemInitialize for RateTransition: '<S2>/Rate Transition2' */
@@ -3831,130 +3893,139 @@ void wturbines_initialize(void)
       /* SystemInitialize for Switch: '<S6>/Switch' */
       wturbines_B.CoreSubsys[ForEach_itr].P_sett = 0.0;
 
-      /* SystemInitialize for Math: '<S28>/Square' */
+      /* SystemInitialize for Math: '<S29>/Square' */
       wturbines_B.CoreSubsys[ForEach_itr].Square = 0.0;
 
-      /* SystemInitialize for Product: '<S28>/Product1' */
+      /* SystemInitialize for Product: '<S29>/Product1' */
       wturbines_B.CoreSubsys[ForEach_itr].Product1 = 0.0;
 
-      /* SystemInitialize for Product: '<S28>/Divide1' */
+      /* SystemInitialize for Product: '<S29>/Divide1' */
       wturbines_B.CoreSubsys[ForEach_itr].Divide1 = 0.0;
 
-      /* SystemInitialize for Math: '<S28>/Power' */
+      /* SystemInitialize for Math: '<S29>/Power' */
       wturbines_B.CoreSubsys[ForEach_itr].ws_drt = 0.0;
 
-      /* SystemInitialize for Sum: '<S28>/Sum1' */
+      /* SystemInitialize for Sum: '<S29>/Sum1' */
       wturbines_B.CoreSubsys[ForEach_itr].ws_drwst = 0.0;
 
-      /* SystemInitialize for Switch: '<S28>/Derating' */
+      /* SystemInitialize for Switch: '<S29>/Derating' */
       wturbines_B.CoreSubsys[ForEach_itr]._sett = 0.0;
 
       /* SystemInitialize for RateTransition: '<S2>/Rate Transition4' */
       wturbines_B.CoreSubsys[ForEach_itr].RateTransition4_e = 0U;
 
-      /* SystemInitialize for RelationalOperator: '<S16>/Compare' */
+      /* SystemInitialize for RelationalOperator: '<S17>/Compare' */
       wturbines_B.CoreSubsys[ForEach_itr].Compare = false;
 
-      /* SystemInitialize for RelationalOperator: '<S18>/Compare' */
+      /* SystemInitialize for RelationalOperator: '<S19>/Compare' */
       wturbines_B.CoreSubsys[ForEach_itr].Compare_c = false;
 
-      /* SystemInitialize for RelationalOperator: '<S17>/Compare' */
+      /* SystemInitialize for RelationalOperator: '<S18>/Compare' */
       wturbines_B.CoreSubsys[ForEach_itr].Compare_j = false;
 
-      /* SystemInitialize for Logic: '<S8>/OR1' */
+      /* SystemInitialize for Logic: '<S9>/OR1' */
       wturbines_B.CoreSubsys[ForEach_itr].OR1 = false;
 
-      /* SystemInitialize for Math: '<S150>/Square' */
+      /* SystemInitialize for Gain: '<S11>/Multiply2' */
+      wturbines_B.CoreSubsys[ForEach_itr].Multiply2 = 0.0;
+
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition10' */
+      wturbines_B.CoreSubsys[ForEach_itr].RateTransition10 = 0.0;
+
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition3' */
+      wturbines_B.CoreSubsys[ForEach_itr].RateTransition3 = 0.0;
+
+      /* SystemInitialize for Math: '<S151>/Square' */
       wturbines_B.CoreSubsys[ForEach_itr].Square_b = 0.0;
 
-      /* SystemInitialize for Product: '<S150>/Product' */
+      /* SystemInitialize for Product: '<S151>/Product' */
       wturbines_B.CoreSubsys[ForEach_itr].Product_b = 0.0;
 
-      /* SystemInitialize for RelationalOperator: '<S149>/IsNaN1' */
+      /* SystemInitialize for RelationalOperator: '<S150>/IsNaN1' */
       wturbines_B.CoreSubsys[ForEach_itr].IsNaN1 = false;
 
-      /* SystemInitialize for Logic: '<S149>/NOT' */
+      /* SystemInitialize for Logic: '<S150>/NOT' */
       wturbines_B.CoreSubsys[ForEach_itr].is_not_nan = false;
 
-      /* SystemInitialize for Switch: '<S149>/Switch' */
+      /* SystemInitialize for Switch: '<S150>/Switch' */
       wturbines_B.CoreSubsys[ForEach_itr].Switch = 0.0;
 
-      /* SystemInitialize for Sum: '<S28>/Sum' */
+      /* SystemInitialize for Sum: '<S29>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].e_t = 0.0;
 
-      /* SystemInitialize for Gain: '<S251>/Proportional Gain' */
+      /* SystemInitialize for Gain: '<S252>/Proportional Gain' */
       wturbines_B.CoreSubsys[ForEach_itr].ProportionalGain = 0.0;
 
-      /* SystemInitialize for Integrator: '<S246>/Integrator' */
+      /* SystemInitialize for Integrator: '<S247>/Integrator' */
       wturbines_B.CoreSubsys[ForEach_itr].Integrator = 0.0;
 
-      /* SystemInitialize for Sum: '<S156>/Sum' */
+      /* SystemInitialize for Sum: '<S157>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].ws_drwst_p = 0.0;
 
-      /* SystemInitialize for Product: '<S156>/Divide' */
+      /* SystemInitialize for Product: '<S157>/Divide' */
       wturbines_B.CoreSubsys[ForEach_itr].Divide = 0.0;
 
-      /* SystemInitialize for Sum: '<S155>/Sum' */
+      /* SystemInitialize for Sum: '<S156>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].ws_drwst_o = 0.0;
 
-      /* SystemInitialize for Gain: '<S198>/Proportional Gain' */
+      /* SystemInitialize for Gain: '<S199>/Proportional Gain' */
       wturbines_B.CoreSubsys[ForEach_itr].ProportionalGain_d = 0.0;
 
-      /* SystemInitialize for Integrator: '<S193>/Integrator' */
+      /* SystemInitialize for Integrator: '<S194>/Integrator' */
       wturbines_B.CoreSubsys[ForEach_itr].Integrator_i = 0.0;
 
-      /* SystemInitialize for MultiPortSwitch: '<S26>/Multiport Switch' */
+      /* SystemInitialize for MultiPortSwitch: '<S27>/Multiport Switch' */
       wturbines_B.CoreSubsys[ForEach_itr]._rreft = 0.0;
 
-      /* SystemInitialize for Sum: '<S26>/Sum' */
+      /* SystemInitialize for Sum: '<S27>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].e_rt = 0.0;
 
-      /* SystemInitialize for Gain: '<S136>/Proportional Gain' */
+      /* SystemInitialize for Gain: '<S137>/Proportional Gain' */
       wturbines_B.CoreSubsys[ForEach_itr].ProportionalGain_p = 0.0;
 
-      /* SystemInitialize for Integrator: '<S131>/Integrator' */
+      /* SystemInitialize for Integrator: '<S132>/Integrator' */
       wturbines_B.CoreSubsys[ForEach_itr].Integrator_e = 0.0;
 
-      /* SystemInitialize for Delay: '<S26>/Delay' */
+      /* SystemInitialize for Delay: '<S27>/Delay' */
       wturbines_B.CoreSubsys[ForEach_itr].Delay = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].Delay_DSTATE = 0.0;
 
-      /* SystemInitialize for Gain: '<S95>/Gain' */
+      /* SystemInitialize for Gain: '<S96>/Gain' */
       wturbines_B.CoreSubsys[ForEach_itr].Gain = 0.0;
 
-      /* SystemInitialize for Gain: '<S32>/Gain' */
+      /* SystemInitialize for Gain: '<S33>/Gain' */
       wturbines_B.CoreSubsys[ForEach_itr].Gain_h = 0.0;
 
-      /* SystemInitialize for Product: '<S82>/PProd Out' */
+      /* SystemInitialize for Product: '<S83>/PProd Out' */
       wturbines_B.CoreSubsys[ForEach_itr].PProdOut = 0.0;
 
-      /* SystemInitialize for Integrator: '<S77>/Integrator' */
+      /* SystemInitialize for Integrator: '<S78>/Integrator' */
       wturbines_B.CoreSubsys[ForEach_itr].Integrator_d = 0.0;
 
-      /* SystemInitialize for Sum: '<S86>/Sum' */
+      /* SystemInitialize for Sum: '<S87>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].Sum = 0.0;
 
-      /* SystemInitialize for MultiPortSwitch: '<S23>/Multiport Switch' */
+      /* SystemInitialize for MultiPortSwitch: '<S24>/Multiport Switch' */
       wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[0] = 0.0;
       wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[1] = 0.0;
 
-      /* SystemInitialize for Switch: '<S8>/Switch2' */
+      /* SystemInitialize for Switch: '<S9>/Switch2' */
       wturbines_B.CoreSubsys[ForEach_itr].Switch2 = 0.0;
 
-      /* SystemInitialize for RateLimiter: '<S8>/Rate Limiter' */
+      /* SystemInitialize for RateLimiter: '<S9>/Rate Limiter' */
       wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_c = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].PrevY_m = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].LastMajorTime = 0.0;
 
-      /* SystemInitialize for RateLimiter: '<S270>/Rate Limiter' */
+      /* SystemInitialize for RateLimiter: '<S271>/Rate Limiter' */
       wturbines_B.CoreSubsys[ForEach_itr].RateLimiter_n = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].PrevY_d = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].LastMajorTime_n = 0.0;
 
-      /* SystemInitialize for Gain: '<S277>/Gain' */
+      /* SystemInitialize for Gain: '<S278>/Gain' */
       wturbines_B.CoreSubsys[ForEach_itr].Gain_n = 0.0;
 
-      /* SystemInitialize for Saturate: '<S10>/Saturation1' */
+      /* SystemInitialize for Saturate: '<S11>/Saturation1' */
       wturbines_B.CoreSubsys[ForEach_itr].Saturation1 = 0.0;
 
       /* SystemInitialize for RateTransition: '<S2>/Rate Transition8' */
@@ -3963,53 +4034,56 @@ void wturbines_initialize(void)
       /* SystemInitialize for RateTransition: '<S2>/Rate Transition9' */
       wturbines_B.CoreSubsys[ForEach_itr].RateTransition9_m = 0.0;
 
-      /* SystemInitialize for RateTransition: '<S9>/Rate Transition5' */
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition6' */
+      wturbines_B.CoreSubsys[ForEach_itr].RateTransition6_o = 0.0;
+
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition' */
+      wturbines_B.CoreSubsys[ForEach_itr].RateTransition_k = 0.0;
+
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition5' */
       wturbines_B.CoreSubsys[ForEach_itr].RateTransition5_i = 0.0;
 
       /* SystemInitialize for RelationalOperator: '<S21>/Compare' */
-      wturbines_B.CoreSubsys[ForEach_itr].Compare_n = false;
-
-      /* SystemInitialize for RelationalOperator: '<S20>/Compare' */
       wturbines_B.CoreSubsys[ForEach_itr].Compare_k = false;
 
-      /* SystemInitialize for Logic: '<S8>/AND' */
-      wturbines_B.CoreSubsys[ForEach_itr].AND = false;
-
-      /* SystemInitialize for RelationalOperator: '<S14>/Compare' */
+      /* SystemInitialize for RelationalOperator: '<S15>/Compare' */
       wturbines_B.CoreSubsys[ForEach_itr].Compare_d = false;
 
-      /* SystemInitialize for RelationalOperator: '<S15>/Compare' */
+      /* SystemInitialize for RelationalOperator: '<S16>/Compare' */
       wturbines_B.CoreSubsys[ForEach_itr].Compare_ks = false;
 
-      /* SystemInitialize for Logic: '<S8>/OR' */
+      /* SystemInitialize for Logic: '<S9>/OR' */
       wturbines_B.CoreSubsys[ForEach_itr].OR = false;
 
-      /* SystemInitialize for Switch: '<S8>/Switch4' */
+      /* SystemInitialize for Switch: '<S9>/Switch4' */
       wturbines_B.CoreSubsys[ForEach_itr].Switch4 = 0.0;
 
-      /* SystemInitialize for Saturate: '<S8>/Saturation' */
+      /* SystemInitialize for Saturate: '<S9>/Saturation' */
       wturbines_B.CoreSubsys[ForEach_itr].Saturation_p = 0.0;
 
-      /* SystemInitialize for Product: '<S273>/Product' */
+      /* SystemInitialize for Product: '<S274>/Product' */
       wturbines_B.CoreSubsys[ForEach_itr].Product_m = 0.0;
 
-      /* SystemInitialize for Gain: '<S273>/Multiply' */
+      /* SystemInitialize for Gain: '<S274>/Multiply' */
       wturbines_B.CoreSubsys[ForEach_itr].Multiply = 0.0;
 
-      /* SystemInitialize for RateTransition: '<S9>/Rate Transition1' */
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition1' */
       wturbines_B.CoreSubsys[ForEach_itr].RateTransition1_h = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition5_Buf[0] = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition1_Buf[0] = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition5_Buf[1] = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition1_Buf[1] = 0.0;
 
-      /* SystemInitialize for RateTransition: '<S9>/Rate Transition11' */
+      /* SystemInitialize for Gain: '<S8>/Gain' */
+      wturbines_B.CoreSubsys[ForEach_itr].Gain_i = 0.0;
+
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition11' */
       wturbines_B.CoreSubsys[ForEach_itr].RateTransition11 = 0.0;
 
-      /* SystemInitialize for RateTransition: '<S9>/Rate Transition4' */
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition4' */
       wturbines_B.CoreSubsys[ForEach_itr].RateTransition4 = 0.0;
 
-      /* SystemInitialize for Gain: '<S11>/Gain' */
+      /* SystemInitialize for Gain: '<S12>/Gain' */
       wturbines_B.CoreSubsys[ForEach_itr].Gain_o = 0.0;
 
       /* SystemInitialize for RateTransition: '<S2>/Rate Transition7' */
@@ -4018,121 +4092,124 @@ void wturbines_initialize(void)
       std::memset(&wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_Buf[0],
                   0, sizeof(real_T) << 4U);
 
-      /* SystemInitialize for RelationalOperator: '<S19>/Compare' */
+      /* SystemInitialize for RelationalOperator: '<S20>/Compare' */
       wturbines_B.CoreSubsys[ForEach_itr].Compare_b = false;
 
-      /* SystemInitialize for SignalConversion: '<S32>/Signal Copy' */
+      /* SystemInitialize for SignalConversion: '<S33>/Signal Copy' */
       wturbines_B.CoreSubsys[ForEach_itr].I[0] = 0.0;
       wturbines_B.CoreSubsys[ForEach_itr].I[1] = 0.0;
 
-      /* SystemInitialize for Gain: '<S32>/Gain1' */
+      /* SystemInitialize for Gain: '<S33>/Gain1' */
       wturbines_B.CoreSubsys[ForEach_itr].Gain1_g = 0.0;
 
-      /* SystemInitialize for Product: '<S74>/IProd Out' */
+      /* SystemInitialize for Product: '<S75>/IProd Out' */
       wturbines_B.CoreSubsys[ForEach_itr].IProdOut = 0.0;
 
-      /* SystemInitialize for Gain: '<S128>/Integral Gain' */
+      /* SystemInitialize for Gain: '<S129>/Integral Gain' */
       wturbines_B.CoreSubsys[ForEach_itr].IntegralGain = 0.0;
 
-      /* SystemInitialize for StateSpace: '<S33>/H&#x221E; controller ' */
+      /* SystemInitialize for StateSpace: '<S34>/H&#x221E; controller ' */
       wturbines_B.CoreSubsys[ForEach_itr].Hcontroller = 0.0;
 
-      /* SystemInitialize for Gain: '<S157>/Multiply' */
+      /* SystemInitialize for Gain: '<S158>/Multiply' */
       wturbines_B.CoreSubsys[ForEach_itr].Multiply_k = 0.0;
 
-      /* SystemInitialize for Gain: '<S157>/Multiply1' */
+      /* SystemInitialize for Gain: '<S158>/Multiply1' */
       wturbines_B.CoreSubsys[ForEach_itr].Multiply1 = 0.0;
 
-      /* SystemInitialize for Gain: '<S190>/Integral Gain' */
+      /* SystemInitialize for Gain: '<S191>/Integral Gain' */
       wturbines_B.CoreSubsys[ForEach_itr].IntegralGain_g = 0.0;
 
-      /* SystemInitialize for Gain: '<S243>/Integral Gain' */
+      /* SystemInitialize for Gain: '<S244>/Integral Gain' */
       wturbines_B.CoreSubsys[ForEach_itr].IntegralGain_a = 0.0;
 
-      /* SystemInitialize for Gain: '<S264>/Gain' */
+      /* SystemInitialize for Gain: '<S265>/Gain' */
       wturbines_B.CoreSubsys[ForEach_itr]._grated = 0.0;
 
-      /* SystemInitialize for Switch: '<S8>/Switch3' */
+      /* SystemInitialize for Switch: '<S9>/Switch3' */
       wturbines_B.CoreSubsys[ForEach_itr].Switch3 = 0.0;
 
-      /* SystemInitialize for RateTransition: '<S9>/Rate Transition7' */
+      /* SystemInitialize for RelationalOperator: '<S22>/Compare' */
+      wturbines_B.CoreSubsys[ForEach_itr].Compare_n = false;
+
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition7' */
       wturbines_B.CoreSubsys[ForEach_itr].RateTransition7 = 0.0;
 
-      /* SystemInitialize for RateTransition: '<S9>/Rate Transition8' */
+      /* SystemInitialize for RateTransition: '<S10>/Rate Transition8' */
       wturbines_B.CoreSubsys[ForEach_itr].RateTransition8_e = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_Buf_h[0] = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition8_Buf[0] = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_Buf_h[1] = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition8_Buf[1] = 0.0;
 
-      /* SystemInitialize for Gain: '<S10>/Multiply2' */
-      wturbines_B.CoreSubsys[ForEach_itr].Multiply2 = 0.0;
-
-      /* SystemInitialize for RateTransition: '<S9>/Rate Transition10' */
-      wturbines_B.CoreSubsys[ForEach_itr].RateTransition10 = 0.0;
-
-      /* SystemInitialize for RateTransition: '<S9>/Rate Transition3' */
-      wturbines_B.CoreSubsys[ForEach_itr].RateTransition3 = 0.0;
-
-      /* SystemInitialize for RelationalOperator: '<S279>/Compare' */
-      wturbines_B.CoreSubsys[ForEach_itr].Compare_p = false;
-
-      /* SystemInitialize for RelationalOperator: '<S280>/Compare' */
-      wturbines_B.CoreSubsys[ForEach_itr].Compare_a = false;
-
-      /* SystemInitialize for Logic: '<S271>/OR1' */
-      wturbines_B.CoreSubsys[ForEach_itr].OR1_g = false;
-
-      /* SystemInitialize for Switch: '<S271>/Switch' */
-      wturbines_B.CoreSubsys[ForEach_itr].Switch_f = 0.0;
-
-      /* SystemInitialize for Saturate: '<S271>/Saturation' */
-      wturbines_B.CoreSubsys[ForEach_itr].Saturation_g = 0.0;
-
-      /* SystemInitialize for MinMax: '<S274>/Max' */
+      /* SystemInitialize for MinMax: '<S275>/Max' */
       wturbines_B.CoreSubsys[ForEach_itr].Max = 0.0;
 
-      /* SystemInitialize for Math: '<S274>/  '
+      /* SystemInitialize for Math: '<S275>/  '
        *
-       * About '<S274>/  ':
+       * About '<S275>/  ':
        *  Operator: reciprocal
        */
       wturbines_B.CoreSubsys[ForEach_itr].ut = 0.0;
 
-      /* SystemInitialize for Math: '<S274>/Square' */
+      /* SystemInitialize for RelationalOperator: '<S280>/Compare' */
+      wturbines_B.CoreSubsys[ForEach_itr].Compare_p = false;
+
+      /* SystemInitialize for RelationalOperator: '<S281>/Compare' */
+      wturbines_B.CoreSubsys[ForEach_itr].Compare_a = false;
+
+      /* SystemInitialize for Logic: '<S272>/OR1' */
+      wturbines_B.CoreSubsys[ForEach_itr].OR1_g = false;
+
+      /* SystemInitialize for Switch: '<S272>/Switch' */
+      wturbines_B.CoreSubsys[ForEach_itr].Switch_f = 0.0;
+
+      /* SystemInitialize for Saturate: '<S272>/Saturation' */
+      wturbines_B.CoreSubsys[ForEach_itr].Saturation_g = 0.0;
+
+      /* SystemInitialize for Math: '<S275>/Square' */
       wturbines_B.CoreSubsys[ForEach_itr].Square_o = 0.0;
 
-      /* SystemInitialize for Math: '<S274>/Power' */
+      /* SystemInitialize for Math: '<S275>/Power' */
       wturbines_B.CoreSubsys[ForEach_itr].Power = 0.0;
 
-      /* SystemInitialize for Product: '<S274>/Product' */
+      /* SystemInitialize for Product: '<S275>/Product' */
       wturbines_B.CoreSubsys[ForEach_itr].T_at = 0.0;
 
-      /* SystemInitialize for Saturate: '<S274>/Saturation' */
+      /* SystemInitialize for Saturate: '<S275>/Saturation' */
       wturbines_B.CoreSubsys[ForEach_itr].Saturation_f = 0.0;
 
-      /* SystemInitialize for Sum: '<S10>/Sum' */
+      /* SystemInitialize for Gain: '<S11>/Friction' */
+      wturbines_B.CoreSubsys[ForEach_itr].Friction = 0.0;
+
+      /* SystemInitialize for Gain: '<S11>/Gain' */
+      wturbines_B.CoreSubsys[ForEach_itr].Gain_m = 0.0;
+
+      /* SystemInitialize for Sum: '<S11>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].Sum_g = 0.0;
 
-      /* SystemInitialize for Gain: '<S10>/Multiply1' */
+      /* SystemInitialize for Gain: '<S11>/Multiply1' */
       wturbines_B.CoreSubsys[ForEach_itr]._dott = 0.0;
 
-      /* SystemInitialize for RandomNumber: '<S266>/White Noise' */
-      wturbines_B.CoreSubsys[ForEach_itr].WhiteNoise = 0.0;
-
-      /* SystemInitialize for Gain: '<S266>/Output' */
-      wturbines_B.CoreSubsys[ForEach_itr].Output = 0.0;
-
-      /* SystemInitialize for Sum: '<S9>/Sum1' */
+      /* SystemInitialize for Sum: '<S11>/Sum1' */
       wturbines_B.CoreSubsys[ForEach_itr].Sum1 = 0.0;
 
       /* SystemInitialize for RandomNumber: '<S267>/White Noise' */
-      wturbines_B.CoreSubsys[ForEach_itr].WhiteNoise_p = 0.0;
+      wturbines_B.CoreSubsys[ForEach_itr].WhiteNoise = 0.0;
 
       /* SystemInitialize for Gain: '<S267>/Output' */
+      wturbines_B.CoreSubsys[ForEach_itr].Output = 0.0;
+
+      /* SystemInitialize for Sum: '<S10>/Sum1' */
+      wturbines_B.CoreSubsys[ForEach_itr].Sum1_j = 0.0;
+
+      /* SystemInitialize for RandomNumber: '<S268>/White Noise' */
+      wturbines_B.CoreSubsys[ForEach_itr].WhiteNoise_p = 0.0;
+
+      /* SystemInitialize for Gain: '<S268>/Output' */
       wturbines_B.CoreSubsys[ForEach_itr].Output_p = 0.0;
 
-      /* SystemInitialize for Sum: '<S9>/Sum' */
+      /* SystemInitialize for Sum: '<S10>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].Sum_i = 0.0;
 
       /* Start for InitialCondition: '<S2>/IC' */
@@ -4156,7 +4233,7 @@ void wturbines_initialize(void)
       /* Start for InitialCondition: '<S2>/IC6' */
       wturbines_DW.CoreSubsys[ForEach_itr].IC6_FirstOutputTime = true;
 
-      /* Start for Lookup_n-D: '<S10>/Ct(&#x3BB;, &#x3B2;)' */
+      /* Start for Lookup_n-D: '<S11>/Ct(&#x3BB;, &#x3B2;)' */
       {
         rt_LUTnWork *TWork_start = (rt_LUTnWork *)
           &wturbines_DW.CoreSubsys[ForEach_itr].TWork[0];
@@ -4215,7 +4292,7 @@ void wturbines_initialize(void)
                            len * rt_SplWk->m_numYWorkElts[0U] * sizeof(real_T));
       }
 
-      /* InitializeConditions for Integrator: '<S10>/Integrator' */
+      /* InitializeConditions for Integrator: '<S11>/Integrator' */
       wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE =
         wturbines_cal->wturbines_CoreSubsys_cal.Integrator_IC;
 
@@ -4227,43 +4304,43 @@ void wturbines_initialize(void)
       wturbines_DW.CoreSubsys[ForEach_itr].PrevY_e =
         wturbines_cal->wturbines_CoreSubsys_cal.RateLimiter1_IC;
 
-      /* InitializeConditions for RateLimiter: '<S272>/Rate Limiter' */
+      /* InitializeConditions for RateLimiter: '<S273>/Rate Limiter' */
       wturbines_DW.CoreSubsys[ForEach_itr].PrevY_n =
         wturbines_cal->wturbines_CoreSubsys_cal.RateLimiter_IC_e;
 
-      /* InitializeConditions for Integrator: '<S246>/Integrator' */
+      /* InitializeConditions for Integrator: '<S247>/Integrator' */
       wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_o =
         wturbines_cal->wturbines_CoreSubsys_cal.PIcontroller_InitialConditionFo;
 
-      /* InitializeConditions for Integrator: '<S193>/Integrator' */
+      /* InitializeConditions for Integrator: '<S194>/Integrator' */
       wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_l =
         wturbines_cal->wturbines_CoreSubsys_cal.PIcontroller_InitialCondition_i;
 
-      /* InitializeConditions for Integrator: '<S131>/Integrator' */
+      /* InitializeConditions for Integrator: '<S132>/Integrator' */
       wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_e =
         wturbines_cal->wturbines_CoreSubsys_cal.PIcontroller_InitialCondition_g;
 
-      /* InitializeConditions for Delay: '<S26>/Delay' */
+      /* InitializeConditions for Delay: '<S27>/Delay' */
       wturbines_DW.CoreSubsys[ForEach_itr].Delay_DSTATE =
         wturbines_cal->wturbines_CoreSubsys_cal.Delay_InitialCondition;
 
-      /* InitializeConditions for Integrator: '<S77>/Integrator' */
+      /* InitializeConditions for Integrator: '<S78>/Integrator' */
       wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_oj =
         wturbines_cal->wturbines_CoreSubsys_cal.PIController_InitialConditionFo;
 
-      /* InitializeConditions for RateLimiter: '<S8>/Rate Limiter' */
+      /* InitializeConditions for RateLimiter: '<S9>/Rate Limiter' */
       wturbines_DW.CoreSubsys[ForEach_itr].LastMajorTime = (rtInf);
 
-      /* InitializeConditions for RateLimiter: '<S270>/Rate Limiter' */
+      /* InitializeConditions for RateLimiter: '<S271>/Rate Limiter' */
       wturbines_DW.CoreSubsys[ForEach_itr].LastMajorTime_n = (rtInf);
 
-      /* InitializeConditions for RateTransition: '<S9>/Rate Transition5' */
+      /* InitializeConditions for RateTransition: '<S10>/Rate Transition5' */
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition5_Buf[0] =
         wturbines_cal->wturbines_CoreSubsys_cal.RateTransition5_InitialConditio;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition5_WrBufIdx = 0;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition5_RdBufIdx = 1;
 
-      /* InitializeConditions for RateTransition: '<S9>/Rate Transition1' */
+      /* InitializeConditions for RateTransition: '<S10>/Rate Transition1' */
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition1_Buf[0] =
         wturbines_cal->wturbines_CoreSubsys_cal.RateTransition1_InitialConditio;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition1_WrBufIdx = 0;
@@ -4280,23 +4357,23 @@ void wturbines_initialize(void)
 
       /* End of InitializeConditions for RateTransition: '<S2>/Rate Transition7' */
 
-      /* InitializeConditions for StateSpace: '<S33>/H&#x221E; controller ' */
+      /* InitializeConditions for StateSpace: '<S34>/H&#x221E; controller ' */
       wturbines_X.CoreSubsys[ForEach_itr].Hcontroller_CSTATE =
         wturbines_cal->wturbines_CoreSubsys_cal.Hcontroller_InitialCondition;
 
-      /* InitializeConditions for RateTransition: '<S9>/Rate Transition7' */
+      /* InitializeConditions for RateTransition: '<S10>/Rate Transition7' */
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_Buf_h[0] =
         wturbines_cal->wturbines_CoreSubsys_cal.RateTransition7_InitialCondit_j;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_WrBufIdx_e = 0;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_RdBufIdx_g = 1;
 
-      /* InitializeConditions for RateTransition: '<S9>/Rate Transition8' */
+      /* InitializeConditions for RateTransition: '<S10>/Rate Transition8' */
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition8_Buf[0] =
         wturbines_cal->wturbines_CoreSubsys_cal.RateTransition8_InitialConditio;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition8_WrBufIdx = 0;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition8_RdBufIdx = 1;
 
-      /* InitializeConditions for RandomNumber: '<S266>/White Noise' */
+      /* InitializeConditions for RandomNumber: '<S267>/White Noise' */
       tmp = std::floor
         (wturbines_cal->wturbines_CoreSubsys_cal.BandLimitedWhiteNoise_seed);
       if (rtIsNaN(tmp) || rtIsInf(tmp)) {
@@ -4324,9 +4401,9 @@ void wturbines_initialize(void)
         RandSeed) * wturbines_cal->wturbines_CoreSubsys_cal.WhiteNoise_StdDev +
         wturbines_cal->wturbines_CoreSubsys_cal.WhiteNoise_Mean;
 
-      /* End of InitializeConditions for RandomNumber: '<S266>/White Noise' */
+      /* End of InitializeConditions for RandomNumber: '<S267>/White Noise' */
 
-      /* InitializeConditions for RandomNumber: '<S267>/White Noise' */
+      /* InitializeConditions for RandomNumber: '<S268>/White Noise' */
       tmp = std::floor
         (wturbines_cal->wturbines_CoreSubsys_cal.BandLimitedWhiteNoise1_seed);
       if (rtIsNaN(tmp) || rtIsInf(tmp)) {
@@ -4355,171 +4432,171 @@ void wturbines_initialize(void)
         wturbines_cal->wturbines_CoreSubsys_cal.WhiteNoise_StdDev_a +
         wturbines_cal->wturbines_CoreSubsys_cal.WhiteNoise_Mean_h;
 
-      /* End of InitializeConditions for RandomNumber: '<S267>/White Noise' */
+      /* End of InitializeConditions for RandomNumber: '<S268>/White Noise' */
 
-      /* SystemInitialize for Chart: '<S8>/Wind Turbine State Machine' */
+      /* SystemInitialize for Chart: '<S9>/Wind Turbine State Machine' */
       wturbines_DW.CoreSubsys[ForEach_itr].sfEvent_g = wturbines_CALL_EVENT;
       wturbines_DW.CoreSubsys[ForEach_itr].is_active_c9_wturbines = 0U;
       wturbines_B.CoreSubsys[ForEach_itr].op_mode_m = op_mode_None;
 
-      /* SystemInitialize for MATLAB Function: '<S8>/MATLAB Function' */
+      /* SystemInitialize for MATLAB Function: '<S9>/MATLAB Function' */
       wturbines_B.CoreSubsys[ForEach_itr].y = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].last_val_not_empty = false;
       wturbines_DW.CoreSubsys[ForEach_itr].doneDoubleBufferReInit = false;
       wturbines_DW.CoreSubsys[ForEach_itr].sfEvent = wturbines_CALL_EVENT;
 
-      /* SystemInitialize for MATLAB Function: '<S10>/True Yaw Offset' */
+      /* SystemInitialize for MATLAB Function: '<S11>/True Yaw Offset' */
       wturbines_B.CoreSubsys[ForEach_itr].yaw = 0.0;
       wturbines_DW.CoreSubsys[ForEach_itr].doneDoubleBufferReInit_b = false;
       wturbines_DW.CoreSubsys[ForEach_itr].sfEvent_e = wturbines_CALL_EVENT;
 
-      /* SystemInitialize for Lookup_n-D: '<S26>/&#x3C9;_ss(u)' */
+      /* SystemInitialize for Lookup_n-D: '<S27>/&#x3C9;_ss(u)' */
       wturbines_B.CoreSubsys[ForEach_itr]._sst = 0.0;
 
-      /* SystemInitialize for Gain: '<S30>/Multiply' */
+      /* SystemInitialize for Gain: '<S31>/Multiply' */
       wturbines_B.CoreSubsys[ForEach_itr].Multiply_g = 0.0;
 
-      /* SystemInitialize for Gain: '<S30>/Multiply1' */
+      /* SystemInitialize for Gain: '<S31>/Multiply1' */
       wturbines_B.CoreSubsys[ForEach_itr].Multiply1_j = 0.0;
 
-      /* SystemInitialize for Gain: '<S31>/Multiply' */
+      /* SystemInitialize for Gain: '<S32>/Multiply' */
       wturbines_B.CoreSubsys[ForEach_itr].Multiply_l = 0.0;
 
-      /* SystemInitialize for Gain: '<S31>/Multiply1' */
+      /* SystemInitialize for Gain: '<S32>/Multiply1' */
       wturbines_B.CoreSubsys[ForEach_itr].Multiply1_p = 0.0;
 
-      /* SystemInitialize for Product: '<S26>/Divide4' */
+      /* SystemInitialize for Product: '<S27>/Divide4' */
       wturbines_B.CoreSubsys[ForEach_itr]._rreft_l = 0.0;
 
-      /* SystemInitialize for Gain: '<S151>/Multiply' */
+      /* SystemInitialize for Gain: '<S152>/Multiply' */
       wturbines_B.CoreSubsys[ForEach_itr].Multiply_p = 0.0;
 
-      /* SystemInitialize for Gain: '<S151>/Multiply1' */
+      /* SystemInitialize for Gain: '<S152>/Multiply1' */
       wturbines_B.CoreSubsys[ForEach_itr].Multiply1_e = 0.0;
 
-      /* SystemInitialize for Sum: '<S149>/Sum' */
+      /* SystemInitialize for Sum: '<S150>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].Sum_d = 0.0;
 
-      /* SystemInitialize for Product: '<S149>/Product1' */
+      /* SystemInitialize for Product: '<S150>/Product1' */
       wturbines_B.CoreSubsys[ForEach_itr].Product1_n = 0.0;
 
-      /* SystemInitialize for Math: '<S149>/Exp'
+      /* SystemInitialize for Math: '<S150>/Exp'
        *
-       * About '<S149>/Exp':
+       * About '<S150>/Exp':
        *  Operator: exp
        */
       wturbines_B.CoreSubsys[ForEach_itr].Exp = 0.0;
 
-      /* SystemInitialize for Lookup_n-D: '<S149>/&#x3B2;(ws)' */
+      /* SystemInitialize for Lookup_n-D: '<S150>/&#x3B2;(ws)' */
       wturbines_B.CoreSubsys[ForEach_itr].ws = 0.0;
 
-      /* SystemInitialize for Gain: '<S153>/Gain1' */
+      /* SystemInitialize for Gain: '<S154>/Gain1' */
       wturbines_B.CoreSubsys[ForEach_itr].Gain1_o = 0.0;
 
-      /* SystemInitialize for Product: '<S149>/Product' */
+      /* SystemInitialize for Product: '<S150>/Product' */
       wturbines_B.CoreSubsys[ForEach_itr].Product_n = 0.0;
 
-      /* SystemInitialize for Product: '<S28>/Divide3' */
+      /* SystemInitialize for Product: '<S29>/Divide3' */
       wturbines_B.CoreSubsys[ForEach_itr].Divide3 = 0.0;
 
-      /* SystemInitialize for MultiPortSwitch: '<S28>/Multiport Switch' */
+      /* SystemInitialize for MultiPortSwitch: '<S29>/Multiport Switch' */
       wturbines_B.CoreSubsys[ForEach_itr]._drt = 0.0;
 
-      /* SystemInitialize for Gain: '<S154>/Multiply' */
+      /* SystemInitialize for Gain: '<S155>/Multiply' */
       wturbines_B.CoreSubsys[ForEach_itr].Multiply_d = 0.0;
 
-      /* SystemInitialize for Gain: '<S154>/Multiply1' */
+      /* SystemInitialize for Gain: '<S155>/Multiply1' */
       wturbines_B.CoreSubsys[ForEach_itr].Multiply1_g = 0.0;
 
-      /* SystemInitialize for Product: '<S28>/Divide2' */
+      /* SystemInitialize for Product: '<S29>/Divide2' */
       wturbines_B.CoreSubsys[ForEach_itr]._drt_n = 0.0;
 
-      /* SystemInitialize for Product: '<S28>/Divide4' */
+      /* SystemInitialize for Product: '<S29>/Divide4' */
       wturbines_B.CoreSubsys[ForEach_itr]._drt_o = 0.0;
 
-      /* SystemInitialize for Switch: '<S156>/Derating' */
+      /* SystemInitialize for Switch: '<S157>/Derating' */
       wturbines_B.CoreSubsys[ForEach_itr].Derating = 0.0;
 
-      /* SystemInitialize for Switch: '<S155>/Derating' */
+      /* SystemInitialize for Switch: '<S156>/Derating' */
       wturbines_B.CoreSubsys[ForEach_itr].Derating_e = 0.0;
 
-      /* SystemInitialize for Saturate: '<S28>/Saturation' */
+      /* SystemInitialize for Saturate: '<S29>/Saturation' */
       wturbines_B.CoreSubsys[ForEach_itr].Saturation_k = 0.0;
 
-      /* SystemInitialize for Sum: '<S255>/Sum' */
+      /* SystemInitialize for Sum: '<S256>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].Sum_b = 0.0;
 
-      /* SystemInitialize for Sum: '<S202>/Sum' */
+      /* SystemInitialize for Sum: '<S203>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].Sum_n = 0.0;
 
-      /* SystemInitialize for Sum: '<S140>/Sum' */
+      /* SystemInitialize for Sum: '<S141>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].Sum_a = 0.0;
 
-      /* SystemInitialize for Product: '<S8>/Product' */
-      wturbines_B.CoreSubsys[ForEach_itr].Product_l = 0.0;
+      /* SystemInitialize for Product: '<S9>/Product' */
+      wturbines_B.CoreSubsys[ForEach_itr].Product_l1 = 0.0;
 
-      /* SystemInitialize for RelationalOperator: '<S13>/Compare' */
+      /* SystemInitialize for RelationalOperator: '<S14>/Compare' */
       wturbines_B.CoreSubsys[ForEach_itr].Compare_i = false;
 
-      /* SystemInitialize for Switch: '<S8>/Switch' */
+      /* SystemInitialize for Switch: '<S9>/Switch' */
       wturbines_B.CoreSubsys[ForEach_itr].Switch_a = 0.0;
 
-      /* SystemInitialize for Switch: '<S8>/Switch1' */
+      /* SystemInitialize for Switch: '<S9>/Switch1' */
       wturbines_B.CoreSubsys[ForEach_itr].Switch1 = 0.0;
 
-      /* SystemInitialize for Lookup_n-D: '<S271>/Cp(&#x3BB;, &#x3B2;) ' */
+      /* SystemInitialize for Lookup_n-D: '<S272>/Cp(&#x3BB;, &#x3B2;) ' */
       wturbines_B.CoreSubsys[ForEach_itr].Cpt = 0.0;
       ForEach_itr++;
     }
 
     /* End of SystemInitialize for SubSystem: '<Root>/For Each Subsystem' */
-    /* SystemInitialize for MATLAB Function: '<S282>/ZoH nan filter1' */
+    /* SystemInitialize for MATLAB Function: '<S283>/ZoH nan filter1' */
     wturbines_DW.doneDoubleBufferReInit_e = false;
     wturbines_DW.sfEvent_n = wturbines_CALL_EVENT;
 
-    /* SystemInitialize for MATLAB Function: '<S282>/ZoH nan filter2' */
+    /* SystemInitialize for MATLAB Function: '<S283>/ZoH nan filter2' */
     wturbines_DW.doneDoubleBufferReInit = false;
     wturbines_DW.sfEvent = wturbines_CALL_EVENT;
     for (i = 0; i < 9; i++) {
-      /* InitializeConditions for UnitDelay: '<S282>/Unit Delay' */
+      /* InitializeConditions for UnitDelay: '<S283>/Unit Delay' */
       wturbines_DW.UnitDelay_DSTATE[i] =
         wturbines_cal->UnitDelay_InitialCondition;
 
-      /* InitializeConditions for UnitDelay: '<S282>/Unit Delay1' */
+      /* InitializeConditions for UnitDelay: '<S283>/Unit Delay1' */
       wturbines_DW.UnitDelay1_DSTATE[i] =
         wturbines_cal->UnitDelay1_InitialCondition;
 
-      /* SystemInitialize for Outport: '<S282>/WindSpeed' */
+      /* SystemInitialize for Outport: '<S283>/WindSpeed' */
       wturbines_B.w_filtered_k[i] = wturbines_cal->WindSpeed_Y0;
 
-      /* SystemInitialize for Outport: '<S282>/Wind Direction' */
+      /* SystemInitialize for Outport: '<S283>/Wind Direction' */
       wturbines_B.w_filtered[i] = wturbines_cal->WindDirection_Y0;
     }
 
     /* End of SystemInitialize for SubSystem: '<S3>/Enabled Subsystem' */
     for (i = 0; i < 9; i++) {
-      /* SystemInitialize for ZeroOrderHold: '<S286>/Zero-Order Hold' incorporates:
-       *  Outport: '<S286>/bEnable'
+      /* SystemInitialize for ZeroOrderHold: '<S287>/Zero-Order Hold' incorporates:
+       *  Outport: '<S287>/bEnable'
        */
       wturbines_B.ZeroOrderHold[i] = wturbines_cal->bEnable_Y0;
 
-      /* SystemInitialize for ZeroOrderHold: '<S286>/Zero-Order Hold1' incorporates:
-       *  Outport: '<S286>/bStop'
+      /* SystemInitialize for ZeroOrderHold: '<S287>/Zero-Order Hold1' incorporates:
+       *  Outport: '<S287>/bStop'
        */
       wturbines_B.ZeroOrderHold1[i] = wturbines_cal->bStop_Y0;
 
-      /* SystemInitialize for ZeroOrderHold: '<S286>/Zero-Order Hold2' incorporates:
-       *  Outport: '<S286>/eCTRL_MODE'
+      /* SystemInitialize for ZeroOrderHold: '<S287>/Zero-Order Hold2' incorporates:
+       *  Outport: '<S287>/eCTRL_MODE'
        */
       wturbines_B.ZeroOrderHold2[i] = wturbines_cal->eCTRL_MODE_Y0;
 
-      /* SystemInitialize for ZeroOrderHold: '<S286>/Zero-Order Hold3' incorporates:
-       *  Outport: '<S286>/fPowerSpt'
+      /* SystemInitialize for ZeroOrderHold: '<S287>/Zero-Order Hold3' incorporates:
+       *  Outport: '<S287>/fPowerSpt'
        */
       wturbines_B.ZeroOrderHold3[i] = wturbines_cal->fPowerSpt_Y0;
 
-      /* SystemInitialize for ZeroOrderHold: '<S286>/Zero-Order Hold4' incorporates:
-       *  Outport: '<S286>/fYawSpt'
+      /* SystemInitialize for ZeroOrderHold: '<S287>/Zero-Order Hold4' incorporates:
+       *  Outport: '<S287>/fYawSpt'
        */
       wturbines_B.ZeroOrderHold4[i] = wturbines_cal->fYawSpt_Y0;
     }

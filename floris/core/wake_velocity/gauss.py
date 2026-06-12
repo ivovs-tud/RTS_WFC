@@ -73,7 +73,7 @@ class GaussVelocityDeficit(BaseModel):
         yaw_angle = -1 * yaw_angle_i
 
         # Initialize the velocity deficit
-        uR = u_initial * ct_i / (2.0 * (1 - np.sqrt(1 - ct_i)))
+        uR = np.where(ct_i <= 0.05, 0.05, u_initial * ct_i / (2.0 * (1 - np.sqrt(np.maximum(1 - ct_i, 0.05)))))
         u0 = u_initial * np.sqrt(1 - ct_i)
 
         # Initial lateral bounds

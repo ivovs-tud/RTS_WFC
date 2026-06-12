@@ -168,6 +168,7 @@ class GaussVelocityDeflection(BaseModel):
         # initial Gaussian wake expansion
         sigma_z0 = ne.evaluate("rotor_diameter_i * 0.5 * sqrt(uR / (freestream_velocity + u0))")
         sigma_y0 = sigma_z0 * cosd(yaw_i) * cosd(wind_veer)
+        sigma_y0 = np.maximum(sigma_y0, 0.01)
 
         # yR = y - y_i
         xR = x_i # yR * tand(yaw) + x_i
@@ -190,7 +191,11 @@ class GaussVelocityDeflection(BaseModel):
         sigma_z = sigma_z * (x >= x0) + sigma_z0 * (x < x0)
 
         M0_sqrt = np.sqrt(M0)
-        middle_term = np.sqrt(sigma_y * sigma_z / (sigma_y0 * sigma_z0))
+        try:
+            middle_term = np.sqrt(sigma_y * sigma_z / (sigma_y0 * sigma_z0))
+        except FloatingPointError:
+            print(f"sigma_y0: {sigma_y0}    sigma_z0: {sigma_z0}")
+            raise FloatingPointError
         ln_deltaNum = (1.6 + M0_sqrt) * (1.6 * middle_term - M0_sqrt)
         ln_deltaDen = (1.6 - M0_sqrt) * (1.6 * middle_term + M0_sqrt)
 

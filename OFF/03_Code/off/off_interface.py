@@ -253,8 +253,6 @@ class OFFInterface:
                         'turbine': sim_info["turbine"].get('feed', False),
                         'wake': sim_info["wake"].get('feed', False)}
 
-        print(settings_cor['ambient'])
-
         # settings_ctr = sim_info["controller"]["settings"]
         # settings_ctr['time step'] = sim_info["sim"]["sim"]["time step"]
         # settings_ctr['number of turbines'] = len(sim_info["wind_farm"]["farm"]["layout_x"])

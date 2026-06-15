@@ -5,6 +5,10 @@ ambient:
 
   flow_field:
     air_density: 1.225
+    wind_veer: 0.0
+    corr_overwrite_direction: true
+    reference_wind_height: -1
+    wind_shear: 0.12
     turbulence_intensities:
       - 0.14
     wind_directions:

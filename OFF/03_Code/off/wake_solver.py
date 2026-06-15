@@ -321,8 +321,8 @@ class TWFSolver(WakeSolver):
             if idx == i_t_tmp:
                 # Turbine itself
                 twf_layout[idx, :] = wind_farm_layout[i_t, :]
-                twf_t_states.append(wind_farm.turbines[i_t].turbine_states.create_interpolated_state(0, 1, 1, 0))
-                twf_a_states.append(wind_farm.turbines[i_t].ambient_states.create_interpolated_state(0, 1, 1, 0))
+                twf_t_states.append(wind_farm.turbines[i_t].turbine_states.create_interpolated_state(0, 1, 0, 1))
+                twf_a_states.append(wind_farm.turbines[i_t].ambient_states.create_interpolated_state(0, 1, 0, 1))
                 continue
 
             lg.debug('Ambient states: Two OP interpolation')

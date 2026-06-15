@@ -226,7 +226,7 @@ ambient:
     wind_shear: 0.12
     wind_speeds: # a single value indicates constant conditions, multiple lead to linear interpolation
       - 5.0
-      - 5.0   
+      - 10.0   
     wind_speeds_t:
       - 0.0
       - 50.0
@@ -237,16 +237,16 @@ ambient:
     wind_directions: # a single value indicates constant conditions, multiple lead to linear interpolation
       - 0.0 
       - 0.0 
-      - 45.0
-      - 45.0
+      - 0.0
+      - 0.0
       - 0.0
       - 0.0
     wind_directions_t:
       - 0.0
       - 50.0
       - 60.0
-      - 300.0
-      - 310.0  
+      - 100.0
+      - 110.0  
       - 1000.0
     requested_power:
       - 0.0

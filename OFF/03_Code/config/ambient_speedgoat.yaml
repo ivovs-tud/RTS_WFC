@@ -7,7 +7,7 @@ flow_field:
   wind_shear: 0.12
   wind_speeds:
     - 5.0
-    - 5.0
+    - 15.0
   wind_speeds_t:
     - 0.0
     - 50.0
@@ -18,8 +18,8 @@ flow_field:
   wind_directions:
     - 0.0
     - 0.0
-    - 45.0
-    - 45.0
+    - 0.0
+    - 0.0
     - 0.0
     - 0.0
   wind_directions_t:

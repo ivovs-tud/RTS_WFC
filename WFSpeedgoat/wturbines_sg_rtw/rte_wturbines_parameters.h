@@ -41,6 +41,7 @@ struct RTE_Param_Service_T {
   real_T rated_rotor_speed;
   real_T rated_rotor_speed_rads;
   real_T rated_torque;
+  real_T rated_wind_speed;
   real_T rotor_radius;
   real_T rotor_speed_all[2];
   real_T rotor_speed_ref_mode;
@@ -89,6 +90,7 @@ real_T* get_rated_power(void);
 real_T* get_rated_rotor_speed(void);
 real_T* get_rated_rotor_speed_rads(void);
 real_T* get_rated_torque(void);
+real_T* get_rated_wind_speed(void);
 real_T* get_rotor_radius(void);
 real_T* get_rotor_speed_all(void);
 real_T* get_rotor_speed_ref_mode(void);

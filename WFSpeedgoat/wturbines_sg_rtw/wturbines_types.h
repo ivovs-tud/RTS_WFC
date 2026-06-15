@@ -7,9 +7,9 @@
  *
  * Code generation for model "wturbines".
  *
- * Model version              : 1.293
+ * Model version              : 1.306
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C++ source code generated on : Mon Jun 15 13:08:27 2026
+ * C++ source code generated on : Mon Jun 15 21:11:38 2026
  *
  * Target selection: speedgoat.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -58,6 +58,7 @@ struct loggingData
   real_T HorWdDir;
   boolean_T bEnable;
   boolean_T bStop;
+  real_T WSpt;
 };
 
 #endif
@@ -85,9 +86,40 @@ struct loggingDataVectors
   real_T HorWdDir[9];
   boolean_T bEnable[9];
   boolean_T bStop[9];
+  real_T WSpt[9];
 };
 
 #endif
+
+#ifndef struct_cell_wrap_wturbines_T
+#define struct_cell_wrap_wturbines_T
+
+struct cell_wrap_wturbines_T
+{
+  uint32_T f1[8];
+};
+
+#endif                                 /* struct_cell_wrap_wturbines_T */
+
+#ifndef struct_dsp_simulink_MovingAverage_wt_T
+#define struct_dsp_simulink_MovingAverage_wt_T
+
+struct dsp_simulink_MovingAverage_wt_T
+{
+  boolean_T matlabCodegenIsDeleted;
+  int32_T isInitialized;
+  boolean_T isSetupComplete;
+  boolean_T TunablePropsChanged;
+  cell_wrap_wturbines_T inputVarSize;
+  real_T ForgettingFactor;
+  int32_T NumChannels;
+  int32_T FrameLength;
+  real_T pwN;
+  real_T pmN;
+  real_T plambda;
+};
+
+#endif                              /* struct_dsp_simulink_MovingAverage_wt_T */
 
 /* Forward declaration for rtModel */
 typedef struct tag_RTM_wturbines_T RT_MODEL_wturbines_T;

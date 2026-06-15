@@ -7,9 +7,9 @@
  *
  * Code generation for model "wturbines".
  *
- * Model version              : 1.306
+ * Model version              : 1.307
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C++ source code generated on : Mon Jun 15 21:11:38 2026
+ * C++ source code generated on : Mon Jun 15 21:25:00 2026
  *
  * Target selection: speedgoat.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -1921,10 +1921,6 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
     wturbines_B.CoreSubsys[ForEach_itr].Integrator =
       wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_o;
 
-    /* Sum: '<S256>/Sum' */
-    wturbines_B.CoreSubsys[ForEach_itr].Sum = wturbines_B.CoreSubsys[ForEach_itr]
-      .ProportionalGain + wturbines_B.CoreSubsys[ForEach_itr].Integrator;
-
     /* Integrator: '<S194>/Integrator' */
     wturbines_B.CoreSubsys[ForEach_itr].Integrator_i =
       wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_l;
@@ -2051,9 +2047,8 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
       wturbines_X.CoreSubsys[ForEach_itr].Integrator_CSTATE_oj;
 
     /* Sum: '<S87>/Sum' */
-    wturbines_B.CoreSubsys[ForEach_itr].Sum_c =
-      wturbines_B.CoreSubsys[ForEach_itr].PProdOut +
-      wturbines_B.CoreSubsys[ForEach_itr].Integrator_d;
+    wturbines_B.CoreSubsys[ForEach_itr].Sum = wturbines_B.CoreSubsys[ForEach_itr]
+      .PProdOut + wturbines_B.CoreSubsys[ForEach_itr].Integrator_d;
 
     /* MultiPortSwitch: '<S24>/Multiport Switch' */
     switch (wturbines_B.CoreSubsys[ForEach_itr].RateTransition4_e) {
@@ -2069,9 +2064,14 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
       /* Switch: '<S157>/Derating' */
       if (wturbines_B.CoreSubsys[ForEach_itr].ws_drwst_p >
           wturbines_cal->wturbines_CoreSubsys_cal.Derating_Threshold) {
+        /* Sum: '<S256>/Sum' */
+        wturbines_B.CoreSubsys[ForEach_itr].Sum_b =
+          wturbines_B.CoreSubsys[ForEach_itr].ProportionalGain +
+          wturbines_B.CoreSubsys[ForEach_itr].Integrator;
+
         /* Switch: '<S157>/Derating' */
         wturbines_B.CoreSubsys[ForEach_itr].Derating =
-          wturbines_B.CoreSubsys[ForEach_itr].Sum;
+          wturbines_B.CoreSubsys[ForEach_itr].Sum_b;
       } else {
         /* Switch: '<S157>/Derating' */
         wturbines_B.CoreSubsys[ForEach_itr].Derating =
@@ -2141,7 +2141,7 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
       wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[0] =
         wturbines_B.CoreSubsys[ForEach_itr].Sum_a;
       wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[1] =
-        wturbines_B.CoreSubsys[ForEach_itr].Sum_c;
+        wturbines_B.CoreSubsys[ForEach_itr].Sum;
       break;
 
      default:
@@ -2321,13 +2321,13 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
     u2 = *get_max_gen_torque();
     if (u0 > u2) {
       /* Saturate: '<S11>/Saturation' */
-      wturbines_B.CoreSubsys[ForEach_itr].T_gen = u2;
+      wturbines_B.CoreSubsys[ForEach_itr].Tgen = u2;
     } else if (u0 < y_Cp) {
       /* Saturate: '<S11>/Saturation' */
-      wturbines_B.CoreSubsys[ForEach_itr].T_gen = y_Cp;
+      wturbines_B.CoreSubsys[ForEach_itr].Tgen = y_Cp;
     } else {
       /* Saturate: '<S11>/Saturation' */
-      wturbines_B.CoreSubsys[ForEach_itr].T_gen = u0;
+      wturbines_B.CoreSubsys[ForEach_itr].Tgen = u0;
     }
 
     /* End of Saturate: '<S11>/Saturation' */
@@ -2335,7 +2335,7 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
     /* Product: '<S279>/Product' */
     wturbines_B.CoreSubsys[ForEach_itr].Product_m =
       wturbines_B.CoreSubsys[ForEach_itr].GenSpd *
-      wturbines_B.CoreSubsys[ForEach_itr].T_gen;
+      wturbines_B.CoreSubsys[ForEach_itr].Tgen;
 
     /* Gain: '<S279>/Multiply' */
     wturbines_B.CoreSubsys[ForEach_itr].Multiply = tmp_9 *
@@ -2405,7 +2405,7 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_Buf[i + 6] =
         wturbines_B.CoreSubsys[ForEach_itr].Gain_o;
       wturbines_DW.CoreSubsys[ForEach_itr].RateTransition7_Buf[i + 7] =
-        wturbines_B.CoreSubsys[ForEach_itr].T_gen;
+        wturbines_B.CoreSubsys[ForEach_itr].Tgen;
 
       /* RelationalOperator: '<S21>/Compare' incorporates:
        *  Constant: '<S21>/Constant'
@@ -2656,7 +2656,7 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
 
     /* Gain: '<S14>/Gain' */
     wturbines_B.CoreSubsys[ForEach_itr].Gain_m = tmp_b *
-      wturbines_B.CoreSubsys[ForEach_itr].T_gen;
+      wturbines_B.CoreSubsys[ForEach_itr].Tgen;
 
     /* MinMax: '<S280>/Max' incorporates:
      *  Constant: '<S280>/Constant'
@@ -2767,7 +2767,7 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
     wturbines_B.CoreSubsys[ForEach_itr].BusCreator.TBrake =
       wturbines_B.CoreSubsys[ForEach_itr].Tbrake;
     wturbines_B.CoreSubsys[ForEach_itr].BusCreator.TGen =
-      wturbines_B.CoreSubsys[ForEach_itr].T_gen;
+      wturbines_B.CoreSubsys[ForEach_itr].Tgen;
     wturbines_B.CoreSubsys[ForEach_itr].BusCreator.Ta =
       wturbines_B.CoreSubsys[ForEach_itr].Saturation_f;
     wturbines_B.CoreSubsys[ForEach_itr].BusCreator.WsEff =
@@ -2988,7 +2988,7 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
       if (rtmIsMajorTimeStep(wturbines_M)) {
         /* Update for Delay: '<S27>/Delay' */
         wturbines_DW.CoreSubsys[ForEach_itr].Delay_DSTATE =
-          wturbines_B.CoreSubsys[ForEach_itr].Sum_c;
+          wturbines_B.CoreSubsys[ForEach_itr].Sum;
       }
 
       /* Update for RateLimiter: '<S276>/Rate Limiter' */
@@ -4439,9 +4439,6 @@ void wturbines_initialize(void)
       /* SystemInitialize for Integrator: '<S247>/Integrator' */
       wturbines_B.CoreSubsys[ForEach_itr].Integrator = 0.0;
 
-      /* SystemInitialize for Sum: '<S256>/Sum' */
-      wturbines_B.CoreSubsys[ForEach_itr].Sum = 0.0;
-
       /* SystemInitialize for Sum: '<S157>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].ws_drwst_p = 0.0;
 
@@ -4489,7 +4486,7 @@ void wturbines_initialize(void)
       wturbines_B.CoreSubsys[ForEach_itr].Integrator_d = 0.0;
 
       /* SystemInitialize for Sum: '<S87>/Sum' */
-      wturbines_B.CoreSubsys[ForEach_itr].Sum_c = 0.0;
+      wturbines_B.CoreSubsys[ForEach_itr].Sum = 0.0;
 
       /* SystemInitialize for MultiPortSwitch: '<S24>/Multiport Switch' */
       wturbines_B.CoreSubsys[ForEach_itr].MultiportSwitch[0] = 0.0;
@@ -4534,7 +4531,7 @@ void wturbines_initialize(void)
       wturbines_B.CoreSubsys[ForEach_itr].Switch5 = 0.0;
 
       /* SystemInitialize for Saturate: '<S11>/Saturation' */
-      wturbines_B.CoreSubsys[ForEach_itr].T_gen = 0.0;
+      wturbines_B.CoreSubsys[ForEach_itr].Tgen = 0.0;
 
       /* SystemInitialize for Product: '<S279>/Product' */
       wturbines_B.CoreSubsys[ForEach_itr].Product_m = 0.0;
@@ -5299,6 +5296,9 @@ void wturbines_initialize(void)
 
       /* SystemInitialize for Saturate: '<S29>/Saturation' */
       wturbines_B.CoreSubsys[ForEach_itr].Saturation_k = 0.0;
+
+      /* SystemInitialize for Sum: '<S256>/Sum' */
+      wturbines_B.CoreSubsys[ForEach_itr].Sum_b = 0.0;
 
       /* SystemInitialize for Sum: '<S203>/Sum' */
       wturbines_B.CoreSubsys[ForEach_itr].Sum_n = 0.0;

@@ -7,9 +7,9 @@
  *
  * Code generation for model "wturbines".
  *
- * Model version              : 1.306
+ * Model version              : 1.307
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C++ source code generated on : Mon Jun 15 21:11:38 2026
+ * C++ source code generated on : Mon Jun 15 21:25:00 2026
  *
  * Target selection: speedgoat.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -235,7 +235,6 @@ struct B_CoreSubsys_wturbines_T {
   real_T e_t;                          /* '<S29>/Sum' */
   real_T ProportionalGain;             /* '<S252>/Proportional Gain' */
   real_T Integrator;                   /* '<S247>/Integrator' */
-  real_T Sum;                          /* '<S256>/Sum' */
   real_T ws_drwst_p;                   /* '<S157>/Sum' */
   real_T Divide;                       /* '<S157>/Divide' */
   real_T Gain;                         /* '<S157>/Gain' */
@@ -252,7 +251,7 @@ struct B_CoreSubsys_wturbines_T {
   real_T Gain_h;                       /* '<S33>/Gain' */
   real_T PProdOut;                     /* '<S83>/PProd Out' */
   real_T Integrator_d;                 /* '<S78>/Integrator' */
-  real_T Sum_c;                        /* '<S87>/Sum' */
+  real_T Sum;                          /* '<S87>/Sum' */
   real_T MultiportSwitch[2];           /* '<S24>/Multiport Switch' */
   real_T PitchSpt;                     /* '<S11>/Switch2' */
   real_T RateLimiter_n;                /* '<S276>/Rate Limiter' */
@@ -266,7 +265,7 @@ struct B_CoreSubsys_wturbines_T {
   real_T RateTransition5_i;            /* '<S12>/Rate Transition5' */
   real_T GenSpd;                       /* '<S14>/Multiply2' */
   real_T Switch5;                      /* '<S11>/Switch5' */
-  real_T T_gen;                        /* '<S11>/Saturation' */
+  real_T Tgen;                         /* '<S11>/Saturation' */
   real_T Product_m;                    /* '<S279>/Product' */
   real_T Multiply;                     /* '<S279>/Multiply' */
   real_T RateTransition1_h;            /* '<S12>/Rate Transition1' */
@@ -338,6 +337,7 @@ struct B_CoreSubsys_wturbines_T {
   real_T Derating_e;                   /* '<S156>/Derating' */
   real_T Saturation_k;                 /* '<S29>/Saturation' */
   real_T Sum_n;                        /* '<S203>/Sum' */
+  real_T Sum_b;                        /* '<S256>/Sum' */
   real_T _rreft_l;                     /* '<S27>/Divide4' */
   real_T Multiply_l;                   /* '<S32>/Multiply' */
   real_T Multiply1_p;                  /* '<S32>/Multiply1' */
@@ -424,36 +424,12 @@ struct DW_CoreSubsys_wturbines_T {
   void* TWork[6];                      /* '<S14>/Ct(&#x3BB;, &#x3B2;)' */
   void* SWork[9];                      /* '<S14>/Ct(&#x3BB;, &#x3B2;)' */
   struct {
-    void *AQHandles;
-  } TAQSigLogging_InsertedFor_Contr;   /* synthesized block */
-
-  struct {
     void *LoggedData;
   } Operationalmode_PWORK;             /* '<S11>/Operational mode' */
 
   struct {
     void *LoggedData[2];
   } Setpoints_PWORK;                   /* '<S29>/Setpoints' */
-
-  struct {
-    void *AQHandles;
-  } TAQSigLogging_InsertedFor_Derat;   /* synthesized block */
-
-  struct {
-    void *AQHandles;
-  } TAQSigLogging_InsertedFor_Sum_a;   /* synthesized block */
-
-  struct {
-    void *AQHandles;
-  } TAQSigLogging_InsertedFor_Divid;   /* synthesized block */
-
-  struct {
-    void *AQHandles;
-  } TAQSigLogging_InsertedFor_PIcon;   /* synthesized block */
-
-  struct {
-    void *AQHandles;
-  } TAQSigLogging_InsertedFor_Sum_c;   /* synthesized block */
 
   int32_T sfEvent;                     /* '<S11>/MATLAB Function' */
   int32_T sfEvent_g;                   /* '<S11>/Wind Turbine State Machine' */

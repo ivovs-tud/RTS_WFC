@@ -38,7 +38,12 @@ class RequestedPowerTransmitter:
 		# If the w_spt is significantly different from last transmitted, or enough time has elapsed, we send
 		if (self.last_transmitted is None or abs(self.last_transmitted - w_spt) > 0.1 or t - self.last_transmitted_t > self.INTEGRITY_TIME):
 			send_pkt = self.pack_requested_power(w_spt)
-			self.sock.send(send_pkt)
+			try:
+				self.sock.send(send_pkt, zmq.NOBLOCK)
+			except zmq.Again:
+				# socket not ready to send
+				return
+
 			print(f"Transmitted Power Reference: {w_spt} at time {t}")
 			self.last_transmitted = w_spt
 			self.last_transmitted_t = t

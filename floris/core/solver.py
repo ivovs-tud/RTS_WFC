@@ -76,6 +76,14 @@ def sequential_solver(
     ambient_turbulence_intensities = flow_field.turbulence_intensities.copy()
     ambient_turbulence_intensities = ambient_turbulence_intensities[:, None, None, None]
 
+    external_thrust_coefficients_sorted = None
+    if thrust_coefficients is not None:
+        external_thrust_coefficients_sorted = np.take_along_axis(
+            thrust_coefficients,
+            grid.sorted_coord_indices,
+            axis=1,
+        )
+
     # Calculate the velocity deficit sequentially from upstream to downstream turbines
     for i in range(grid.n_turbines):
 
@@ -87,53 +95,51 @@ def sequential_solver(
         u_i = flow_field.u_sorted[:, i:i+1]
         v_i = flow_field.v_sorted[:, i:i+1]
 
-        # replace this with passing ct from layer above
-        ct_i = thrust_coefficients
-        # ct_i = thrust_coefficient(
-        #     velocities=flow_field.u_sorted,
-        #     turbulence_intensities=flow_field.turbulence_intensity_field_sorted,
-        #     air_density=flow_field.air_density,
-        #     yaw_angles=farm.yaw_angles_sorted,
-        #     tilt_angles=farm.tilt_angles_sorted,
-        #     power_setpoints=farm.power_setpoints_sorted,
-        #     awc_modes=farm.awc_modes_sorted,
-        #     awc_amplitudes=farm.awc_amplitudes_sorted,
-        #     thrust_coefficient_functions=farm.turbine_thrust_coefficient_functions,
-        #     tilt_interps=farm.turbine_tilt_interps,
-        #     correct_cp_ct_for_tilt=farm.correct_cp_ct_for_tilt_sorted,
-        #     turbine_type_map=farm.turbine_type_map_sorted,
-        #     turbine_power_thrust_tables=farm.turbine_power_thrust_tables,
-        #     ix_filter=[i],
-        #     average_method=grid.average_method,
-        #     cubature_weights=grid.cubature_weights,
-        #     multidim_condition=flow_field.multidim_conditions
-        # )
-        # print(ct_i.shape)
-        # Since we are filtering for the i'th turbine in the thrust coefficient function,
-        # get the first index here (0:1)
-        ct_i = ct_i[:, 0:1, None, None]
-        axial_induction_i = axial_induction(
-            velocities=flow_field.u_sorted,
-            turbulence_intensities=flow_field.turbulence_intensity_field_sorted,
-            air_density=flow_field.air_density,
-            yaw_angles=farm.yaw_angles_sorted,
-            tilt_angles=farm.tilt_angles_sorted,
-            power_setpoints=farm.power_setpoints_sorted,
-            awc_modes=farm.awc_modes_sorted,
-            awc_amplitudes=farm.awc_amplitudes_sorted,
-            axial_induction_functions=farm.turbine_axial_induction_functions,
-            tilt_interps=farm.turbine_tilt_interps,
-            correct_cp_ct_for_tilt=farm.correct_cp_ct_for_tilt_sorted,
-            turbine_type_map=farm.turbine_type_map_sorted,
-            turbine_power_thrust_tables=farm.turbine_power_thrust_tables,
-            ix_filter=[i],
-            average_method=grid.average_method,
-            cubature_weights=grid.cubature_weights,
-            multidim_condition=flow_field.multidim_conditions
-        )
-        # Since we are filtering for the i'th turbine in the axial induction function,
-        # get the first index here (0:1)
-        axial_induction_i = axial_induction_i[:, 0:1, None, None]
+        if external_thrust_coefficients_sorted is None:
+            ct_i = thrust_coefficient(
+                velocities=flow_field.u_sorted,
+                turbulence_intensities=flow_field.turbulence_intensity_field_sorted,
+                air_density=flow_field.air_density,
+                yaw_angles=farm.yaw_angles_sorted,
+                tilt_angles=farm.tilt_angles_sorted,
+                power_setpoints=farm.power_setpoints_sorted,
+                awc_modes=farm.awc_modes_sorted,
+                awc_amplitudes=farm.awc_amplitudes_sorted,
+                thrust_coefficient_functions=farm.turbine_thrust_coefficient_functions,
+                tilt_interps=farm.turbine_tilt_interps,
+                correct_cp_ct_for_tilt=farm.correct_cp_ct_for_tilt_sorted,
+                turbine_type_map=farm.turbine_type_map_sorted,
+                turbine_power_thrust_tables=farm.turbine_power_thrust_tables,
+                ix_filter=[i],
+                average_method=grid.average_method,
+                cubature_weights=grid.cubature_weights,
+                multidim_condition=flow_field.multidim_conditions
+            )
+            ct_i = ct_i[:, 0:1, None, None]
+
+            axial_induction_i = axial_induction(
+                velocities=flow_field.u_sorted,
+                turbulence_intensities=flow_field.turbulence_intensity_field_sorted,
+                air_density=flow_field.air_density,
+                yaw_angles=farm.yaw_angles_sorted,
+                tilt_angles=farm.tilt_angles_sorted,
+                power_setpoints=farm.power_setpoints_sorted,
+                awc_modes=farm.awc_modes_sorted,
+                awc_amplitudes=farm.awc_amplitudes_sorted,
+                axial_induction_functions=farm.turbine_axial_induction_functions,
+                tilt_interps=farm.turbine_tilt_interps,
+                correct_cp_ct_for_tilt=farm.correct_cp_ct_for_tilt_sorted,
+                turbine_type_map=farm.turbine_type_map_sorted,
+                turbine_power_thrust_tables=farm.turbine_power_thrust_tables,
+                ix_filter=[i],
+                average_method=grid.average_method,
+                cubature_weights=grid.cubature_weights,
+                multidim_condition=flow_field.multidim_conditions
+            )
+            axial_induction_i = axial_induction_i[:, 0:1, None, None]
+        else:
+            ct_i = external_thrust_coefficients_sorted[:, i:i+1, None, None]
+            axial_induction_i = 0.5 * (1.0 - np.sqrt(np.clip(1.0 - ct_i, 0.0, None)))
         turbulence_intensity_i = turbine_turbulence_intensity[:, i:i+1]
         yaw_angle_i = farm.yaw_angles_sorted[:, i:i+1, None, None]
         hub_height_i = farm.hub_heights_sorted[:, i:i+1, None, None]

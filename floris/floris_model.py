@@ -235,9 +235,6 @@ class FlorisModel(LoggingManager):
             ) = wind_data.unpack_for_reinitialize()
             self._wind_data = wind_data
 
-        if thrust_coefficients is not None:
-            self.core.set_thrust_coefficients(thrust_coefficients)
-            
         ## FlowField
         if wind_speeds is not None:
             flow_field_dict["wind_speeds"] = wind_speeds
@@ -281,6 +278,8 @@ class FlorisModel(LoggingManager):
 
         # Create a new instance of floris and attach to self
         self.core = Core.from_dict(floris_dict)
+        if thrust_coefficients is not None:
+            self.core.set_thrust_coefficients(thrust_coefficients)
 
     def set_operation(
         self,
@@ -1008,6 +1007,11 @@ class FlorisModel(LoggingManager):
         ) * hours_per_year
 
     def get_turbine_ais(self) -> NDArrayFloat:
+        if self.core.thrust_coefficients is not None:
+            return 0.5 * (
+                1.0 - np.sqrt(np.clip(1.0 - self.core.thrust_coefficients, 0.0, None))
+            )
+
         turbine_ais = axial_induction(
             velocities=self.core.flow_field.u,
             turbulence_intensities=self.core.flow_field.turbulence_intensity_field[:,:,None,None],
@@ -1029,8 +1033,8 @@ class FlorisModel(LoggingManager):
         return turbine_ais
 
     def get_turbine_thrust_coefficients(self) -> NDArrayFloat:
-        if self._thrust_coefficients is not None:
-            return self._thrust_coefficients
+        if self.core.thrust_coefficients is not None:
+            return self.core.thrust_coefficients
         else:
             turbine_thrust_coefficients = thrust_coefficient(
                 velocities=self.core.flow_field.u,

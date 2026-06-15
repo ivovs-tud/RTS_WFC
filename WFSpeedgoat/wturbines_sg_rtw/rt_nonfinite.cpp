@@ -7,9 +7,9 @@
  *
  * Code generation for model "wturbines".
  *
- * Model version              : 1.241
+ * Model version              : 1.293
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C++ source code generated on : Thu Jun 11 13:02:08 2026
+ * C++ source code generated on : Mon Jun 15 13:08:27 2026
  *
  * Target selection: speedgoat.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping

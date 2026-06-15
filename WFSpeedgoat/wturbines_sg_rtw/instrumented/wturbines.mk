@@ -2,7 +2,7 @@
 ## Makefile generated for component 'wturbines'. 
 ## 
 ## Makefile     : wturbines.mk
-## Generated on : Thu Jun 11 13:02:32 2026
+## Generated on : Mon Jun 15 13:08:31 2026
 ## Final product: $(START_DIR)/wturbines_sg_rtw/wturbines
 ## Product type : executable
 ## 
@@ -21,7 +21,7 @@ MAKEFILE                  = wturbines.mk
 MATLAB_ROOT               = C:/PROGRA~1/MATLAB/R2024b
 MATLAB_BIN                = C:/PROGRA~1/MATLAB/R2024b/bin
 MATLAB_ARCH_BIN           = $(MATLAB_BIN)/win64
-START_DIR                 = H:/RTS_WFC/WFSpeedgoat
+START_DIR                 = C:/Users/hackaton26/Desktop/Hackathon/RTS_WFC/WFSpeedgoat
 SOLVER                    = 
 SOLVER_OBJ                = 
 CLASSIC_INTERFACE         = 0

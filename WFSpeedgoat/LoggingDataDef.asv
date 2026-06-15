@@ -1,0 +1,7 @@
+fieldNames = { ...
+    'Cp', 'double';
+    
+};
+
+
+[loggingData, loggingDataBytes] = fieldNamesToBus(fieldNames, 'loggingData', 'logging data');

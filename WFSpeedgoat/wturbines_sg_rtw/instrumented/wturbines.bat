@@ -3,8 +3,6 @@ call "%SLREALTIME_QNX_SP_ROOT%\%SLREALTIME_QNX_VERSION%\qnxsdp-env.bat"
 
 cd .
 
-chcp 1252
-
 if "%1"=="" (make  -f wturbines.mk all) else (make  -f wturbines.mk %1)
 @if errorlevel 1 goto error_exit
 

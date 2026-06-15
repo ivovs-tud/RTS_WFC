@@ -7,9 +7,9 @@
  *
  * Code generation for model "wturbines".
  *
- * Model version              : 1.241
+ * Model version              : 1.293
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C++ source code generated on : Thu Jun 11 13:02:08 2026
+ * C++ source code generated on : Mon Jun 15 13:08:27 2026
  *
  * Target selection: speedgoat.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -32,6 +32,60 @@ typedef enum {
   op_mode_shutting_down,
   op_mode_emergency_stop
 } op_mode;
+
+#endif
+
+#ifndef DEFINED_TYPEDEF_FOR_loggingData_
+#define DEFINED_TYPEDEF_FOR_loggingData_
+
+struct loggingData
+{
+  real_T Cp;
+  real_T Ct;
+  real_T GenSpd;
+  op_mode OpMode;
+  real_T OrientationSpt;
+  real_T Pitch;
+  real_T PitchSpt;
+  real_T RotSpd;
+  uint8_T eCtrlMode;
+  real_T TBrake;
+  real_T TGen;
+  real_T Ta;
+  real_T WsEff;
+  real_T YawTrue;
+  real_T HorWdSpd;
+  real_T HorWdDir;
+  boolean_T bEnable;
+  boolean_T bStop;
+};
+
+#endif
+
+#ifndef DEFINED_TYPEDEF_FOR_loggingDataVectors_
+#define DEFINED_TYPEDEF_FOR_loggingDataVectors_
+
+struct loggingDataVectors
+{
+  real_T Cp[9];
+  real_T Ct[9];
+  real_T GenSpd[9];
+  op_mode OpMode[9];
+  real_T OrientationSpt[9];
+  real_T Pitch[9];
+  real_T PitchSpt[9];
+  real_T RotSpd[9];
+  int32_T eCtrlMode[9];
+  real_T TBrake[9];
+  real_T TGen[9];
+  real_T Ta[9];
+  real_T WsEff[9];
+  real_T YawTrue[9];
+  real_T HorWdSpd[9];
+  real_T HorWdDir[9];
+  boolean_T bEnable[9];
+  boolean_T bStop[9];
+};
 
 #endif
 

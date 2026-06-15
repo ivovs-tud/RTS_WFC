@@ -1,10 +1,10 @@
-# the aim of this file is to test the implementation of the api TO connect the Off simulation with
-# a flow of turbine states coming from an external source
+"""Run OFF against the Speedgoat real-time target."""
 
+import argparse
 import os
-import sys
+from pathlib import Path
+import tempfile
 
-import off.off as off
 import off.off_interface as offi
 import numpy as np
 import logging
@@ -15,6 +15,7 @@ import struct
 import matplotlib.pyplot as plt
 import time
 from TXRXRTS import UDPComms
+import yaml
 
 np.seterr(all='raise', under='ignore')
 import warnings
@@ -26,27 +27,60 @@ from bisect import bisect_right
 from GridPowerTransmitter import RequestedPowerTransmitter
 
 MAX_YAW = 60
+DEFAULT_CONFIG = Path(__file__).resolve().parent / "config" / "off2speedgoat.yaml"
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Run OFF while communicating with a Speedgoat real-time simulator.")
+    parser.add_argument("speedgoat_ip_pos", nargs="?", help="Speedgoat target IP. Kept for backwards compatibility.")
+    parser.add_argument("scada_ip_pos", nargs="?", help="SCADA target IP. Kept for backwards compatibility.")
+    parser.add_argument("--speedgoat-ip", default=None, help="Speedgoat target IP.")
+    parser.add_argument("--scada-ip", default=None, help="SCADA target IP.",)
+    parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG, help="Path to the main OFF run YAML.")
+    parser.add_argument("--ambient-config", type=Path, default=None, help="Optional YAML containing only the ambient block. Replaces the ambient block in --config.")
+    parser.add_argument("--mode", choices=("Prod", "Visual"), default="Prod", help="Runtime mode.")
+    return parser.parse_args()
+
+
+def load_run_config(config_path: Path, ambient_config_path: Path | None = None) -> Path:
+    config_path = config_path.expanduser().resolve()
+    if ambient_config_path is None:
+        return config_path
+
+    ambient_config_path = ambient_config_path.expanduser().resolve()
+    with config_path.open("r") as stream:
+        run_config = yaml.safe_load(stream)
+    with ambient_config_path.open("r") as stream:
+        ambient_config = yaml.safe_load(stream)
+
+    if not isinstance(run_config, dict):
+        raise ValueError(f"Main config is not a YAML mapping: {config_path}")
+    if not isinstance(ambient_config, dict):
+        raise ValueError(f"Ambient config is not a YAML mapping: {ambient_config_path}")
+
+    run_config["ambient"] = ambient_config.get("ambient", ambient_config)
+
+    merged_config = tempfile.NamedTemporaryFile(
+        mode="w",
+        suffix=".yaml",
+        prefix=f"{config_path.stem}_with_ambient_",
+        delete=False,
+    )
+    with merged_config:
+        yaml.safe_dump(run_config, merged_config, sort_keys=False)
+
+    return Path(merged_config.name)
+
 
 def main():
+    args = parse_args()
     logging.basicConfig(filename='myapp.log', level=logging.INFO)
-    
+
     # setting up server with one port to one port communication 
     # IP addresses
-    if len(sys.argv) > 1:
-        IP_address_speedgoat = sys.argv[1]  # Speedgoat target
-    else:
-        IP_address_speedgoat = "172.19.3.43"  # Speedgoat target
+    IP_address_speedgoat = args.speedgoat_ip or args.speedgoat_ip_pos or "172.19.3.43"
+    scadaIP = args.scada_ip or args.scada_ip_pos or "172.19.3.214"
     
-    if len(sys.argv) > 2:
-        scadaIP = sys.argv[2]  # SCADA target
-    else:
-        scadaIP = "172.19.3.214"    
-
-    localIP = "172.19.3.214"
-    
-
-    print(f"speedgoat IP: {IP_address_speedgoat}, scada IP: {scadaIP}")
-
     # Ports
     python2simulink_port = 49160  # PC -> Speedgoat
     simulink2python_port = 49152  # Speedgoat -> PC
@@ -57,7 +91,7 @@ def main():
     pcRX_port = 49152
     pcTX_port = 49160
 
-    mode = 'Prod'  # 'Visual' or 'Prod'
+    mode = args.mode  # 'Visual' or 'Prod'
 
     udp_comm = UDPComms(remote_ip=IP_address_speedgoat, tx_port=rtsRX_port, rx_port=pcRX_port, send_interval=0.5)
     udp_comm.start()
@@ -68,11 +102,11 @@ def main():
     op = RequestedPowerTransmitter(scadaIP, "9001")
     op.connect()
 
-    # get layout of wind farm from windfarm_information.yaml
-    file_name = f'{off.OFF_PATH}\\02_Examples_and_Cases\\03_Cases\\windfarm_information_2x5.yaml'
+    file_name = load_run_config(args.config, args.ambient_config)
+    print(f"OFF config: {file_name}")
 
     off_interface = offi.OFFInterface()
-    off_interface.init_simulation_by_path(file_name)
+    off_interface.init_simulation_by_path(str(file_name))
     iteration = 0
 
     Nt = len(off_interface.off_sim.wind_farm.turbines) # number of turbines
@@ -86,12 +120,6 @@ def main():
     off_input = np.zeros(2*Nt)
     lg.info("initial off_input: %s", off_input)
 
-    
-
-    #artifical multiplier to test speedgoat limit
-    n = 1
-
-
     ## updating turbine states so that both simulink and off can run at the same time
     # since all the initial states are the same this can be done this way but only for the initial step
     for turbine in off_interface.off_sim.wind_farm.turbines:
@@ -100,9 +128,7 @@ def main():
     INTERVAL = off_interface.off_sim.settings_sim['time step'] # seconds
     next_tick = time.perf_counter() + INTERVAL
 
-    for t in np.arange(off_interface.off_sim.settings_sim['time start'],
-                           off_interface.off_sim.settings_sim['time end'],
-                           off_interface.off_sim.settings_sim['time step']):
+    for t in np.arange(off_interface.off_sim.settings_sim['time start'], off_interface.off_sim.settings_sim['time end'], off_interface.off_sim.settings_sim['time step']):
         
         # First we read from the RTS the most up to date simulink data
         if udp_comm.get_recv_value() is not None:
@@ -112,12 +138,9 @@ def main():
             rts_tur_data = off_input
             
         rts_tur_data[Nt:-1] = rts_tur_data[Nt:-1] * 180 / np.pi
-        #rts_tur_data[0:Nt] = np.array([0.6 for _ in range(Nt)])
 
         # update turbine states
         for turbine_index, turbine in enumerate(off_interface.off_sim.wind_farm.turbines):
-            #rel_yaw = off_input[turbine_index, 0] - simulink_input[turbine_index, 2] * 180/np.pi
-            #rel_yaw = max(min(50, rel_yaw), -50) # bounding yaw so that the comp doesnt fail
             ct = max(min(1, rts_tur_data[turbine_index]), 0.001)
             yaw = rts_tur_data[turbine_index + Nt]
 
@@ -145,16 +168,17 @@ def main():
 
         iteration += 1
 
-        sleep_for = next_tick - time.perf_counter()
-        print(f"Sleep for {sleep_for}", flush=True)
-        
-        if sleep_for > 0:
-            time.sleep(sleep_for)
-        next_tick += INTERVAL
+        now = time.perf_counter()
+        sleep_for = next_tick - now
 
-    #py2sim_socket.close()
-    # print("Simulation finished, Python process terminated.")
-    
+        if sleep_for > 0:
+            print(f"Sleep for {sleep_for}", flush=True)
+            time.sleep(sleep_for)
+            next_tick += INTERVAL
+        else:
+            missed_ticks = int((-sleep_for) // INTERVAL) + 1
+            next_tick += missed_ticks * INTERVAL
+            print(f"Sleep for 0.0; timing overrun by {-sleep_for}", flush=True)
 
     # make graphs for all 10 columns in visual data
     if mode == 'Visual':

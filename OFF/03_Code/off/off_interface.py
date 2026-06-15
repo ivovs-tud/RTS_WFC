@@ -90,7 +90,7 @@ class OFFInterface:
         tmp_yaml_path = self._gen_FLORIS_yaml(settings_wke,
                                               sim_info["wind_farm"],
                                               sim_info["ambient"],
-                                              path_to_yaml.rsplit('\\', 1)[0])  # This might not work on Windows
+                                              os.path.dirname(os.path.abspath(path_to_yaml)))
         settings_wke.update(dict([('tmp_yaml_path', tmp_yaml_path)]))
 
         # Visualization settings

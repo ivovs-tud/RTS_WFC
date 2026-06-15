@@ -17,6 +17,7 @@
 # along with this program (see COPYING file).  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+from pathlib import Path
 
 import logging
 lg = logging.getLogger('off')
@@ -35,7 +36,7 @@ import shutil
 from off import __file__ as OFF_PATH
 import datetime
 
-OFF_PATH = OFF_PATH.rsplit('\\', 3)[0]
+OFF_PATH = str(Path(OFF_PATH).resolve().parents[2])
 
 
 class OFF:

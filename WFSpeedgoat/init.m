@@ -29,7 +29,7 @@ rtsRXIECport = '11000';         % UDP port used by RTS to receive turbine cmd_da
 %% Data Structures Definitions
 TurbineDataDef
 TurbineCmdDef
-
+LoggingDataDef
 
 %% Simulation Constants
 Ts_tur      = Simulink.Parameter(0.01);      % Sample frequency of the turbine simulation

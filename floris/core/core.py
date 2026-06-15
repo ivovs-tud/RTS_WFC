@@ -213,6 +213,37 @@ class Core(BaseClass):
         self.finalize()
 
     def set_thrust_coefficients(self, thrust_coefficients):
+        if thrust_coefficients is None:
+            self.thrust_coefficients = None
+            return
+
+        thrust_coefficients = np.asarray(thrust_coefficients, dtype=float)
+        n_findex = self.flow_field.n_findex
+        n_turbines = self.farm.n_turbines
+
+        if thrust_coefficients.ndim == 1:
+            if thrust_coefficients.size != n_turbines:
+                raise ValueError(
+                    "thrust_coefficients must have one value per turbine, or shape "
+                    f"(n_findex, n_turbines)=({n_findex}, {n_turbines})."
+                )
+            thrust_coefficients = thrust_coefficients[None, :]
+
+        if thrust_coefficients.ndim != 2:
+            raise ValueError("thrust_coefficients must be a 1D or 2D array.")
+
+        if thrust_coefficients.shape == (n_turbines, 1):
+            thrust_coefficients = thrust_coefficients.T
+
+        if thrust_coefficients.shape == (1, n_turbines):
+            thrust_coefficients = np.tile(thrust_coefficients, (n_findex, 1))
+        elif thrust_coefficients.shape != (n_findex, n_turbines):
+            raise ValueError(
+                "thrust_coefficients must have shape "
+                f"(n_findex, n_turbines)=({n_findex}, {n_turbines}) or (1, {n_turbines}); "
+                f"received {thrust_coefficients.shape}."
+            )
+
         self.thrust_coefficients = thrust_coefficients
 
     def solve_for_viz(self):

@@ -1,7 +1,10 @@
 """Run OFF against the Speedgoat real-time target."""
 
-import argparse
 import os
+
+
+import argparse
+
 from pathlib import Path
 import tempfile
 
@@ -79,7 +82,7 @@ def main():
     # setting up server with one port to one port communication 
     # IP addresses
     IP_address_speedgoat = args.speedgoat_ip or args.speedgoat_ip_pos or "172.19.3.43"
-    scadaIP = args.scada_ip or args.scada_ip_pos or "172.19.3.214"
+    scadaIP = args.scada_ip or args.scada_ip_pos or "172.19.3.220"
     
     # Ports
     python2simulink_port = 49160  # PC -> Speedgoat
@@ -95,7 +98,7 @@ def main():
 
     udp_comm = UDPComms(remote_ip=IP_address_speedgoat, tx_port=rtsRX_port, rx_port=pcRX_port, send_interval=0.5)
     udp_comm.start()
-    # lg.info("Sockets created and bound to ports : %d (Simulink->Python) and %d (Python->Simulink)", simulink2python_port, pcRX_port)
+    lg.info("Sockets created and bound to ports : %d (Simulink->Python) and %d (Python->Simulink)", simulink2python_port, pcRX_port)
     lg.info("")
     
     # Operator EndPoint
@@ -103,7 +106,7 @@ def main():
     op.connect()
 
     file_name = load_run_config(args.config, args.ambient_config)
-    print(f"OFF config: {file_name}")
+    #print(f"OFF config: {file_name}")
 
     off_interface = offi.OFFInterface()
     off_interface.init_simulation_by_path(str(file_name))
@@ -137,18 +140,21 @@ def main():
         else:
             rts_tur_data = off_input
             
-        rts_tur_data[Nt:-1] = rts_tur_data[Nt:-1] * 180 / np.pi
+        #rts_tur_data[Nt:-1] = rts_tur_data[Nt:-1] * 180 / np.pi
 
         # update turbine states
         for turbine_index, turbine in enumerate(off_interface.off_sim.wind_farm.turbines):
-            ct = max(min(1, rts_tur_data[turbine_index]), 0.001)
+            ct = max(min(1, rts_tur_data[turbine_index]), 0.00001)
             yaw = rts_tur_data[turbine_index + Nt]
+            
 
             # We do a 'hotfix' here that prevents bugs regarding yaw offsets that floris cannot handle.
             # Namely, if yaw is out of the allowed range, we just set it to be example in the direction of the wind with very low Ct (so no wake generation happens)
             if (yaw < -MAX_YAW or yaw >= MAX_YAW):
                 yaw = 0
-                ct = 0.001
+                ct = 0.00001
+            if ct < 0.025:
+                ct = 0.00001
 
             turbine.turbine_states.update_states(ct=ct, yaw=yaw)
 

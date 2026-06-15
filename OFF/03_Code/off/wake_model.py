@@ -84,7 +84,13 @@ class WakeModel(ABC):
         """
         pass
 
-    def set_wind_farm(self, wind_farm_layout: np.ndarray, turbine_states, ambient_states):
+    def set_wind_farm(
+        self,
+        wind_farm_layout: np.ndarray,
+        turbine_states,
+        ambient_states,
+        reference_turbine_index: int = 0,
+    ):
         """
         Changes the states of the stored wind farm
 
@@ -151,7 +157,13 @@ class PythonGaussianWake(WakeModel):
 
         lg.info('Gaussian Wake model created.')
 
-    def set_wind_farm(self, wind_farm_layout: np.ndarray, turbine_states: List[TurbineStates], ambient_states:List[AmbientStates]):
+    def set_wind_farm(
+        self,
+        wind_farm_layout: np.ndarray,
+        turbine_states: List[TurbineStates],
+        ambient_states: List[AmbientStates],
+        reference_turbine_index: int = 0,
+    ):
         """
         Changes the states of the stored wind farm
 
@@ -171,8 +183,8 @@ class PythonGaussianWake(WakeModel):
         self.fi.reinitialize(
             layout_x=wind_farm_layout[:, 0],
             layout_y=wind_farm_layout[:, 1],
-            wind_directions=[ambient_states[0].get_turbine_wind_dir()],  # TODO Assign wind vel from main turbine
-            wind_speeds=[ambient_states[0].get_turbine_wind_speed_abs()],    # TODO Assign wind dir from main turbine
+            wind_directions=[ambient_states[reference_turbine_index].get_turbine_wind_dir()],
+            wind_speeds=[ambient_states[reference_turbine_index].get_turbine_wind_speed_abs()],
         )
 
     def get_measurements_i_t(self, i_t: int) -> tuple:
@@ -448,7 +460,13 @@ class Floris4Wake(WakeModel):
         self.fmodel = FlorisModel(self.settings['yaml_path'])
         lg.info('FLORIS 4 object created.')
 
-    def set_wind_farm(self, wind_farm_layout: np.ndarray, turbine_states, ambient_states):
+    def set_wind_farm(
+        self,
+        wind_farm_layout: np.ndarray,
+        turbine_states,
+        ambient_states,
+        reference_turbine_index: int = 0,
+    ):
         """
         Changes the states of the stored wind farm
 
@@ -467,34 +485,26 @@ class Floris4Wake(WakeModel):
         n_t = len(self.turbine_states)
         yaw_ang = np.zeros([1,n_t])
 
-        # Set ambient conditions 
-        windsirections = np.zeros(n_t)
-        windspeeds = np.zeros(n_t)
-        turbulenceintensities = np.zeros(n_t)
-        for ii_t in range(n_t):
-            windsirections[ii_t] = ambient_states[ii_t].get_turbine_wind_dir()
-            windspeeds[ii_t] = ambient_states[ii_t].get_turbine_wind_speed_abs()
-            turbulenceintensities[ii_t] = ambient_states[ii_t].get_turbine_turbulance_intensity()
-
-
         for ii_t in np.arange(n_t):
             yaw_ang[0, ii_t] = self.turbine_states[ii_t].get_current_yaw()
         
-
+        reference_ambient = ambient_states[reference_turbine_index]
         time_series = TimeSeries(
-            wind_directions=windsirections,
-            wind_speeds=windspeeds,
-            turbulence_intensities=turbulenceintensities,
+            wind_directions=np.array([reference_ambient.get_turbine_wind_dir()]),
+            wind_speeds=np.array([reference_ambient.get_turbine_wind_speed_abs()]),
+            turbulence_intensities=np.array([reference_ambient.get_turbine_turbulance_intensity()]),
         )
         
-        thrust_coefficients = np.array([turbine_state.get_ct() for turbine_state in self.turbine_states]).reshape((len(self.turbine_states),1))
+        thrust_coefficients = np.array(
+            [[turbine_state.get_ct() for turbine_state in self.turbine_states]]
+        )
 
         
         self.fmodel.set(
             layout_x=wind_farm_layout[:, 0],
             layout_y=wind_farm_layout[:, 1],
             wind_data=time_series,
-            yaw_angles=yaw_ang, # - np.reshape(windsirections, (1,10)),
+            yaw_angles=yaw_ang,
             thrust_coefficients = thrust_coefficients
         )
 

@@ -215,7 +215,7 @@ class TurbineStatesMask(TurbineStates):
         """
         super().__init__(number_of_time_steps, 2, ['ct (-), yaw (deg)'])
         # giving a non-zero initial value to ct so that floris doesn't breake
-        self.states[:, 0] = np.ones(number_of_time_steps) * 0.2
+        self.states[:, 0] = np.ones(number_of_time_steps) * 0.005
         # self.set_ax_ind((1 - np.sqrt(1 - self.ct)) / 2)
 
     def get_current_ax_ind(self) -> float:

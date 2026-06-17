@@ -103,8 +103,8 @@ K_omega_sq = 1/2 * (tsr_opt)^-3 * air_density * pi * (rotor_diameter / 2)^5 * Cp
 
 dr_mode = Simulink.Parameter(1);  % 1 | Max-omega, 2 | Constant-omega, 3 | Constant-TSR, 4 | Minimum Ct, 0 | Shutdown
 
-K_p_gen = 1e3;  % 1E7
-K_i_gen = 1e3;  % 1E5
+K_p_gen = 1e2;  % 1E7
+K_i_gen = 1e2;  % 1E5
 K_p_pitch = 1;
 K_i_pitch = 0;
 

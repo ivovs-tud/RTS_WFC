@@ -27,7 +27,7 @@ if strcmp(turbine_name, 'NREL5MW')
     rotor_diameter = 126;
     Cp_opt = 0.482;
     tsr_opt = 7.55;
-    inertia = 4e6;%38677040.613; % Rotor Inertia
+    inertia = 18677040.613; % Rotor Inertia
     gearbox_ratio = 97;
     generator_eff = 0.944;
     cut_in_wind_speed = 3.0;

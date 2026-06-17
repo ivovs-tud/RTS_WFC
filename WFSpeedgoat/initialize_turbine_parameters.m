@@ -27,7 +27,7 @@ if strcmp(turbine_name, 'NREL5MW')
     rotor_diameter = 126;
     Cp_opt = 0.482;
     tsr_opt = 7.55;
-    inertia = 4e6; %38677040.613; % Rotor Inertia
+    inertia = 4e6;%38677040.613; % Rotor Inertia
     gearbox_ratio = 97;
     generator_eff = 0.944;
     cut_in_wind_speed = 3.0;
@@ -43,7 +43,7 @@ if strcmp(turbine_name, 'NREL5MW')
 
     %max_gen_torque = 47402.91;
     
-    brake_torque = 28116.2 * gearbox_ratio;
+    brake_torque = rated_rot_torque;
     cp_ct_file = 'Cp_Ct_IEA22MWRWT_github.csv';
     pitch_above_rated_file = 'pitch_above_rated_NREL5MW.csv';
     power_ss_file = 'power_ss_NREL5MW.csv';
@@ -103,8 +103,8 @@ K_omega_sq = 1/2 * (tsr_opt)^-3 * air_density * pi * (rotor_diameter / 2)^5 * Cp
 
 dr_mode = Simulink.Parameter(1);  % 1 | Max-omega, 2 | Constant-omega, 3 | Constant-TSR, 4 | Minimum Ct, 0 | Shutdown
 
-K_p_gen = 1e7;  % 1E7
-K_i_gen = 1e5;  % 1E5
+K_p_gen = 1e3;  % 1E7
+K_i_gen = 1e3;  % 1E5
 K_p_pitch = 1;
 K_i_pitch = 0;
 

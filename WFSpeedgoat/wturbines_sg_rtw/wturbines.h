@@ -9,7 +9,7 @@
  *
  * Model version              : 1.313
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C++ source code generated on : Wed Jun 17 14:51:19 2026
+ * C++ source code generated on : Wed Jun 17 16:19:19 2026
  *
  * Target selection: speedgoat.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -360,6 +360,7 @@ struct B_CoreSubsys_wturbines_T {
   real_T Exp;                          /* '<S152>/Exp' */
   real_T ws;                           /* '<S152>/&#x3B2;(ws)' */
   real_T Gain1_o;                      /* '<S156>/Gain1' */
+  real_T Gain_c;                       /* '<S152>/Gain' */
   real_T Product_n;                    /* '<S152>/Product' */
   real_T _drt;                         /* '<S31>/Multiport Switch' */
   real_T _drt_o;                       /* '<S31>/Divide4' */

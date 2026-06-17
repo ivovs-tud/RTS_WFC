@@ -9,7 +9,7 @@
  *
  * Model version              : 1.313
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C++ source code generated on : Wed Jun 17 14:51:19 2026
+ * C++ source code generated on : Wed Jun 17 16:19:19 2026
  *
  * Target selection: speedgoat.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -1856,9 +1856,14 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
           wturbines_cal->wturbines_CoreSubsys_cal.Gain1_Gain *
           wturbines_B.CoreSubsys[ForEach_itr].ws;
 
+        /* Gain: '<S152>/Gain' */
+        wturbines_B.CoreSubsys[ForEach_itr].Gain_c =
+          wturbines_cal->wturbines_CoreSubsys_cal.Gain_Gain *
+          wturbines_B.CoreSubsys[ForEach_itr].Gain1_o;
+
         /* Product: '<S152>/Product' */
         wturbines_B.CoreSubsys[ForEach_itr].Product_n =
-          wturbines_B.CoreSubsys[ForEach_itr].Gain1_o *
+          wturbines_B.CoreSubsys[ForEach_itr].Gain_c *
           wturbines_B.CoreSubsys[ForEach_itr].Exp;
 
         /* Switch: '<S152>/Switch' */
@@ -2005,7 +2010,7 @@ void wturbines_step0(void)             /* Sample time: [0.0s, 0.0s] */
 
       /* Gain: '<S98>/Gain' */
       wturbines_B.CoreSubsys[ForEach_itr].Gain_k =
-        wturbines_cal->wturbines_CoreSubsys_cal.Gain_Gain *
+        wturbines_cal->wturbines_CoreSubsys_cal.Gain_Gain_a *
         wturbines_B.CoreSubsys[ForEach_itr].Delay;
 
       /* S-Function (sfix_look1_dyn): '<S45>/Gain Dynamic Lookup' incorporates:
@@ -5491,6 +5496,9 @@ void wturbines_initialize(void)
 
       /* SystemInitialize for Gain: '<S156>/Gain1' */
       wturbines_B.CoreSubsys[ForEach_itr].Gain1_o = 0.0;
+
+      /* SystemInitialize for Gain: '<S152>/Gain' */
+      wturbines_B.CoreSubsys[ForEach_itr].Gain_c = 0.0;
 
       /* SystemInitialize for Product: '<S152>/Product' */
       wturbines_B.CoreSubsys[ForEach_itr].Product_n = 0.0;

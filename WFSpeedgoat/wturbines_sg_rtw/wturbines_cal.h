@@ -115,6 +115,9 @@ struct wturbines_CoreSubsys_cal_type {
   real_T Gain1_Gain;                   /* Expression: pi/180
                                         * Referenced by: '<S156>/Gain1'
                                         */
+  real_T Gain_Gain;                    /* Expression: 1
+                                        * Referenced by: '<S152>/Gain'
+                                        */
   real_T Constant2_Value;              /* Expression: 0
                                         * Referenced by: '<S152>/Constant2'
                                         */
@@ -256,7 +259,7 @@ struct wturbines_CoreSubsys_cal_type {
   real_T Delay_InitialCondition;       /* Expression: 0.0
                                         * Referenced by: '<S29>/Delay'
                                         */
-  real_T Gain_Gain;                    /* Expression: 180/pi
+  real_T Gain_Gain_a;                  /* Expression: 180/pi
                                         * Referenced by: '<S98>/Gain'
                                         */
   real_T Gain_Gain_f;                  /* Expression: 180/pi

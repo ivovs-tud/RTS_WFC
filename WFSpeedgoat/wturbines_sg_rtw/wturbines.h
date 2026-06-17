@@ -7,9 +7,9 @@
  *
  * Code generation for model "wturbines".
  *
- * Model version              : 1.307
+ * Model version              : 1.309
  * Simulink Coder version : 24.2 (R2024b) 21-Jun-2024
- * C++ source code generated on : Mon Jun 15 21:25:00 2026
+ * C++ source code generated on : Tue Jun 16 16:58:21 2026
  *
  * Target selection: speedgoat.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -211,6 +211,7 @@ struct B_CoreSubsys_wturbines_T {
   real_T RateLimiter1;                 /* '<S2>/Rate Limiter1' */
   real_T RateTransition6;              /* '<S2>/Rate Transition6' */
   real_T RateLimiter_p;                /* '<S278>/Rate Limiter' */
+  real_T IC_k;                         /* '<S278>/IC' */
   real_T Gain1;                        /* '<S284>/Gain1' */
   real_T TrigonometricFunction;        /* '<S14>/Trigonometric Function' */
   real_T Product_l;                    /* '<S14>/Product' */
@@ -228,10 +229,10 @@ struct B_CoreSubsys_wturbines_T {
   real_T ws_drt;                       /* '<S29>/Power' */
   real_T ws_drwst;                     /* '<S29>/Sum1' */
   real_T _sett;                        /* '<S29>/Derating' */
-  real_T Relay;                        /* '<S151>/Relay' */
   real_T RateTransition3;              /* '<S12>/Rate Transition3' */
-  real_T Switch;                       /* '<S151>/Switch' */
-  real_T Switch_l;                     /* '<S150>/Switch' */
+  real_T Square_b;                     /* '<S151>/Square' */
+  real_T Product_b;                    /* '<S151>/Product' */
+  real_T Switch;                       /* '<S150>/Switch' */
   real_T e_t;                          /* '<S29>/Sum' */
   real_T ProportionalGain;             /* '<S252>/Proportional Gain' */
   real_T Integrator;                   /* '<S247>/Integrator' */
@@ -278,6 +279,8 @@ struct B_CoreSubsys_wturbines_T {
   real_T IProdOut;                     /* '<S75>/IProd Out' */
   real_T IntegralGain;                 /* '<S129>/Integral Gain' */
   real_T Hcontroller;                  /* '<S34>/H&#x221E; controller ' */
+  real_T Relay;                        /* '<S151>/Relay' */
+  real_T Switch_i;                     /* '<S151>/Switch' */
   real_T Multiply_k;                   /* '<S158>/Multiply' */
   real_T Multiply1;                    /* '<S158>/Multiply1' */
   real_T IntegralGain_g;               /* '<S191>/Integral Gain' */
@@ -352,8 +355,6 @@ struct B_CoreSubsys_wturbines_T {
   real_T ws;                           /* '<S150>/&#x3B2;(ws)' */
   real_T Gain1_o;                      /* '<S154>/Gain1' */
   real_T Product_n;                    /* '<S150>/Product' */
-  real_T Square_b;                     /* '<S151>/Square' */
-  real_T Product_b;                    /* '<S151>/Product' */
   real_T _drt;                         /* '<S29>/Multiport Switch' */
   real_T _drt_o;                       /* '<S29>/Divide4' */
   real_T _drt_n;                       /* '<S29>/Divide2' */
@@ -477,8 +478,9 @@ struct DW_CoreSubsys_wturbines_T {
   boolean_T IC4_FirstOutputTime;       /* '<S2>/IC4' */
   boolean_T IC5_FirstOutputTime;       /* '<S2>/IC5' */
   boolean_T IC6_FirstOutputTime;       /* '<S2>/IC6' */
-  boolean_T Relay_Mode;                /* '<S151>/Relay' */
+  boolean_T IC_FirstOutputTime_l;      /* '<S278>/IC' */
   boolean_T PrevLimited;               /* '<S276>/Rate Limiter' */
+  boolean_T Relay_Mode;                /* '<S151>/Relay' */
   boolean_T objisempty;                /* '<S11>/Moving Average' */
   boolean_T doneDoubleBufferReInit;    /* '<S11>/MATLAB Function' */
   boolean_T last_val_not_empty;        /* '<S11>/MATLAB Function' */

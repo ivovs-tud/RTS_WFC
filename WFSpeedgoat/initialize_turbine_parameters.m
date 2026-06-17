@@ -37,10 +37,13 @@ if strcmp(turbine_name, 'NREL5MW')
     min_rotor_speed_rads = 0.722;
     rated_power = 5E6;
     pitch_rate_deg = 10;  % In deg/s (from 0.1745 rad/s)
-    brake_torque = 28116.2;  % FIXME: This is the high-speed brake torque, do I need to use the gearbox?
+    %brake_torque = 28116.2;  % FIXME: This is the high-speed brake torque, do I need to use the gearbox?
     yawing_rate = 5; % deg/s
-    rated_torque = 31465000;
-    max_gen_torque = 47402.91;
+    rated_rot_torque = 31465000;
+
+    %max_gen_torque = 47402.91;
+    
+    brake_torque = 28116.2 * gearbox_ratio;
     cp_ct_file = 'Cp_Ct_IEA22MWRWT_github.csv';
     pitch_above_rated_file = 'pitch_above_rated_NREL5MW.csv';
     power_ss_file = 'power_ss_NREL5MW.csv';
@@ -72,8 +75,10 @@ else
 end
 
 rated_rotor_speed_rads = rated_rotor_speed * (2 * pi) / 60;  % In rad/s
+rated_gen_torque = rated_power / (rated_rotor_speed_rads * gearbox_ratio);
+max_gen_torque = 1.15 * rated_gen_torque;
 rotor_radius = rotor_diameter / 2;
-brake_torque = rated_torque;
+%brake_torque = rated_torque;
 MIN_ROT_SPEED = 1e-3;
 ROT_SPEED_MIN_TRANS = min_rotor_speed_rads;
 ROT_SPEED_SP_DIFF = 0.1;
@@ -98,8 +103,8 @@ K_omega_sq = 1/2 * (tsr_opt)^-3 * air_density * pi * (rotor_diameter / 2)^5 * Cp
 
 dr_mode = Simulink.Parameter(1);  % 1 | Max-omega, 2 | Constant-omega, 3 | Constant-TSR, 4 | Minimum Ct, 0 | Shutdown
 
-K_p_gen = 1e6;  % 1E7
-K_i_gen = 1e4;  % 1E5
+K_p_gen = 1e7;  % 1E7
+K_i_gen = 1e5;  % 1E5
 K_p_pitch = 1;
 K_i_pitch = 0;
 

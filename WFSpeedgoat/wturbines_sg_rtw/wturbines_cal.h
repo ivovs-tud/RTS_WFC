@@ -131,7 +131,7 @@ struct wturbines_CoreSubsys_cal_type {
   real_T Derating_Threshold_c;         /* Expression: 0
                                         * Referenced by: '<S156>/Derating'
                                         */
-  real_T Saturation_UpperSat;          /* Expression: 15 * (2 * pi / 360)
+  real_T Saturation_UpperSat;          /* Expression: 90 * (2 * pi / 360)
                                         * Referenced by: '<S29>/Saturation'
                                         */
   real_T Saturation_LowerSat;          /* Expression: -2 * (2 * pi / 360)
@@ -167,6 +167,9 @@ struct wturbines_CoreSubsys_cal_type {
   real_T Integrator_IC;                /* Expression: 0
                                         * Referenced by: '<S14>/Integrator'
                                         */
+  real_T Saturation_UpperSat_e;        /* Expression: inf
+                                        * Referenced by: '<S14>/Saturation'
+                                        */
   real_T Saturation_LowerSat_e;        /* Expression: 0
                                         * Referenced by: '<S14>/Saturation'
                                         */
@@ -190,6 +193,9 @@ struct wturbines_CoreSubsys_cal_type {
                                         */
   real_T RateLimiter_IC_e;             /* Expression: 0
                                         * Referenced by: '<S278>/Rate Limiter'
+                                        */
+  real_T IC_Value_h;                   /* Expression: 270
+                                        * Referenced by: '<S278>/IC'
                                         */
   real_T Gain1_Gain_e;                 /* Expression: pi/180
                                         * Referenced by: '<S284>/Gain1'
@@ -230,18 +236,9 @@ struct wturbines_CoreSubsys_cal_type {
   real_T Derating_Threshold_l;         /* Expression: 0
                                         * Referenced by: '<S29>/Derating'
                                         */
-  real_T Relay_YOn;                    /* Expression: 1
-                                        * Referenced by: '<S151>/Relay'
-                                        */
-  real_T Relay_YOff;                   /* Expression: 0
-                                        * Referenced by: '<S151>/Relay'
-                                        */
   real_T RateTransition3_InitialConditio;/* Expression: 0
                                           * Referenced by: '<S12>/Rate Transition3'
                                           */
-  real_T Switch_Threshold_e;           /* Expression: 0
-                                        * Referenced by: '<S151>/Switch'
-                                        */
   real_T Constant_Value_l;             /* Expression: 0
                                         * Referenced by: '<S156>/Constant'
                                         */
@@ -286,6 +283,15 @@ struct wturbines_CoreSubsys_cal_type {
                                           */
   real_T Hcontroller_InitialCondition; /* Expression: 0
                                         * Referenced by: '<S34>/H&#x221E; controller '
+                                        */
+  real_T Relay_YOn;                    /* Expression: 1
+                                        * Referenced by: '<S151>/Relay'
+                                        */
+  real_T Relay_YOff;                   /* Expression: 0
+                                        * Referenced by: '<S151>/Relay'
+                                        */
+  real_T Switch_Threshold_e;           /* Expression: 0
+                                        * Referenced by: '<S151>/Switch'
                                         */
   real_T Multiply_Gain_g;              /* Expression: 1 / (2 * pi)
                                         * Referenced by: '<S158>/Multiply'
@@ -334,6 +340,9 @@ struct wturbines_CoreSubsys_cal_type {
                                         */
   real_T Constant8_Value;              /* Expression: 3
                                         * Referenced by: '<S280>/Constant8'
+                                        */
+  real_T Saturation_UpperSat_e3;       /* Expression: inf
+                                        * Referenced by: '<S280>/Saturation'
                                         */
   real_T Saturation_LowerSat_k;        /* Expression: 0
                                         * Referenced by: '<S280>/Saturation'

@@ -123,11 +123,11 @@ RTE_Param_Service_T RTE_Param_Service = {
     -0.073059, -0.109138, -0.147827, -0.188549, -0.231957, -0.278588, -0.327732,
     -0.378658, -0.430879, -0.484343, -0.539215, -0.595778, -0.654499, -0.71581,
     -0.779983, -0.847144, -0.917284, -0.990321 },
-  10000.0,
+  100000.0,
   0.0,
   0.0,
   2.3434176336062817,
-  1.0E+6,
+  1.0E+7,
   1.0,
   0.1,
   0.001,
@@ -137,14 +137,14 @@ RTE_Param_Service_T RTE_Param_Service = {
   0.1,
   1.225,
   0.0,
-  3.1465E+7,
+  2.7272714E+6,
   3.0,
   25.0,
   1.0,
   97.0,
   0.944,
   4.0E+6,
-  47402.91,
+  46782.35951836405,
 
   { 0.0, 3.83, 6.6, 8.7, 10.45, 12.06, 13.54, 14.92, 16.23, 17.47, 18.7, 19.94,
     21.18, 22.35, 23.47 },
@@ -155,7 +155,6 @@ RTE_Param_Service_T RTE_Param_Service = {
   5.0E+6,
   12.1,
   1.2671090369478832,
-  3.1465E+7,
   11.4,
   63.0,
 
@@ -343,11 +342,6 @@ real_T* get_rated_rotor_speed(void)
 real_T* get_rated_rotor_speed_rads(void)
 {
   return &RTE_Param_Service_ptr->rated_rotor_speed_rads;
-}
-
-real_T* get_rated_torque(void)
-{
-  return &RTE_Param_Service_ptr->rated_torque;
 }
 
 real_T* get_rated_wind_speed(void)

@@ -4,11 +4,14 @@ import os
 
 
 import argparse
+import random
 
+from itertools import count
 from pathlib import Path
 import tempfile
 
 import off.off_interface as offi
+import off.ambient_corrector as amb_corr
 import numpy as np
 import logging
 lg = logging.getLogger('off')
@@ -31,6 +34,7 @@ from GridPowerTransmitter import RequestedPowerTransmitter
 
 MAX_YAW = 60
 DEFAULT_CONFIG = Path(__file__).resolve().parent / "config" / "off2speedgoat.yaml"
+DEFAULT_AMBIENT_CONFIG_DIR = DEFAULT_CONFIG.parent
 
 
 def parse_args():
@@ -41,8 +45,31 @@ def parse_args():
     parser.add_argument("--scada-ip", default=None, help="SCADA target IP.",)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG, help="Path to the main OFF run YAML.")
     parser.add_argument("--ambient-config", type=Path, default=None, help="Optional YAML containing only the ambient block. Replaces the ambient block in --config.")
+    parser.add_argument("--loop-forever", action="store_true", help="Keep running and load a random short ambient config when the current one ends.")
+    parser.add_argument("--ambient-config-dir", type=Path, default=DEFAULT_AMBIENT_CONFIG_DIR, help="Directory containing ambient configs used by --loop-forever.")
+    parser.add_argument("--random-ambient-prefix", default="short", help="Filename prefix for ambient configs picked by --loop-forever.")
+    parser.add_argument("--random-seed", type=int, default=None, help="Optional seed for reproducible random ambient selection.")
     parser.add_argument("--mode", choices=("Prod", "Visual"), default="Prod", help="Runtime mode.")
     return parser.parse_args()
+
+
+def read_yaml(path: Path) -> dict:
+    path = path.expanduser().resolve()
+    with path.open("r") as stream:
+        data = yaml.safe_load(stream)
+
+    if not isinstance(data, dict):
+        raise ValueError(f"YAML file is not a mapping: {path}")
+    return data
+
+
+def extract_ambient_block(config: dict, source: Path) -> dict:
+    ambient = config.get("ambient", config)
+    if not isinstance(ambient, dict):
+        raise ValueError(f"Ambient config is not a YAML mapping: {source}")
+    if "flow_field" not in ambient:
+        raise ValueError(f"Ambient config has no flow_field block: {source}")
+    return ambient
 
 
 def load_run_config(config_path: Path, ambient_config_path: Path | None = None) -> Path:
@@ -51,17 +78,10 @@ def load_run_config(config_path: Path, ambient_config_path: Path | None = None) 
         return config_path
 
     ambient_config_path = ambient_config_path.expanduser().resolve()
-    with config_path.open("r") as stream:
-        run_config = yaml.safe_load(stream)
-    with ambient_config_path.open("r") as stream:
-        ambient_config = yaml.safe_load(stream)
+    run_config = read_yaml(config_path)
+    ambient_config = read_yaml(ambient_config_path)
 
-    if not isinstance(run_config, dict):
-        raise ValueError(f"Main config is not a YAML mapping: {config_path}")
-    if not isinstance(ambient_config, dict):
-        raise ValueError(f"Ambient config is not a YAML mapping: {ambient_config_path}")
-
-    run_config["ambient"] = ambient_config.get("ambient", ambient_config)
+    run_config["ambient"] = extract_ambient_block(ambient_config, ambient_config_path)
 
     merged_config = tempfile.NamedTemporaryFile(
         mode="w",
@@ -75,9 +95,71 @@ def load_run_config(config_path: Path, ambient_config_path: Path | None = None) 
     return Path(merged_config.name)
 
 
+def find_random_ambient_configs(config_dir: Path, prefix: str) -> list[Path]:
+    config_dir = config_dir.expanduser().resolve()
+    candidates = sorted(
+        path for pattern in (f"{prefix}*.yaml", f"{prefix}*.yml")
+        for path in config_dir.glob(pattern)
+        if path.is_file()
+    )
+    if not candidates:
+        raise FileNotFoundError(f"No ambient configs matching {prefix!r} found in {config_dir}")
+    return candidates
+
+
+def random_ambient_config(candidates: list[Path], rng: random.Random) -> Path:
+    return rng.choice(candidates)
+
+
+def replace_ambient_condition(off_interface: offi.OFFInterface, ambient_config_path: Path) -> dict:
+    ambient_config = read_yaml(ambient_config_path)
+    ambient = extract_ambient_block(ambient_config, ambient_config_path)
+    flow_field = ambient["flow_field"]
+
+    off_sim = off_interface.off_sim
+    off_sim.settings_cor["ambient"] = flow_field
+    states_name = off_sim.wind_farm.turbines[0].ambient_states.get_state_names()
+    off_sim.ambient_corrector = amb_corr.AmbientCorrector(flow_field, off_sim.wind_farm, states_name)
+    return flow_field
+
+
+def apply_ambient_condition_at_time(off_interface: offi.OFFInterface, t: float) -> None:
+    off_sim = off_interface.off_sim
+    off_sim.ambient_corrector.update(t)
+    for idx, turbine in enumerate(off_sim.wind_farm.turbines):
+        off_sim.ambient_corrector(idx, turbine.ambient_states)
+
+
+def ambient_condition_duration(flow_field: dict) -> float:
+    duration = 0.0
+    for key, values in flow_field.items():
+        if not key.endswith("_t") or not isinstance(values, (list, tuple, np.ndarray)):
+            continue
+        if len(values) == 0:
+            continue
+        duration = max(duration, float(max(values)))
+
+    if duration <= 0.0:
+        raise ValueError("Ambient condition needs at least one positive *_t entry for --loop-forever.")
+    return duration
+
+
+def requested_power_at(flow_field: dict, t: float):
+    power_t = flow_field.get("requested_power_t")
+    power = flow_field.get("requested_power")
+    if not power_t or not power:
+        return None
+
+    op_time_idx = bisect_right(power_t, t) - 1
+    if op_time_idx < 0:
+        return None
+    return power[op_time_idx]
+
+
 def main():
     args = parse_args()
     logging.basicConfig(filename='myapp.log', level=logging.INFO)
+    rng = random.Random(args.random_seed)
 
     # setting up server with one port to one port communication 
     # IP addresses
@@ -105,12 +187,22 @@ def main():
     op = RequestedPowerTransmitter(scadaIP, "9001")
     op.connect()
 
-    file_name = load_run_config(args.config, args.ambient_config)
+    random_ambient_candidates = None
+    initial_ambient_config = args.ambient_config
+    if args.loop_forever:
+        random_ambient_candidates = find_random_ambient_configs(args.ambient_config_dir, args.random_ambient_prefix)
+        if initial_ambient_config is None:
+            initial_ambient_config = random_ambient_config(random_ambient_candidates, rng)
+            lg.info("Initial random ambient config: %s", initial_ambient_config)
+
+    file_name = load_run_config(args.config, initial_ambient_config)
     #print(f"OFF config: {file_name}")
 
     off_interface = offi.OFFInterface()
     off_interface.init_simulation_by_path(str(file_name))
     iteration = 0
+    segment_start_time = off_interface.off_sim.settings_sim['time start']
+    ambient_duration = ambient_condition_duration(off_interface.off_sim.settings_cor['ambient']) if args.loop_forever else None
 
     Nt = len(off_interface.off_sim.wind_farm.turbines) # number of turbines
 
@@ -131,7 +223,25 @@ def main():
     INTERVAL = off_interface.off_sim.settings_sim['time step'] # seconds
     next_tick = time.perf_counter() + INTERVAL
 
-    for t in np.arange(off_interface.off_sim.settings_sim['time start'], off_interface.off_sim.settings_sim['time end'], off_interface.off_sim.settings_sim['time step']):
+    time_start = off_interface.off_sim.settings_sim['time start']
+    time_end = off_interface.off_sim.settings_sim['time end']
+    time_step = off_interface.off_sim.settings_sim['time step']
+    if args.loop_forever:
+        time_iterator = (time_start + i * time_step for i in count())
+    else:
+        time_iterator = np.arange(time_start, time_end, time_step)
+
+    for t in time_iterator:
+        ambient_t = t - segment_start_time
+        if args.loop_forever and ambient_t >= ambient_duration:
+            ambient_config = random_ambient_config(random_ambient_candidates, rng)
+            flow_field = replace_ambient_condition(off_interface, ambient_config)
+            ambient_duration = ambient_condition_duration(flow_field)
+            segment_start_time = t
+            ambient_t = 0.0
+            apply_ambient_condition_at_time(off_interface, ambient_t)
+            lg.info("Loaded random ambient config: %s", ambient_config)
+            print(f"Loaded random ambient config at t = {t}: {ambient_config}", flush=True)
         
         # First we read from the RTS the most up to date simulink data
         if udp_comm.get_recv_value() is not None:
@@ -159,7 +269,7 @@ def main():
             turbine.turbine_states.update_states(ct=ct, yaw=yaw)
 
         # run off simulation step
-        simulink_input = off_interface.off_sim.run_one_step(t)
+        simulink_input = off_interface.off_sim.run_one_step(ambient_t)
         simulink_input = np.array(simulink_input, dtype=np.float32)
 
         # Transmit this data to speedgoat
@@ -167,9 +277,9 @@ def main():
         print("sent to speedgoat at t = ", t , "\n", simulink_input)
 
         # Next, obtain requested power from grid operator and send to grid operator port
-        op_time_idx = bisect_right(off_interface.off_sim.settings_cor['ambient']['requested_power_t'], t) - 1
-        if op_time_idx >= 0:
-            op.tx_requested_power(t, off_interface.off_sim.settings_cor['ambient']['requested_power'][op_time_idx])
+        requested_power = requested_power_at(off_interface.off_sim.settings_cor['ambient'], ambient_t)
+        if requested_power is not None:
+            op.tx_requested_power(t, requested_power)
 
 
         iteration += 1

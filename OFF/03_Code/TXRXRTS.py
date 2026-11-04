@@ -24,6 +24,7 @@ import threading
 import time
 from typing import Any
 import numpy as np
+from timing_instrumentation import ReceiveMetadata, TIMING_TRAILER, split_timing_trailer
 
 
 class UDPComms:
@@ -39,6 +40,8 @@ class UDPComms:
     send_interval   : seconds between send attempts (default 0.02 → 50 Hz).
     socket_timeout  : receive-socket timeout in seconds (default 1.0).
     encoding        : 'json' (default) or 'raw' (bytes pass-through).
+    timing_log      : optional TimingLog; None disables packet logging.
+    timing_metadata : append/expect the 12-byte timing trailer (default False).
     """
 
     def __init__(
@@ -50,6 +53,8 @@ class UDPComms:
         send_interval: float = 0.02,
         socket_timeout: float = 1.0,
         encoding: str = "json",
+        timing_log=None,
+        timing_metadata: bool = False,
     ) -> None:
         if encoding not in ("json", "raw"):
             raise ValueError("encoding must be 'json' or 'raw'")
@@ -59,12 +64,17 @@ class UDPComms:
         self._rx_port = rx_port
         self._send_interval = send_interval
         self._encoding = encoding
+        self._timing_log = timing_log
+        self._timing_metadata = timing_metadata
+        self._timing_enabled = timing_log is not None or timing_metadata
+        self._tx_sequence = 0  # one outgoing stream per UDPComms instance
 
         # ── shared state ──────────────────────────────────────────────────────
         self._send_value: Any = None          # latest value queued by main thread
         self._send_lock = threading.Lock()
 
         self._recv_value: Any = None          # latest value received from remote
+        self._recv_metadata = None           # published under the same lock
         self._recv_lock = threading.Lock()
 
         self._stop_event = threading.Event()
@@ -118,6 +128,15 @@ class UDPComms:
         with self._recv_lock:
             return self._recv_value
 
+    def get_recv_snapshot(self):
+        """Return (value, packet metadata, snapshot monotonic ns) atomically.
+
+        Decoded arrays refer to immutable packet bytes. Replacing the receive
+        slot cannot change this value; callers may copy it outside the lock.
+        """
+        with self._recv_lock:
+            return self._recv_value, self._recv_metadata, time.monotonic_ns()
+
     # ── context-manager support ───────────────────────────────────────────────
 
     def __enter__(self) -> "UDPComms":
@@ -140,7 +159,22 @@ class UDPComms:
                 try:
                     payload = self._encode(value)
 
-                    self._tx_sock.sendto(payload, (self._remote_ip, self._tx_port))
+                    if self._timing_enabled:
+                        seq = self._tx_sequence
+                        self._tx_sequence = (seq + 1) & 0xFFFFFFFF
+                        destination = (self._remote_ip, self._tx_port)
+                        send_unix_ns = time.time_ns()
+                        send_mono_ns = time.monotonic_ns()
+                        if self._timing_metadata:
+                            payload += TIMING_TRAILER.pack(seq, send_unix_ns)
+                        sent_bytes = self._tx_sock.sendto(payload, destination)
+                        if self._timing_log is not None:
+                            self._timing_log.packet(
+                                "PC_TO_RTS", "send", seq, send_unix_ns,
+                                send_mono_ns, send_unix_ns, sent_bytes,
+                            )
+                    else:
+                        self._tx_sock.sendto(payload, (self._remote_ip, self._tx_port))
                 except OSError as exc:
                     print(f"[UDPSender] send error: {exc}")
 
@@ -150,13 +184,36 @@ class UDPComms:
                 time.sleep(sleep_for)
 
     def _recv_loop(self) -> None:
+        signal_bytes = 2*9*4  # existing RTS input: nine Ct values + nine yaw values
+        expected_bytes = signal_bytes + (TIMING_TRAILER.size if self._timing_metadata else 0)
+        receive_size = expected_bytes + 1 if self._timing_metadata else signal_bytes
         while not self._stop_event.is_set():
             #print("Try to Receive")
             try:
-                data, _ = self._rx_sock.recvfrom(2*9*4)
+                # Preserve the legacy receive size unless trailers are enabled.
+                # One extra byte in extended mode detects oversized datagrams.
+                data, _ = self._rx_sock.recvfrom(receive_size)
+                if self._timing_enabled:
+                    rx_unix_ns = time.time_ns()
+                    rx_mono_ns = time.monotonic_ns()
+                packet_bytes = len(data)
+                seq = sender_unix_ns = None
+                invalid_size = self._timing_metadata and packet_bytes != expected_bytes
+                if self._timing_metadata and not invalid_size:
+                    data, seq, sender_unix_ns = split_timing_trailer(data)
+                if self._timing_log is not None:
+                    self._timing_log.packet(
+                        "RTS_TO_PC", "receive", seq, rx_unix_ns,
+                        rx_mono_ns, sender_unix_ns, packet_bytes,
+                    )
+                if invalid_size:
+                    print(f"[UDPReceiver] Expected {expected_bytes}-byte timing packet; received {packet_bytes} bytes")
+                    continue
                 value = self._decode(data)
+                metadata = ReceiveMetadata(seq, sender_unix_ns, rx_unix_ns, rx_mono_ns) if self._timing_enabled else None
                 with self._recv_lock:
                     self._recv_value = value
+                    self._recv_metadata = metadata
             except socket.timeout:
                 pass  # normal; lets us check _stop_event regularly
             except OSError as exc:

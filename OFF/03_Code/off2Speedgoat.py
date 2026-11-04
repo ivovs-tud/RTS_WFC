@@ -7,6 +7,7 @@ import argparse
 import random
 
 from itertools import count
+from contextlib import ExitStack
 from pathlib import Path
 import tempfile
 
@@ -21,6 +22,7 @@ import struct
 import matplotlib.pyplot as plt
 import time
 from TXRXRTS import UDPComms
+from timing_instrumentation import TimingLog
 import yaml
 
 np.seterr(all='raise', under='ignore')
@@ -50,6 +52,9 @@ def parse_args():
     parser.add_argument("--random-ambient-prefix", default="short", help="Filename prefix for ambient configs picked by --loop-forever.")
     parser.add_argument("--random-seed", type=int, default=None, help="Optional seed for reproducible random ambient selection.")
     parser.add_argument("--mode", choices=("Prod", "Visual"), default="Prod", help="Runtime mode.")
+    parser.add_argument("--timing-log", action="store_true", help="Record UDP and solver timing asynchronously; does not change the wire format.")
+    parser.add_argument("--timing-metadata", action="store_true", help="Append/expect the 12-byte UDP timing trailer. Requires matching RTS support.")
+    parser.add_argument("--timing-log-dir", type=Path, default=Path(__file__).resolve().parent / "timing_logs", help="Parent directory for unique timing-log run directories.")
     return parser.parse_args()
 
 
@@ -178,129 +183,146 @@ def main():
 
     mode = args.mode  # 'Visual' or 'Prod'
 
-    udp_comm = UDPComms(remote_ip=IP_address_speedgoat, tx_port=rtsRX_port, rx_port=pcRX_port, send_interval=0.5)
-    udp_comm.start()
-    lg.info("Sockets created and bound to ports : %d (Simulink->Python) and %d (Python->Simulink)", simulink2python_port, pcRX_port)
-    lg.info("")
+    with ExitStack() as cleanup:
+        timing_log = cleanup.enter_context(TimingLog(args.timing_log_dir)) if args.timing_log else None
+        if timing_log is not None:
+            print(f"Timing logs: {timing_log.run_dir}", flush=True)
+        udp_comm = UDPComms(remote_ip=IP_address_speedgoat, tx_port=rtsRX_port, rx_port=pcRX_port, send_interval=0.5,
+                            timing_log=timing_log, timing_metadata=args.timing_metadata)
+        udp_comm.start()
+        cleanup.callback(udp_comm.stop)  # stop producers before draining timing logs
+        lg.info("Sockets created and bound to ports : %d (Simulink->Python) and %d (Python->Simulink)", simulink2python_port, pcRX_port)
+        lg.info("")
     
-    # Operator EndPoint
-    op = RequestedPowerTransmitter(scadaIP, "9001")
-    op.connect()
+        # Operator EndPoint
+        op = RequestedPowerTransmitter(scadaIP, "9001")
+        op.connect()
 
-    random_ambient_candidates = None
-    initial_ambient_config = args.ambient_config
-    if args.loop_forever:
-        random_ambient_candidates = find_random_ambient_configs(args.ambient_config_dir, args.random_ambient_prefix)
-        if initial_ambient_config is None:
-            initial_ambient_config = random_ambient_config(random_ambient_candidates, rng)
-            lg.info("Initial random ambient config: %s", initial_ambient_config)
+        random_ambient_candidates = None
+        initial_ambient_config = args.ambient_config
+        if args.loop_forever:
+            random_ambient_candidates = find_random_ambient_configs(args.ambient_config_dir, args.random_ambient_prefix)
+            if initial_ambient_config is None:
+                initial_ambient_config = random_ambient_config(random_ambient_candidates, rng)
+                lg.info("Initial random ambient config: %s", initial_ambient_config)
 
-    file_name = load_run_config(args.config, initial_ambient_config)
-    #print(f"OFF config: {file_name}")
+        file_name = load_run_config(args.config, initial_ambient_config)
+        #print(f"OFF config: {file_name}")
 
-    off_interface = offi.OFFInterface()
-    off_interface.init_simulation_by_path(str(file_name))
-    iteration = 0
-    segment_start_time = off_interface.off_sim.settings_sim['time start']
-    ambient_duration = ambient_condition_duration(off_interface.off_sim.settings_cor['ambient']) if args.loop_forever else None
+        off_interface = offi.OFFInterface()
+        off_interface.init_simulation_by_path(str(file_name))
+        iteration = 0
+        segment_start_time = off_interface.off_sim.settings_sim['time start']
+        ambient_duration = ambient_condition_duration(off_interface.off_sim.settings_cor['ambient']) if args.loop_forever else None
 
-    Nt = len(off_interface.off_sim.wind_farm.turbines) # number of turbines
+        Nt = len(off_interface.off_sim.wind_farm.turbines) # number of turbines
 
-    # intializing signals so that simulink and off can run simultaneously
-    simulink_input_init_perturbine = np.array([8, 0]) # wind speed, wind direction (rad)
-    simulink_input = np.array([simulink_input_init_perturbine for _ in off_interface.off_sim.wind_farm.turbines], dtype=np.float32)
-    lg.info("initial simulink_input: %s", simulink_input)
+        # intializing signals so that simulink and off can run simultaneously
+        simulink_input_init_perturbine = np.array([8, 0]) # wind speed, wind direction (rad)
+        simulink_input = np.array([simulink_input_init_perturbine for _ in off_interface.off_sim.wind_farm.turbines], dtype=np.float32)
+        lg.info("initial simulink_input: %s", simulink_input)
 
-    off_input_init_per_turbine = np.array([0, 0.5]) # yaw, ct
-    off_input = np.zeros(2*Nt)
-    lg.info("initial off_input: %s", off_input)
+        off_input_init_per_turbine = np.array([0, 0.5]) # yaw, ct
+        off_input = np.zeros(2*Nt)
+        lg.info("initial off_input: %s", off_input)
 
-    ## updating turbine states so that both simulink and off can run at the same time
-    # since all the initial states are the same this can be done this way but only for the initial step
-    for turbine in off_interface.off_sim.wind_farm.turbines:
-        turbine.turbine_states.update_states(ct=off_input_init_per_turbine[1], yaw=off_input_init_per_turbine[0])
+        ## updating turbine states so that both simulink and off can run at the same time
+        # since all the initial states are the same this can be done this way but only for the initial step
+        for turbine in off_interface.off_sim.wind_farm.turbines:
+            turbine.turbine_states.update_states(ct=off_input_init_per_turbine[1], yaw=off_input_init_per_turbine[0])
     
-    INTERVAL = off_interface.off_sim.settings_sim['time step'] # seconds
-    next_tick = time.perf_counter() + INTERVAL
+        INTERVAL = off_interface.off_sim.settings_sim['time step'] # seconds
+        next_tick = time.perf_counter() + INTERVAL
 
-    time_start = off_interface.off_sim.settings_sim['time start']
-    time_end = off_interface.off_sim.settings_sim['time end']
-    time_step = off_interface.off_sim.settings_sim['time step']
-    if args.loop_forever:
-        time_iterator = (time_start + i * time_step for i in count())
-    else:
-        time_iterator = np.arange(time_start, time_end, time_step)
-
-    for t in time_iterator:
-        ambient_t = t - segment_start_time
-        if args.loop_forever and ambient_t >= ambient_duration:
-            ambient_config = random_ambient_config(random_ambient_candidates, rng)
-            flow_field = replace_ambient_condition(off_interface, ambient_config)
-            ambient_duration = ambient_condition_duration(flow_field)
-            segment_start_time = t
-            ambient_t = 0.0
-            apply_ambient_condition_at_time(off_interface, ambient_t)
-            lg.info("Loaded random ambient config: %s", ambient_config)
-            print(f"Loaded random ambient config at t = {t}: {ambient_config}", flush=True)
-        
-        # First we read from the RTS the most up to date simulink data
-        if udp_comm.get_recv_value() is not None:
-            rts_tur_data = udp_comm.get_recv_value().copy()
-            print("Ct, Yaw received at t = ", t , "\n", rts_tur_data)
+        time_start = off_interface.off_sim.settings_sim['time start']
+        time_end = off_interface.off_sim.settings_sim['time end']
+        time_step = off_interface.off_sim.settings_sim['time step']
+        if args.loop_forever:
+            time_iterator = (time_start + i * time_step for i in count())
         else:
-            rts_tur_data = off_input
+            time_iterator = np.arange(time_start, time_end, time_step)
+
+        for t in time_iterator:
+            if timing_log is not None:
+                step_start_unix_ns = time.time_ns()
+                step_start_mono_ns = time.monotonic_ns()
+            ambient_t = t - segment_start_time
+            if args.loop_forever and ambient_t >= ambient_duration:
+                ambient_config = random_ambient_config(random_ambient_candidates, rng)
+                flow_field = replace_ambient_condition(off_interface, ambient_config)
+                ambient_duration = ambient_condition_duration(flow_field)
+                segment_start_time = t
+                ambient_t = 0.0
+                apply_ambient_condition_at_time(off_interface, ambient_t)
+                lg.info("Loaded random ambient config: %s", ambient_config)
+                print(f"Loaded random ambient config at t = {t}: {ambient_config}", flush=True)
+
+            # First we read from the RTS the most up to date simulink data
+            if timing_log is not None:
+                received, used_rts_packet, input_snapshot_mono_ns = udp_comm.get_recv_snapshot()
+            else:
+                received = udp_comm.get_recv_value()
+            if received is not None:
+                rts_tur_data = received.copy()
+                print("Ct, Yaw received at t = ", t , "\n", rts_tur_data)
+            else:
+                rts_tur_data = off_input
             
-        #rts_tur_data[Nt:-1] = rts_tur_data[Nt:-1] * 180 / np.pi
+            #rts_tur_data[Nt:-1] = rts_tur_data[Nt:-1] * 180 / np.pi
 
-        # update turbine states
-        for turbine_index, turbine in enumerate(off_interface.off_sim.wind_farm.turbines):
-            ct = max(min(1, rts_tur_data[turbine_index]), 0.00001)
-            yaw = rts_tur_data[turbine_index + Nt]
+            # update turbine states
+            for turbine_index, turbine in enumerate(off_interface.off_sim.wind_farm.turbines):
+                ct = max(min(1, rts_tur_data[turbine_index]), 0.00001)
+                yaw = rts_tur_data[turbine_index + Nt]
             
 
-            # We do a 'hotfix' here that prevents bugs regarding yaw offsets that floris cannot handle.
-            # Namely, if yaw is out of the allowed range, we just set it to be example in the direction of the wind with very low Ct (so no wake generation happens)
-            if (yaw < -MAX_YAW or yaw >= MAX_YAW):
-                yaw = 0
-                ct = 0.00001
-            if ct < 0.025:
-                ct = 0.00001
+                # We do a 'hotfix' here that prevents bugs regarding yaw offsets that floris cannot handle.
+                # Namely, if yaw is out of the allowed range, we just set it to be example in the direction of the wind with very low Ct (so no wake generation happens)
+                if (yaw < -MAX_YAW or yaw >= MAX_YAW):
+                    yaw = 0
+                    ct = 0.00001
+                if ct < 0.025:
+                    ct = 0.00001
 
-            turbine.turbine_states.update_states(ct=ct, yaw=yaw)
+                turbine.turbine_states.update_states(ct=ct, yaw=yaw)
 
-        # run off simulation step
-        simulink_input = off_interface.off_sim.run_one_step(ambient_t)
-        simulink_input = np.array(simulink_input, dtype=np.float32)
+            # run off simulation step
+            simulink_input = off_interface.off_sim.run_one_step(ambient_t)
+            if timing_log is not None:
+                step_end_mono_ns = time.monotonic_ns()
+                timing_log.step(iteration, step_start_unix_ns, step_start_mono_ns,
+                                input_snapshot_mono_ns, step_end_mono_ns, used_rts_packet)
+            simulink_input = np.array(simulink_input, dtype=np.float32)
 
-        # Transmit this data to speedgoat
-        udp_comm.set_send_value(simulink_input.copy())
-        print("sent to speedgoat at t = ", t , "\n", simulink_input)
+            # Transmit this data to speedgoat
+            udp_comm.set_send_value(simulink_input.copy())
+            print("sent to speedgoat at t = ", t , "\n", simulink_input)
 
-        # Next, obtain requested power from grid operator and send to grid operator port
-        requested_power = requested_power_at(off_interface.off_sim.settings_cor['ambient'], ambient_t)
-        if requested_power is not None:
-            op.tx_requested_power(t, requested_power)
+            # Next, obtain requested power from grid operator and send to grid operator port
+            requested_power = requested_power_at(off_interface.off_sim.settings_cor['ambient'], ambient_t)
+            if requested_power is not None:
+                op.tx_requested_power(t, requested_power)
 
 
-        iteration += 1
+            iteration += 1
 
-        now = time.perf_counter()
-        sleep_for = next_tick - now
+            now = time.perf_counter()
+            sleep_for = next_tick - now
 
-        if sleep_for > 0:
-            print(f"Sleep for {sleep_for}", flush=True)
-            time.sleep(sleep_for)
-            next_tick += INTERVAL
-        else:
-            missed_ticks = int((-sleep_for) // INTERVAL) + 1
-            next_tick += missed_ticks * INTERVAL
-            print(f"Sleep for 0.0; timing overrun by {-sleep_for}", flush=True)
+            if sleep_for > 0:
+                print(f"Sleep for {sleep_for}", flush=True)
+                time.sleep(sleep_for)
+                next_tick += INTERVAL
+            else:
+                missed_ticks = int((-sleep_for) // INTERVAL) + 1
+                next_tick += missed_ticks * INTERVAL
+                print(f"Sleep for 0.0; timing overrun by {-sleep_for}", flush=True)
 
-    # make graphs for all 10 columns in visual data
-    if mode == 'Visual':
-        #save visual data as numpy array
-        visual_data = np.array(visual_data)  # shape (time_steps, num_turbines, 10 features)
-        np.save('visual_data_speedgoat.npy', visual_data)
+        # make graphs for all 10 columns in visual data
+        if mode == 'Visual':
+            #save visual data as numpy array
+            visual_data = np.array(visual_data)  # shape (time_steps, num_turbines, 10 features)
+            np.save('visual_data_speedgoat.npy', visual_data)
 
 
 if __name__ == "__main__":

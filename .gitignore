@@ -350,6 +350,7 @@ secrets.json
 *.o
 
 # Temporary files
+OFF/03_Code/timing_logs/
 *.tmp
 *.temp
 ~$*
